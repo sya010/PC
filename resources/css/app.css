@@ -1,0 +1,337 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap');
+
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* ========================================
+   THEME CONFIGURATION - Light Theme
+   ======================================== */
+@theme {
+    /* Font Families */
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-arabic: 'Noto Sans Arabic', 'Noto Kufi Arabic', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    /* Color Palette - Light Theme */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f8fafc;
+    --color-bg-tertiary: #f1f5f9;
+    --color-bg-elevated: #e2e8f0;
+
+    /* Text Colors - Dark for readability on light bg */
+    --color-text-primary: #1e293b;
+    --color-text-secondary: #475569;
+    --color-text-muted: #94a3b8;
+
+    /* Neumorphic Shadows - Light Mode */
+    --shadow-neu-outset: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.9);
+    --shadow-neu-inset: inset 3px 3px 6px rgba(0, 0, 0, 0.06), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+    --shadow-neu-sm: 3px 3px 6px rgba(0, 0, 0, 0.06), -3px -3px 6px rgba(255, 255, 255, 0.8);
+
+    /* Glassmorphism - Light Mode */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-blur: 12px;
+
+    /* Border Radius */
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+}
+
+/* RTL Font Family Override */
+html[dir="rtl"] body {
+    font-family: var(--font-arabic);
+}
+
+/* Fix RTL overflow issues specifically */
+[dir="rtl"] .dropdown-menu {
+    text-align: right;
+}
+
+/* Selection Color */
+::selection {
+    background-color: #6366f1;
+    color: white;
+}
+
+/* Custom Scrollbar - Light Mode */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius-md);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6366f1;
+}
+
+/* ========================================
+   NEUMORPHIC COMPONENTS - Light Mode
+   ======================================== */
+.neu-card {
+    background: var(--color-bg-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-neu-outset);
+    border: 1px solid var(--glass-border);
+}
+
+.neu-inset {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-neu-inset);
+}
+
+.neu-button {
+    background: var(--color-bg-primary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-neu-sm);
+    border: 1px solid var(--glass-border);
+    transition: all var(--transition-base);
+    cursor: pointer;
+}
+
+.neu-button:hover {
+    box-shadow: var(--shadow-neu-outset);
+    transform: translateY(-2px);
+    background: white;
+}
+
+.neu-button:active {
+    box-shadow: var(--shadow-neu-inset);
+    transform: translateY(0);
+}
+
+/* ========================================
+   GLASSMORPHISM
+   ======================================== */
+.glass-navbar {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+/* ========================================
+   UTILITIES
+   ======================================== */
+.gradient-text {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.input-neu {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    box-shadow: var(--shadow-neu-inset);
+    transition: all var(--transition-base);
+}
+
+.input-neu:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: white;
+    box-shadow: var(--shadow-neu-inset), 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.input-neu::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* ========================================
+   DROPDOWN & MENUS
+   ======================================== */
+.dropdown-menu {
+    background: white;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    min-width: 180px;
+    z-index: 50;
+}
+
+.dropdown-item {
+    padding: 0.625rem 1rem;
+    color: var(--color-text-secondary);
+    transition: all var(--transition-fast);
+    display: block;
+    width: 100%;
+    text-align: inherit;
+}
+
+.dropdown-item:hover {
+    background: var(--color-bg-secondary);
+    color: #6366f1;
+}
+
+/* ========================================
+   PC BUILDER & PRODUCT CARDS
+   ======================================== */
+.product-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-neu-sm);
+    transition: all var(--transition-base);
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.builder-slot {
+    background: white;
+    border: 2px dashed #e2e8f0;
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    transition: all var(--transition-base);
+}
+
+.builder-slot:hover {
+    border-color: #6366f1;
+    background: #f8fafc;
+}
+
+.builder-slot.selected {
+    border-style: solid;
+    border-color: #6366f1;
+    background: #eff6ff;
+}
+
+.builder-slot.incompatible {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+.compatibility-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.compatibility-badge.success {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.compatibility-badge.error {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.compatibility-badge.warning {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.component-option {
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.component-option:hover {
+    border-color: #6366f1;
+    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1);
+}
+
+.component-option.selected {
+    border-color: #6366f1;
+    background: #eff6ff;
+    ring: 2px solid #6366f1;
+    /* Ring to highlight selection */
+}
+
+/* ========================================
+   ANIMATIONS & BUTTONS
+   ======================================== */
+.btn-animate {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-animate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -10px rgba(79, 70, 229, 0.4);
+}
+
+.btn-animate:active {
+    transform: translateY(0);
+}
+
+.btn-gradient {
+    background: #4f46e5;
+    /* indigo-600 */
+    color: white;
+    border: none;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-gradient:hover {
+    background: #4338ca;
+    /* indigo-700 */
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-secondary-animate {
+    background: white;
+    color: var(--color-text-primary);
+    border: 1px solid var(--glass-border);
+    transition: all 0.3s ease;
+}
+
+.btn-secondary-animate:hover {
+    border-color: #6366f1;
+    color: #6366f1;
+    background: #f8fafc;
+    transform: translateY(-1px);
+}
