@@ -45,6 +45,9 @@
         <x-footer />
     </div>
 
+    <!-- Chatbot Widget -->
+    <livewire:chatbot />
+    
     <!-- Custom Cursor -->
     <x-cursor />
     
