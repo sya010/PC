@@ -8,8 +8,7 @@
         :aria-expanded="dropdownOpen"
         aria-haspopup="true"
     >
-        <span class="text-lg">{{ $languages[$currentLocale]['flag'] }}</span>
-        <span class="hidden sm:block text-sm font-medium text-[var(--color-text-secondary)]">
+        <span class="text-sm font-medium text-[var(--color-text-secondary)]">
             {{ $languages[$currentLocale]['native'] }}
         </span>
         <svg 
@@ -53,7 +52,6 @@
                         : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)] hover:text-[var(--color-text-primary)]' 
                     }}"
             >
-                <span class="text-lg">{{ $language['flag'] }}</span>
                 <div class="flex flex-col items-start flex-1">
                     <span class="text-sm font-medium">{{ $language['native'] }}</span>
                     @if($language['native'] !== $language['name'])

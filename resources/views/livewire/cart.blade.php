@@ -72,13 +72,9 @@
                             <span>Shipping</span>
                             <span class="text-green-600">Free</span>
                         </div>
-                        <div class="flex justify-between text-[var(--color-text-secondary)]">
-                            <span>Tax (Estimate)</span>
-                            <span>{{ number_format($total * 0.05, 0) }} IQD</span>
-                        </div>
                         <div class="border-t border-[var(--glass-border)] pt-4 flex justify-between font-bold text-lg text-[var(--color-text-primary)]">
                             <span>Total</span>
-                            <span class="text-indigo-600">{{ number_format($total * 1.05, 0) }} IQD</span>
+                            <span class="text-indigo-600">{{ number_format($total, 0) }} IQD</span>
                         </div>
                     </div>
 

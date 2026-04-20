@@ -2,9 +2,9 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
             <h1 class="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
-                Users Management
+                {{ __('messages.admin.users.title') }}
             </h1>
-            <p class="text-gray-500 mt-1">Manage user accounts and administrative roles.</p>
+            <p class="text-gray-500 mt-1">{{ __('messages.admin.users.subtitle') }}</p>
         </div>
     </div>
 
@@ -14,16 +14,16 @@
             <input 
                 type="text" 
                 wire:model.live.debounce.300ms="search" 
-                placeholder="Search users by name or email..." 
+                placeholder="{{ __('messages.admin.users.search_placeholder') }}" 
                 maxlength="100"
-                class="w-full pl-12 pr-4 py-3.5 rounded-xl border-none focus:ring-0 text-gray-900 placeholder-gray-400 bg-transparent"
+                class="w-full {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'pr-12 pl-4' : 'pl-12 pr-4' }} py-3.5 rounded-xl border-none focus:ring-0 text-gray-900 placeholder-gray-400 bg-transparent"
             >
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <div class="absolute inset-y-0 {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'right-0 pr-4' : 'left-0 pl-4' }} flex items-center pointer-events-none">
                 <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                 </svg>
             </div>
-            <div class="absolute inset-y-0 right-0 pr-4 flex items-center">
+            <div class="absolute inset-y-0 {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'left-0 pl-4' : 'right-0 pr-4' }} flex items-center">
                 <div wire:loading wire:target="search" class="animate-spin rounded-full h-5 w-5 border-b-2 border-indigo-600"></div>
             </div>
         </div>
@@ -46,13 +46,13 @@
     <!-- Users Table -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-gray-600">
+            <table class="w-full text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'right' : 'left' }} text-sm text-gray-600">
                 <thead class="bg-gray-50/50 text-xs uppercase font-bold text-gray-500 tracking-wider">
                     <tr>
-                        <th class="px-6 py-4">User</th>
-                        <th class="px-6 py-4">Role</th>
-                        <th class="px-6 py-4">Joined Date</th>
-                        <th class="px-6 py-4 text-right">Actions</th>
+                        <th class="px-6 py-4">{{ __('messages.admin.users.user') }}</th>
+                        <th class="px-6 py-4">{{ __('messages.admin.users.role') }}</th>
+                        <th class="px-6 py-4">{{ __('messages.admin.users.joined_date') }}</th>
+                        <th class="px-6 py-4 text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'left' : 'right' }}">{{ __('messages.admin.users.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -72,34 +72,34 @@
                             <td class="px-6 py-4">
                                 @if($user->is_admin)
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-700 border border-purple-200">
-                                        Admin
+                                        {{ __('messages.admin.users.admin_role') }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-600 border border-gray-200">
-                                        User
+                                        {{ __('messages.admin.users.user_role') }}
                                     </span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-500">
                                 {{ $user->created_at->format('M d, Y') }}
                             </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                            <td class="px-6 py-4 text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'left' : 'right' }}">
+                                <div class="flex items-center {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'justify-start' : 'justify-end' }} gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                                     <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate class="px-3 py-1.5 text-xs font-bold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition-colors">
-                                        Edit
+                                        {{ __('messages.admin.users.edit') }}
                                     </a>
                                     
                                     @if($user->is_admin)
-                                        <button wire:click="demote({{ $user->id }})" wire:confirm="Are you sure you want to remove admin privileges from {{ $user->name }}?" class="px-3 py-1.5 text-xs font-bold text-yellow-700 bg-yellow-100 rounded-lg hover:bg-yellow-200 transition-colors">
-                                            Demote
+                                        <button wire:click="demote({{ $user->id }})" wire:confirm="{{ str_replace(':name', $user->name, __('messages.admin.users.confirm_demote')) }}" class="px-3 py-1.5 text-xs font-bold text-yellow-700 bg-yellow-100 rounded-lg hover:bg-yellow-200 transition-colors">
+                                            {{ __('messages.admin.users.demote') }}
                                         </button>
                                     @else
-                                        <button wire:click="promote({{ $user->id }})" wire:confirm="Are you sure you want to promote {{ $user->name }} to Admin?" class="px-3 py-1.5 text-xs font-bold text-indigo-700 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors">
-                                            Make Admin
+                                        <button wire:click="promote({{ $user->id }})" wire:confirm="{{ str_replace(':name', $user->name, __('messages.admin.users.confirm_promote')) }}" class="px-3 py-1.5 text-xs font-bold text-indigo-700 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors">
+                                            {{ __('messages.admin.users.make_admin') }}
                                         </button>
                                     @endif
                                     
-                                    <button wire:click="delete({{ $user->id }})" wire:confirm="Are you sure you want to delete this user?" class="p-1.5 text-gray-400 hover:text-rose-600 transition-colors hover:bg-rose-50 rounded-lg">
+                                    <button wire:click="delete({{ $user->id }})" wire:confirm="{{ __('messages.admin.users.confirm_delete') }}" class="p-1.5 text-gray-400 hover:text-rose-600 transition-colors hover:bg-rose-50 rounded-lg">
                                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                     </button>
                                 </div>
@@ -108,7 +108,7 @@
                     @empty
                         <tr>
                             <td colspan="4" class="px-6 py-12 text-center text-gray-400 font-medium">
-                                No users found matching your search.
+                                {{ __('messages.admin.users.no_users') }}
                             </td>
                         </tr>
                     @endforelse

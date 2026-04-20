@@ -16,9 +16,13 @@ class ComponentSelector extends Component
     public array $filters = [];
     public ?array $currentBuild = [];
 
+    // Whether this is selecting an extra slot (additional storage/cooling)
+    public bool $isExtra = false;
+    public ?int $editIndex = null;
+
     // Filter properties
     public $minPrice = 0;
-    public $maxPrice = 5000000;
+    public $maxPrice = 10000000;
     public $selectedBrands = [];
     public $sort = 'newest';
 
@@ -49,12 +53,15 @@ class ComponentSelector extends Component
         }
 
         $this->type = $type;
-        // Load current build state from PC Builder component if possible, 
-        // or we might need to pass it via session or manage it in a shared service.
-        // For now, let's assume PcBuilder stores state in session or we can just access compatibility warnings.
-        // A better approach for this multi-page flow is to have a "BuildSession" service or just use session().
-        
         $this->currentBuild = session()->get('pc_build', []);
+
+        // Check if this is an extra slot selection (via query parameter)
+        $this->isExtra = request()->query('extra', false) ? true : false;
+        
+        $editIndex = request()->query('edit_index', null);
+        if ($editIndex !== null) {
+            $this->editIndex = (int) $editIndex;
+        }
     }
 
     public function updatedSearch()
@@ -67,7 +74,7 @@ class ComponentSelector extends Component
         $this->search = '';
         $this->selectedBrands = [];
         $this->minPrice = 0;
-        $this->maxPrice = 5000000;
+        $this->maxPrice = 10000000;
         $this->sort = 'newest';
         $this->resetPage();
     }
@@ -77,8 +84,7 @@ class ComponentSelector extends Component
         $product = Product::find($id);
         
         if ($product) {
-            $build = session()->get('pc_build', []);
-            $build[$this->type] = [
+            $componentData = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
@@ -86,7 +92,37 @@ class ComponentSelector extends Component
                 'specs' => $product->specs,
                 'category' => $product->category
             ];
-            session()->put('pc_build', $build); // Save to session
+
+            if ($this->isExtra) {
+                // Add or edit an extra slot
+                $extras = session()->get('pc_build_extras', []);
+                if (!isset($extras[$this->type])) {
+                    $extras[$this->type] = [];
+                }
+                
+                if ($this->editIndex !== null && isset($extras[$this->type][$this->editIndex])) {
+                    // Replace existing extra slot
+                    $extras[$this->type][$this->editIndex] = $componentData;
+                    session()->put('pc_build_extras', $extras);
+                } else {
+                    // Add new extra slot
+                    $extras[$this->type][] = $componentData;
+                    session()->put('pc_build_extras', $extras);
+
+                    // Initialize quantity for this extra slot
+                    $extraQty = session()->get('pc_build_extra_quantities', []);
+                    if (!isset($extraQty[$this->type])) {
+                        $extraQty[$this->type] = [];
+                    }
+                    $extraQty[$this->type][] = 1;
+                    session()->put('pc_build_extra_quantities', $extraQty);
+                }
+            } else {
+                // Normal primary slot selection
+                $build = session()->get('pc_build', []);
+                $build[$this->type] = $componentData;
+                session()->put('pc_build', $build);
+            }
             
             return redirect()->route('build-pc');
         }
@@ -107,7 +143,7 @@ class ComponentSelector extends Component
         }
 
         // Apply filters here
-        if ($this->minPrice > 0 || $this->maxPrice < 50000000) {
+        if ($this->minPrice > 0 || $this->maxPrice < 10000000) {
            $query->whereBetween('price', [$this->minPrice, $this->maxPrice]);
         }
         
@@ -134,9 +170,14 @@ class ComponentSelector extends Component
 
         $products = $query->paginate(24);
 
+        $title = $this->getComponentTitle($this->type);
+        if ($this->isExtra) {
+            $title = 'Add Another ' . ($this->type === 'storage' ? 'Storage Drive' : 'Cooling Fan');
+        }
+
         return view('livewire.component-selector', [
             'products' => $products,
-            'title' => $this->getComponentTitle($this->type)
+            'title' => $title
         ])->layout('components.layouts.app'); // Ensure it uses the main layout
     }
 
