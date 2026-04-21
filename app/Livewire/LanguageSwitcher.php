@@ -17,21 +17,21 @@ class LanguageSwitcher extends Component
      */
     public array $languages = [
         'en' => [
-            'name' => 'English',
-            'native' => 'English',
-            'flag' => '🇬🇧',
+            'name' => 'EN',
+            'native' => 'EN',
+            'flag' => '',
             'dir' => 'ltr',
         ],
         'ar' => [
-            'name' => 'Arabic',
-            'native' => 'العربية',
-            'flag' => '🇮🇶',
+            'name' => 'AR',
+            'native' => 'AR',
+            'flag' => '',
             'dir' => 'rtl',
         ],
         'ku' => [
-            'name' => 'Kurdish',
-            'native' => 'کوردی',
-            'flag' => '🇮🇶',
+            'name' => 'KU',
+            'native' => 'KU',
+            'flag' => '',
             'dir' => 'rtl',
         ],
     ];
@@ -47,7 +47,7 @@ class LanguageSwitcher extends Component
     /**
      * Switch to a different locale without page refresh.
      */
-    public function switchLocale(string $locale): void
+    public function switchLocale(string $locale)
     {
         // Validate the locale
         if (!array_key_exists($locale, $this->languages)) {
@@ -72,8 +72,8 @@ class LanguageSwitcher extends Component
         // Queue the cookie to be set
         Cookie::queue('app_locale', $locale, 525600);
         
-        // Redirect to refresh the page with new locale (cleanest approach for full translation update)
-        $this->redirect(request()->header('Referer', '/'), navigate: true);
+        // Redirect to refresh the page with new locale (full page reload for complete translation update)
+        return redirect(request()->header('Referer', '/'));
     }
 
     /**

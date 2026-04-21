@@ -33,6 +33,27 @@ class PcBuilder extends Component
         'speakers' => null,
     ];
 
+    // Quantity support for RAM, Storage, and Cooling
+    public $componentQuantities = [
+        'ram' => 1,
+        'storage' => 1,
+        'cooling' => 1,
+    ];
+
+    // Extra component slots for storage and cooling (multiple different products)
+    // Structure: ['storage' => [0 => ['id'=>..., 'name'=>..., ...], 1 => [...]], 'cooling' => [...]]
+    public $extraComponents = [
+        'storage' => [],
+        'cooling' => [],
+    ];
+
+    // Quantities for extra component slots
+    // Structure: ['storage' => [0 => 1, 1 => 2], 'cooling' => [0 => 1]]
+    public $extraQuantities = [
+        'storage' => [],
+        'cooling' => [],
+    ];
+
     public $search = '';
     public ?string $activeSelection = null;
     public float $totalPrice = 0;
@@ -45,6 +66,10 @@ class PcBuilder extends Component
     public string $compatibilityColor = 'green';
     public array $compatibilityReport = [];
     public array $systemAnalysis = [];
+
+    // Reset Modal Properties
+    public bool $showResetModal = false;
+    public string $resetTarget = 'all'; // 'all', 'core', 'peripherals'
 
     // Keys mapping for fetching products by category
     protected $categoryMap = [
@@ -66,6 +91,15 @@ class PcBuilder extends Component
         'speakers' => 'Speakers',
     ];
 
+    // Types that support quantity selection
+    protected $quantityTypes = ['ram', 'storage', 'cooling'];
+
+    // Types that support multiple different selections (extra slots)
+    protected $multiSlotTypes = ['storage', 'cooling'];
+
+    // Maximum number of extra slots per type
+    protected $maxExtraSlots = 4;
+
     public function mount(): void
     {
         // Load build from session
@@ -73,6 +107,20 @@ class PcBuilder extends Component
             $this->selectedComponents, 
             session()->get('pc_build', [])
         );
+
+        // Load quantities from session
+        $this->componentQuantities = array_merge(
+            $this->componentQuantities,
+            session()->get('pc_build_quantities', [])
+        );
+
+        // Load extra components from session
+        $sessionExtras = session()->get('pc_build_extras', []);
+        $this->extraComponents = array_merge($this->extraComponents, $sessionExtras);
+
+        // Load extra quantities from session
+        $sessionExtraQty = session()->get('pc_build_extra_quantities', []);
+        $this->extraQuantities = array_merge($this->extraQuantities, $sessionExtraQty);
 
         $this->checkCompatibility();
         $this->calculateTotal();
@@ -84,11 +132,178 @@ class PcBuilder extends Component
     }
     
     // openSelector, closeSelector, and selectComponent logic removed/moved to ComponentSelector page logic
+
+    /**
+     * Check if a component type supports quantity selection.
+     */
+    public function isQuantityType(string $type): bool
+    {
+        return in_array($type, $this->quantityTypes);
+    }
+
+    /**
+     * Check if a component type supports multiple different selections.
+     */
+    public function isMultiSlotType(string $type): bool
+    {
+        return in_array($type, $this->multiSlotTypes);
+    }
+
+    /**
+     * Get the quantity for a component type.
+     */
+    public function getQuantity(string $type): int
+    {
+        return $this->componentQuantities[$type] ?? 1;
+    }
+
+    /**
+     * Get the quantity for an extra slot.
+     */
+    public function getExtraQuantity(string $type, int $index): int
+    {
+        return $this->extraQuantities[$type][$index] ?? 1;
+    }
+
+    /**
+     * Increment the quantity for a component type.
+     */
+    public function incrementQuantity(string $type): void
+    {
+        if (!$this->isQuantityType($type)) return;
+        
+        $max = 8;
+        if (($this->componentQuantities[$type] ?? 1) < $max) {
+            $this->componentQuantities[$type] = ($this->componentQuantities[$type] ?? 1) + 1;
+            $this->saveQuantities();
+            $this->calculateTotal();
+        }
+    }
+
+    /**
+     * Decrement the quantity for a component type.
+     */
+    public function decrementQuantity(string $type): void
+    {
+        if (!$this->isQuantityType($type)) return;
+        
+        if (($this->componentQuantities[$type] ?? 1) > 1) {
+            $this->componentQuantities[$type] = ($this->componentQuantities[$type] ?? 1) - 1;
+            $this->saveQuantities();
+            $this->calculateTotal();
+        }
+    }
+
+    /**
+     * Increment the quantity for an extra slot.
+     */
+    public function incrementExtraQuantity(string $type, int $index): void
+    {
+        $max = 8;
+        $current = $this->extraQuantities[$type][$index] ?? 1;
+        if ($current < $max) {
+            $this->extraQuantities[$type][$index] = $current + 1;
+            $this->saveExtraQuantities();
+            $this->calculateTotal();
+        }
+    }
+
+    /**
+     * Decrement the quantity for an extra slot.
+     */
+    public function decrementExtraQuantity(string $type, int $index): void
+    {
+        $current = $this->extraQuantities[$type][$index] ?? 1;
+        if ($current > 1) {
+            $this->extraQuantities[$type][$index] = $current - 1;
+            $this->saveExtraQuantities();
+            $this->calculateTotal();
+        }
+    }
+
+    /**
+     * Remove an extra component slot.
+     */
+    public function removeExtraComponent(string $type, int $index): void
+    {
+        if (isset($this->extraComponents[$type][$index])) {
+            // Remove the component and its quantity
+            array_splice($this->extraComponents[$type], $index, 1);
+            
+            if (isset($this->extraQuantities[$type][$index])) {
+                array_splice($this->extraQuantities[$type], $index, 1);
+            }
+            
+            // Re-index arrays
+            $this->extraComponents[$type] = array_values($this->extraComponents[$type]);
+            $this->extraQuantities[$type] = array_values($this->extraQuantities[$type]);
+            
+            $this->saveExtras();
+            $this->saveExtraQuantities();
+            $this->calculateTotal();
+        }
+    }
+
+    /**
+     * Check how many extra slots are used for a type.
+     */
+    public function getExtraCount(string $type): int
+    {
+        return count($this->extraComponents[$type] ?? []);
+    }
+
+    /**
+     * Check if more extra slots can be added for a type.
+     */
+    public function canAddExtra(string $type): bool
+    {
+        return $this->isMultiSlotType($type) 
+            && ($this->selectedComponents[$type] !== null) 
+            && ($this->getExtraCount($type) < $this->maxExtraSlots);
+    }
+
+    /**
+     * Save quantities to session.
+     */
+    protected function saveQuantities(): void
+    {
+        session()->put('pc_build_quantities', $this->componentQuantities);
+    }
+
+    /**
+     * Save extra components to session.
+     */
+    protected function saveExtras(): void
+    {
+        session()->put('pc_build_extras', $this->extraComponents);
+    }
+
+    /**
+     * Save extra quantities to session.
+     */
+    protected function saveExtraQuantities(): void
+    {
+        session()->put('pc_build_extra_quantities', $this->extraQuantities);
+    }
     
     public function removeComponent(string $type)
     {
         $this->selectedComponents[$type] = null;
         
+        // Reset quantity when removing
+        if ($this->isQuantityType($type)) {
+            $this->componentQuantities[$type] = 1;
+            $this->saveQuantities();
+        }
+
+        // Also remove all extra slots for this type
+        if ($this->isMultiSlotType($type)) {
+            $this->extraComponents[$type] = [];
+            $this->extraQuantities[$type] = [];
+            $this->saveExtras();
+            $this->saveExtraQuantities();
+        }
+
         // Update session
         $build = session()->get('pc_build', []);
         unset($build[$type]);
@@ -96,6 +311,60 @@ class PcBuilder extends Component
 
         $this->checkCompatibility();
         $this->calculateTotal();
+    }
+
+    public function confirmReset(string $target = 'all')
+    {
+        $this->resetTarget = $target;
+        $this->showResetModal = true;
+    }
+
+    public function cancelReset()
+    {
+        $this->showResetModal = false;
+        $this->resetTarget = 'all';
+    }
+
+    public function executeReset()
+    {
+        $coreKeys = ['cpu', 'motherboard', 'gpu', 'ram', 'storage', 'cooling', 'psu', 'case'];
+        $peripheralKeys = ['monitor', 'keyboard', 'mouse', 'headset', 'mousepad', 'microphone', 'webcam', 'speakers'];
+
+        if ($this->resetTarget === 'all' || $this->resetTarget === 'core') {
+            foreach ($coreKeys as $key) {
+                $this->selectedComponents[$key] = null;
+            }
+            $this->componentQuantities['ram'] = 1;
+            $this->componentQuantities['storage'] = 1;
+            $this->componentQuantities['cooling'] = 1;
+            $this->extraComponents['storage'] = [];
+            $this->extraComponents['cooling'] = [];
+            $this->extraQuantities['storage'] = [];
+            $this->extraQuantities['cooling'] = [];
+        }
+
+        if ($this->resetTarget === 'all' || $this->resetTarget === 'peripherals') {
+            foreach ($peripheralKeys as $key) {
+                $this->selectedComponents[$key] = null;
+            }
+        }
+
+        // Update session
+        session()->put('pc_build', array_filter($this->selectedComponents));
+        session()->put('pc_build_quantities', $this->componentQuantities);
+        session()->put('pc_build_extras', $this->extraComponents);
+        session()->put('pc_build_extra_quantities', $this->extraQuantities);
+
+        $this->checkCompatibility();
+        $this->calculateTotal();
+        
+        $this->showResetModal = false;
+        
+        $message = 'PC Build reset successfully.';
+        if ($this->resetTarget === 'core') $message = 'Core System reset successfully.';
+        if ($this->resetTarget === 'peripherals') $message = 'Peripherals reset successfully.';
+        
+        $this->dispatch('notify', message: $message);
     }
 
     public function checkCompatibility()
@@ -152,16 +421,37 @@ class PcBuilder extends Component
 
     public function calculateTotal()
     {
-        $this->totalPrice = collect($this->selectedComponents)
-            ->whereNotNull()
-            ->sum('price');
+        $this->totalPrice = 0;
+        
+        // Primary components
+        foreach ($this->selectedComponents as $type => $component) {
+            if ($component !== null) {
+                $quantity = $this->isQuantityType($type) ? ($this->componentQuantities[$type] ?? 1) : 1;
+                $this->totalPrice += $component['price'] * $quantity;
+            }
+        }
+
+        // Extra components (storage, cooling)
+        foreach ($this->extraComponents as $type => $extras) {
+            foreach ($extras as $index => $extra) {
+                $quantity = $this->extraQuantities[$type][$index] ?? 1;
+                $this->totalPrice += $extra['price'] * $quantity;
+            }
+        }
     }
 
     public function getSelectedCount(): int
     {
-        return collect($this->selectedComponents)
+        $count = collect($this->selectedComponents)
             ->whereNotNull()
             ->count();
+
+        // Count extras too
+        foreach ($this->extraComponents as $extras) {
+            $count += count($extras);
+        }
+
+        return $count;
     }
 
     public function isValidBuild(): bool
@@ -189,20 +479,41 @@ class PcBuilder extends Component
             return;
         }
 
+        // Add primary components
         foreach ($this->selectedComponents as $type => $component) {
             if ($component) {
-                $this->addToCart(
-                    $component['id'],
-                    $component['name'],
-                    $component['price'],
-                    $component['image'],
-                    'Custom PC ' . ucfirst($type)
-                );
+                $quantity = $this->isQuantityType($type) ? ($this->componentQuantities[$type] ?? 1) : 1;
+                
+                for ($i = 0; $i < $quantity; $i++) {
+                    $this->addToCart(
+                        $component['id'],
+                        $component['name'],
+                        $component['price'],
+                        $component['image'],
+                        'Custom PC ' . ucfirst($type)
+                    );
+                }
+            }
+        }
+
+        // Add extra components
+        foreach ($this->extraComponents as $type => $extras) {
+            foreach ($extras as $index => $extra) {
+                $quantity = $this->extraQuantities[$type][$index] ?? 1;
+                
+                for ($i = 0; $i < $quantity; $i++) {
+                    $this->addToCart(
+                        $extra['id'],
+                        $extra['name'],
+                        $extra['price'],
+                        $extra['image'],
+                        'Custom PC ' . ucfirst($type)
+                    );
+                }
             }
         }
 
         $this->dispatch('notify', message: 'Full PC Build added to cart!');
-        // Optional: clear selection or redirect
     }
 
     public function hasIssue(string $type): bool
@@ -333,7 +644,7 @@ class PcBuilder extends Component
                     'id' => $product->id,
                     'name' => $product->name,
                     'price' => $product->price,
-                    'image' => (string) $product->image, // Ensure string for easy handling
+                    'image' => (string) $product->image,
                     'specs' => $this->formatSpecsShort($product->specs),
                     'raw_specs' => $product->specs ?? []
                 ];

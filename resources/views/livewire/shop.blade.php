@@ -58,7 +58,7 @@
                                 <button wire:click="$set('category', '{{ $key }}'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-colors {{ $category === $key ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600' }}">
                                     <div class="flex items-center justify-between">
                                         <span>{{ $label }}</span>
-                                        <span class="text-xs font-bold {{ $category === $key ? 'text-indigo-500 bg-indigo-100' : 'text-slate-400 bg-slate-100' }} px-2 py-0.5 rounded-full">{{ $this->categoryCounts[$key] ?? 0 }}</span>
+                                        <span class="text-xs font-bold {{ $category === $key ? 'text-indigo-500 bg-indigo-100' : 'text-slate-400 bg-slate-100' }} px-2 py-0.5 rounded-full">{{ $categoryCounts[$key] ?? 0 }}</span>
                                     </div>
                                 </button>
                             @endforeach
@@ -130,8 +130,11 @@
                              class="absolute left-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-100 z-[100] p-6"
                              style="display: none;">
                             
-                            <div class="mb-4">
+                            <div class="mb-4 flex items-center justify-between">
                                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Set Price Budget</span>
+                                @if($minPrice > 0 || $maxPrice < 10000000)
+                                    <button wire:click="$set('minPrice', 0); $set('maxPrice', 10000000)" class="text-xs font-bold text-indigo-600 hover:text-indigo-800">Reset</button>
+                                @endif
                             </div>
 
                             <div class="space-y-4">
@@ -161,7 +164,7 @@
                            </svg>
                            <span class="text-slate-400 font-normal">Sort by:</span>
                            <span class="text-slate-900">
-                               @if($sort === 'random') Random
+                               @if($sort === 'featured') Featured
                                @elseif($sort === 'newest') Newest Arrivals
                                @elseif($sort === 'price_low') Price: Low to High
                                @elseif($sort === 'price_high') Price: High to Low
@@ -178,7 +181,7 @@
                    <div x-show="open" 
                         class="absolute right-0 mt-2 w-full lg:w-64 bg-white rounded-2xl shadow-xl border border-slate-100 z-[100] py-2"
                         style="display: none;">
-                       <button wire:click="$set('sort', 'random'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'random' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Random</button>
+                       <button wire:click="$set('sort', 'featured'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'featured' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Featured</button>
                        <button wire:click="$set('sort', 'newest'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'newest' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Newest Arrivals</button>
                        <button wire:click="$set('sort', 'price_low'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'price_low' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Price: Low to High</button>
                        <button wire:click="$set('sort', 'price_high'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'price_high' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Price: High to Low</button>

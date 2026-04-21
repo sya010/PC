@@ -16,17 +16,17 @@ class Shop extends Component
 
     public $search = '';
     public $category = '';
-    public $sort = 'random';
+    public $sort = 'featured';
     public $minPrice = 0;
-    public $maxPrice = 5000000;
+    public $maxPrice = 10000000;
     public $selectedBrands = [];
 
     protected $queryString = [
         'search' => ['except' => ''],
         'category' => ['except' => ''],
-        'sort' => ['except' => 'random'],
+        'sort' => ['except' => 'featured'],
         'minPrice' => ['except' => 0],
-        'maxPrice' => ['except' => 5000000],
+        'maxPrice' => ['except' => 10000000],
         'selectedBrands' => ['except' => []],
     ];
 
@@ -87,7 +87,7 @@ class Shop extends Component
                  
                  $query->where('category', $dbCategory);
             })
-            ->when($this->minPrice > 0 || $this->maxPrice < 5000000, function ($query) {
+            ->when($this->minPrice > 0 || $this->maxPrice < 10000000, function ($query) {
                 $query->whereBetween('price', [$this->minPrice, $this->maxPrice]);
             })
             ->when(!empty($this->selectedBrands), function ($query) {
@@ -97,7 +97,7 @@ class Shop extends Component
                     }
                 });
             })
-            ->when($this->sort === 'random', function ($query) {
+            ->when($this->sort === 'featured', function ($query) {
                 $query->inRandomOrder();
             })
             ->when($this->sort === 'price_low', function ($query) {
@@ -129,8 +129,8 @@ class Shop extends Component
         $this->category = '';
         $this->selectedBrands = [];
         $this->minPrice = 0;
-        $this->maxPrice = 5000000;
-        $this->sort = 'random';
+        $this->maxPrice = 10000000;
+        $this->sort = 'featured';
         $this->resetPage();
     }
 
@@ -177,8 +177,16 @@ class Shop extends Component
 
     public function render()
     {
+        $allProducts = \App\Models\Product::where('is_active', true)->get();
+        $categoryCounts = [];
+        foreach ($this->categories as $key => $label) {
+            $dbCategory = $this->categoryMap[strtolower($key)] ?? $key;
+            $categoryCounts[$key] = $allProducts->where('category', $dbCategory)->count();
+        }
+
         return view('livewire.shop', [
             'products' => $this->products,
+            'categoryCounts' => $categoryCounts,
         ])->layout('components.layouts.app');
     }
 }

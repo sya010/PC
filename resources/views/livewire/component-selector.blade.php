@@ -110,8 +110,11 @@
                                  class="absolute left-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-100 z-50 p-6"
                                  style="display: none;">
                                 
-                                <div class="mb-4">
+                                <div class="mb-4 flex items-center justify-between">
                                     <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Set Price Budget</span>
+                                    @if($minPrice > 0 || $maxPrice < 10000000)
+                                        <button wire:click="$set('minPrice', 0); $set('maxPrice', 10000000)" class="text-xs font-bold text-indigo-600 hover:text-indigo-800">Reset</button>
+                                    @endif
                                 </div>
 
                                 <div class="space-y-4">
