@@ -25,6 +25,7 @@ class ProductForm extends Component
     public $existingImage; // To hold the existing image URL when editing
     public $is_active = true;
     public $specs = [];
+    public $availableCategories = [];
 
     // Validation Rules
     protected function rules() 
@@ -33,10 +34,7 @@ class ProductForm extends Component
             'name' => 'required|string|min:3|max:255',
             'price' => 'required|numeric|min:0|max:100000000', // Reasonable max price
             'stock' => 'required|integer|min:0|max:100000',
-            'category' => [
-                'required', 
-                Rule::in(['CPU', 'GPU', 'Motherboard', 'RAM', 'Storage', 'PSU', 'Case', 'Cooling', 'Monitor', 'Keyboard', 'Mouse', 'Headset', 'Microphone', 'Chair', 'Accessory'])
-            ],
+            'category' => 'required|string|max:100',
             'description' => 'nullable|string|max:5000',
             'image' => [
                 'nullable',
@@ -63,6 +61,10 @@ class ProductForm extends Component
 
     public function mount($id = null)
     {
+        $existingCategories = Product::select('category')->distinct()->pluck('category')->filter()->toArray();
+        $defaultCategories = ['CPU', 'GPU', 'Motherboard', 'RAM', 'Storage', 'PSU', 'Case', 'Cooling', 'Monitor', 'Keyboard', 'Mouse', 'Headset', 'Microphone', 'Chair', 'Accessory'];
+        $this->availableCategories = array_values(array_unique(array_merge($defaultCategories, $existingCategories)));
+
         if ($id) {
             $this->product = Product::findOrFail($id);
             $this->name = $this->product->name;

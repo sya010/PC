@@ -24,6 +24,7 @@ return [
     'login' => 'تسجيل الدخول',
     'register' => 'إنشاء حساب',
     'logout' => 'تسجيل الخروج',
+    'currency' => 'د.ع',
 
     // Languages
     'languages' => [
@@ -237,6 +238,8 @@ return [
             'no_specs' => 'لم تتم إضافة مواصفات بعد.',
             'organization' => 'التنظيم',
             'select_category' => 'اختر الفئة',
+            'add_new_category' => 'إضافة فئة جديدة...',
+            'add' => 'إضافة',
             'active_status' => 'حالة النشاط',
             'media' => 'الوسائط',
             'click_or_drop' => 'انقر أو اسحب صورة',
@@ -267,6 +270,21 @@ return [
             'actions' => 'الإجراءات',
             'update_status' => 'تحديث الحالة',
             'no_orders' => 'لا توجد طلبات.',
+            'order_items' => 'عناصر الطلب',
+            'product' => 'المنتج',
+            'qty' => 'الكمية',
+            'price' => 'السعر',
+            'subtotal' => 'المجموع الفرعي',
+            'customer_info' => 'معلومات العميل',
+            'name' => 'الاسم',
+            'email' => 'البريد',
+            'phone' => 'الهاتف',
+            'shipping_info' => 'معلومات الشحن',
+            'address' => 'العنوان',
+            'city' => 'المدينة',
+            'payment_method' => 'الدفع',
+            'view' => 'عرض',
+            'back_to_orders' => 'العودة للطلبات',
         ],
 
         // Users Page
@@ -287,6 +305,13 @@ return [
             'confirm_promote' => 'هل أنت متأكد من ترقية :name إلى مدير؟',
             'confirm_delete' => 'هل أنت متأكد من حذف هذا المستخدم؟',
             'no_users' => 'لم يتم العثور على مستخدمين.',
+            'blocked' => 'محظور',
+            'block' => 'حظر',
+            'unblock' => 'إلغاء الحظر',
+            'confirm_block' => 'هل أنت متأكد من حظر :name؟',
+            'confirm_unblock' => 'هل أنت متأكد من إلغاء حظر :name؟',
+            'you' => 'أنت',
+            'account_blocked' => 'تم حظر حسابك. يرجى التواصل مع الدعم.',
         ],
 
         // User Form

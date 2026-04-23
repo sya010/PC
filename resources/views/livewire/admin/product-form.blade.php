@@ -99,40 +99,74 @@
                         <div class="group" x-data="{ 
                             open: false, 
                             selected: @entangle('category'), 
-                            options: ['CPU', 'GPU', 'Motherboard', 'RAM', 'Storage', 'PSU', 'Case', 'Cooling', 'Monitor', 'Peripherals'] 
+                            options: @js($availableCategories),
+                            newCategory: '',
+                            isAdding: false,
+                            addCategory() {
+                                const cat = this.newCategory.trim();
+                                if (cat !== '') {
+                                    if (!this.options.includes(cat)) {
+                                        this.options.push(cat);
+                                    }
+                                    this.selected = cat;
+                                    this.newCategory = '';
+                                    this.isAdding = false;
+                                }
+                            }
                         }">
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5 group-focus-within:text-indigo-600 transition-colors">{{ __('messages.admin.products.category') }}</label>
                             
-                            <div class="relative">
-                                <!-- Trigger Button -->
-                                <button type="button" @click="open = !open" @click.away="open = false" 
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'right' : 'left' }} text-gray-900 cursor-pointer focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all duration-200 flex items-center justify-between shadow-sm">
-                                    <span x-text="selected ? selected : '{{ __('messages.admin.product_form.select_category') }}'" :class="selected ? 'text-gray-900 font-medium' : 'text-gray-400'"></span>
-                                    <svg class="w-5 h-5 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                                </button>
-                                
-                                <!-- Dropdown Menu -->
-                                <div x-show="open" 
-                                    x-transition:enter="transition ease-out duration-100"
-                                    x-transition:enter-start="transform opacity-0 scale-95"
-                                    x-transition:enter-end="transform opacity-100 scale-100"
-                                    x-transition:leave="transition ease-in duration-75"
-                                    x-transition:leave-start="transform opacity-100 scale-100"
-                                    x-transition:leave-end="transform opacity-0 scale-95"
-                                    class="absolute z-50 w-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 max-h-60 overflow-y-auto py-1"
-                                    style="display: none;">
+                            <div class="flex gap-2 h-[48px]">
+                                <!-- Regular Select Mode -->
+                                <div class="relative flex-1" x-show="!isAdding">
+                                    <button type="button" @click="open = !open; isAdding = false" @click.away="open = false" 
+                                        class="w-full h-full px-4 rounded-xl border border-gray-200 bg-gray-50/50 text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'right' : 'left' }} text-gray-900 cursor-pointer focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all duration-200 flex items-center justify-between shadow-sm">
+                                        <span x-text="selected ? selected : '{{ __('messages.admin.product_form.select_category') }}'" :class="selected ? 'text-gray-900 font-medium' : 'text-gray-400'"></span>
+                                        <svg class="w-5 h-5 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                                    </button>
                                     
-                                    <template x-for="option in options" :key="option">
-                                        <div @click="selected = option; open = false" 
-                                            class="px-4 py-2.5 hover:bg-indigo-50 cursor-pointer flex items-center justify-between group/item transition-colors">
-                                            <span x-text="option" class="font-medium text-gray-700 group-hover/item:text-indigo-700"></span>
-                                            <span x-show="selected === option" class="text-indigo-600">
-                                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-                                            </span>
+                                    <!-- Dropdown Menu -->
+                                    <div x-show="open" 
+                                        x-transition:enter="transition ease-out duration-100"
+                                        x-transition:enter-start="transform opacity-0 scale-95"
+                                        x-transition:enter-end="transform opacity-100 scale-100"
+                                        x-transition:leave="transition ease-in duration-75"
+                                        x-transition:leave-start="transform opacity-100 scale-100"
+                                        x-transition:leave-end="transform opacity-0 scale-95"
+                                        class="absolute z-50 w-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col"
+                                        style="display: none;">
+
+                                        <div class="max-h-60 overflow-y-auto py-1">
+                                            <template x-for="option in options" :key="option">
+                                                <div @click="selected = option; open = false" 
+                                                    class="px-4 py-2.5 hover:bg-indigo-50 cursor-pointer flex items-center justify-between group/item transition-colors">
+                                                    <span x-text="option" class="font-medium text-gray-700 group-hover/item:text-indigo-700"></span>
+                                                    <span x-show="selected === option" class="text-indigo-600">
+                                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                                    </span>
+                                                </div>
+                                            </template>
                                         </div>
-                                    </template>
+                                    </div>
                                 </div>
+
+                                <!-- Adding Mode (Input) -->
+                                <input x-show="isAdding" type="text" x-model="newCategory" @keydown.enter.prevent="addCategory()" placeholder="{{ __('messages.admin.product_form.add_new_category') }}" 
+                                    class="flex-1 w-full h-full px-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 bg-white shadow-sm transition-all text-sm" style="display: none;">
+                                
+                                <button x-show="isAdding" type="button" @click="addCategory()" class="h-full px-4 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-colors shadow-sm whitespace-nowrap" style="display: none;">
+                                    {{ __('messages.admin.product_form.add') }}
+                                </button>
+
+                                <!-- Toggle Button -->
+                                <button type="button" @click="isAdding = !isAdding; open = false" 
+                                    class="h-full aspect-square flex items-center justify-center rounded-xl flex-shrink-0 transition-all shadow-sm"
+                                    :class="isAdding ? 'bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white'"
+                                    title="{{ __('messages.admin.product_form.add_new_category') }}">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" :class="isAdding ? 'rotate-45 transition-transform' : 'transition-transform'"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                                </button>
                             </div>
+                            
                             @error('category') <span class="text-red-500 text-sm font-medium mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
