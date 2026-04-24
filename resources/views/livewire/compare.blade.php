@@ -1,443 +1,256 @@
-<div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    
-    <!-- Header -->
-    <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold mb-2 text-gray-900">
-            {{ __('messages.nav.compare') }}
-        </h1>
-        <p class="text-gray-500 text-base max-w-2xl mx-auto">{{ __('messages.compare.subtitle') }}</p>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">{{ __('messages.nav.compare') }}</h1>
+        <p class="mt-2 text-gray-500 text-lg max-w-xl mx-auto">{{ __('messages.compare.subtitle') }}</p>
     </div>
 
-    <!-- Product Picker Toggle / Status -->
-    <div class="mb-6 flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100 gap-4">
-        <div class="flex items-center gap-4">
-            <div class="flex -space-x-3">
-                @foreach($selectedProducts as $p)
-                    <img src="{{ $p['image'] }}" class="w-10 h-10 rounded-full border-2 border-white bg-gray-50 object-cover" title="{{ $p['name'] }}">
-                @endforeach
-                @for($i = count($selectedProducts); $i < 3; $i++)
-                    <div class="w-10 h-10 rounded-full border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center text-gray-300 font-bold text-xs">
-                        {{ $i + 1 }}
+    @if(!$selectedCategory)
+        <h2 class="text-lg font-bold text-gray-800 mb-2 text-center">Choose a category to compare</h2>
+        <p class="text-sm text-gray-400 text-center mb-6">PC Components get enhanced comparison with an overall verdict</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+            @foreach($categories as $key => $label)
+                @php $isPC = in_array($key, $pcPartCategories); @endphp
+                <button wire:click="selectCategory('{{ $key }}')" class="group flex flex-col items-center gap-3 p-5 bg-white rounded-2xl border {{ $isPC ? 'border-indigo-100' : 'border-gray-100' }} shadow-sm hover:shadow-lg hover:border-indigo-400 hover:-translate-y-1 transition-all duration-200">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br {{ $isPC ? 'from-indigo-50 to-purple-100 group-hover:from-indigo-500 group-hover:to-purple-600' : 'from-gray-50 to-gray-100 group-hover:from-gray-600 group-hover:to-gray-700' }} flex items-center justify-center transition-all">
+                        <svg class="w-6 h-6 {{ $isPC ? 'text-indigo-600' : 'text-gray-500' }} group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $categoryIcons[$key] ?? 'M4 6h16M4 12h16M4 18h16' }}" /></svg>
                     </div>
-                @endfor
+                    <span class="font-semibold text-sm text-gray-700">{{ $label }}</span>
+                    @if($isPC)<span class="text-[9px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">PC Part</span>@endif
+                </button>
+            @endforeach
+        </div>
+    @else
+        {{-- Category Bar --}}
+        <div class="mb-6 flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $categoryIcons[$selectedCategory] ?? 'M4 6h16' }}" /></svg>
+                </div>
+                <div>
+                    <span class="font-bold text-gray-900 text-sm">{{ $categories[$selectedCategory] ?? $selectedCategory }}</span>
+                    <div class="text-xs text-gray-400">{{ count($selectedProducts) }} / 2 Selected</div>
+                </div>
             </div>
-            <div class="flex flex-col">
-                <span class="font-bold text-sm text-gray-900">{{ count($selectedProducts) }} / 3 Selected</span>
-                @if(count($selectedProducts) < 3)
-                    <span class="text-[10px] text-indigo-600 font-medium">Add {{ 3 - count($selectedProducts) }} more</span>
-                @else
-                    <span class="text-[10px] text-amber-600 font-medium">Comparison full</span>
+            <div class="flex gap-2">
+                <button wire:click="changeCategory" class="px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Change Category</button>
+                @if(count($selectedProducts) > 0)
+                    <button wire:click="clearComparison" class="px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">Clear All</button>
+                @endif
+                @if(count($selectedProducts) < 2)
+                    <button wire:click="togglePicker" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-lg shadow transition-all flex items-center gap-1.5 active:scale-95">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        {{ $showPicker ? 'Hide' : 'Add Product' }}
+                    </button>
                 @endif
             </div>
         </div>
-        
-        <div class="flex gap-2">
-             @if(count($selectedProducts) > 0)
-                <button 
-                    wire:click="clearComparison"
-                    class="px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
-                >
-                    Clear All
-                </button>
-            @endif
 
-            @if(count($selectedProducts) < 3)
-                <button 
-                    wire:click="togglePicker"
-                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2 transform active:scale-95"
-                >
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    {{ $showPicker ? 'Hide Products' : 'Add Product' }}
-                </button>
-            @endif
-        </div>
-    </div>
-
-    <!-- Collapsible Mini Shop Picker -->
-    <div 
-        x-data="{ show: @entangle('showPicker') }"
-        x-show="show"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 -translate-y-4"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 -translate-y-4"
-        class="mb-8 border-b border-gray-100 pb-8"
-    >
-        <!-- Top Filter Bar (Matching Shop Design) -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
-            <div class="flex flex-col lg:flex-row lg:items-center gap-4 justify-between">
-                
-                <!-- Left Side: Search & Filter Dropdowns -->
-                <div class="flex flex-col lg:flex-row gap-4 flex-1">
-                    
-                    <!-- Search -->
-                    <div class="relative flex-1 min-w-[200px]">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </div>
-                        <input 
-                            wire:model.live.debounce.300ms="search" 
-                            type="text" 
-                            placeholder="Search products..." 
-                            class="block w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all placeholder:text-gray-400"
-                        >
+        {{-- Picker --}}
+        <div x-data="{ show: @entangle('showPicker') }" x-show="show" x-transition class="mb-8 pb-8 border-b border-gray-100">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="relative flex-1">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></div>
+                        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search {{ $categories[$selectedCategory] ?? '' }}..." class="block w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all">
                     </div>
-
-                    <!-- Category Dropdown -->
-                    <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open" type="button" class="flex items-center justify-between gap-2 px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-white hover:border-gray-300 transition-all min-w-[150px]">
-                            <span class="truncate">{{ $category ?: 'All Categories' }}</span>
-                            <svg class="w-4 h-4 text-gray-400 flex-shrink-0 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div x-show="open" @click.away="open = false" x-transition class="absolute z-50 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 max-h-64 overflow-y-auto">
-                            <button wire:click="$set('category', '')" @click="open = false" class="w-full px-4 py-2 text-left text-sm hover:bg-indigo-50 hover:text-indigo-600 transition-colors {{ !$category ? 'bg-indigo-50 text-indigo-600 font-medium' : 'text-gray-700' }}">
-                                All Categories
-                            </button>
-                            @foreach($categories as $key => $label)
-                                <button wire:click="$set('category', '{{ $key }}')" @click="open = false" class="w-full px-4 py-2 text-left text-sm hover:bg-indigo-50 hover:text-indigo-600 transition-colors {{ $category === $key ? 'bg-indigo-50 text-indigo-600 font-medium' : 'text-gray-700' }}">
-                                    {{ $label }}
-                                </button>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Brands Multi-Select Dropdown -->
-                    <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open" type="button" class="flex items-center justify-between gap-2 px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-white hover:border-gray-300 transition-all min-w-[140px]">
-                            <span class="truncate">
-                                @if(count($selectedBrands) > 0)
-                                    {{ count($selectedBrands) }} Brand{{ count($selectedBrands) > 1 ? 's' : '' }}
-                                @else
-                                    All Brands
-                                @endif
-                            </span>
-                            <svg class="w-4 h-4 text-gray-400 flex-shrink-0 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div x-show="open" @click.away="open = false" x-transition class="absolute z-50 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 max-h-64 overflow-y-auto">
-                            @foreach(['ASUS', 'MSI', 'Gigabyte', 'Corsair', 'Samsung', 'Intel', 'AMD', 'NVIDIA', 'Logitech', 'Razer', 'SteelSeries', 'HyperX'] as $brand)
-                                <label class="flex items-center gap-3 px-4 py-2 hover:bg-indigo-50 cursor-pointer transition-colors">
-                                    <input type="checkbox" wire:model.live="selectedBrands" value="{{ $brand }}" class="rounded text-indigo-600 border-gray-300 focus:ring-indigo-500 focus:ring-offset-0">
-                                    <span class="text-sm text-gray-700">{{ $brand }}</span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Price Range Dropdown -->
-                    <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open" type="button" class="flex items-center justify-between gap-2 px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-white hover:border-gray-300 transition-all min-w-[140px]">
-                            <span class="truncate">
-                                @if($minPrice > 0 || $maxPrice < 5000000)
-                                    {{ number_format($minPrice) }} - {{ number_format($maxPrice) }}
-                                @else
-                                    Price Range
-                                @endif
-                            </span>
-                            <svg class="w-4 h-4 text-gray-400 flex-shrink-0 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div x-show="open" @click.away="open = false" x-transition class="absolute z-50 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-100 p-4">
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="text-[10px] uppercase font-bold text-gray-400 mb-1 block">Minimum (IQD)</label>
-                                    <input wire:model.live.debounce.500ms="minPrice" type="number" placeholder="0" class="w-full text-sm py-2 px-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] uppercase font-bold text-gray-400 mb-1 block">Maximum (IQD)</label>
-                                    <input wire:model.live.debounce.500ms="maxPrice" type="number" placeholder="Any" class="w-full text-sm py-2 px-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <select wire:model.live="sort" class="px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50">
+                        <option value="newest">Newest</option>
+                        <option value="price_low">Price: Low → High</option>
+                        <option value="price_high">Price: High → Low</option>
+                    </select>
                 </div>
             </div>
-        </div>
-
-        <!-- Products Grid -->
-        <div class="relative">
-            <div wire:loading.flex wire:target="search, category, minPrice, maxPrice, selectedBrands" class="absolute inset-0 bg-white/80 z-10 items-center justify-center rounded-2xl">
-                <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                @forelse($this->availableProducts as $product)
-                    <div class="bg-white rounded-xl p-3 shadow-sm border border-gray-100 hover:border-indigo-200 hover:shadow-md transition-all group flex flex-col relative overflow-hidden">
-                        <div class="aspect-square bg-gray-50 rounded-lg mb-3 overflow-hidden p-2 relative">
-                            <img src="{{ $product->image }}" class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform">
-                            <button 
-                                wire:click="addProduct({{ $product->id }})"
-                                class="absolute bottom-2 right-2 bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-full shadow-lg transition-transform hover:scale-110 active:scale-95"
-                                title="Add to Compare"
-                            >
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                </svg>
-                            </button>
-                        </div>
-                        <div>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">{{ $product->category }}</span>
-                            <h4 class="text-xs font-bold text-gray-900 line-clamp-2 leading-tight mb-2" title="{{ $product->name }}">{{ $product->name }}</h4>
+            <div class="relative">
+                <div wire:loading.flex wire:target="search, sort" class="absolute inset-0 bg-white/80 z-10 items-center justify-center rounded-2xl"><svg class="animate-spin h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    @forelse($this->availableProducts as $product)
+                        <div class="bg-white rounded-xl p-3 shadow-sm border border-gray-100 hover:border-indigo-200 hover:shadow-md transition-all group flex flex-col">
+                            <div class="aspect-square bg-gray-50 rounded-lg mb-3 overflow-hidden p-2 relative">
+                                <img src="{{ $product->image }}" class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform">
+                                <button wire:click="addProduct({{ $product->id }})" class="absolute bottom-2 right-2 bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-transform"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg></button>
+                            </div>
+                            <h4 class="text-xs font-bold text-gray-900 line-clamp-2 leading-tight mb-2">{{ $product->name }}</h4>
                             <div class="font-bold text-indigo-600 text-sm">{{ number_format($product->price) }} IQD</div>
                         </div>
-                    </div>
-                @empty
-                    <div class="col-span-full text-center py-10 text-gray-500">
-                        No products found matching filters.
-                    </div>
-                @endforelse
-            </div>
-            <div class="mt-6">
-                {{ $this->availableProducts->links() }}
+                    @empty
+                        <div class="col-span-full text-center py-10 text-gray-400">No products found.</div>
+                    @endforelse
+                </div>
+                <div class="mt-6">{{ $this->availableProducts->links() }}</div>
             </div>
         </div>
-    </div>
 
-
-    <!-- Comparison Table -->
-    @if(count($selectedProducts) > 0)
-        <!-- Compatibility Alert -->
-        @if(count($compatibilityWarnings) > 0)
-            <div class="bg-red-50/50 backdrop-blur-sm border border-red-100 p-4 mb-8 rounded-2xl shadow-sm">
-                <div class="flex gap-3">
-                    <div class="flex-shrink-0 bg-red-100 p-1.5 rounded-lg h-fit">
-                        <svg class="h-5 w-5 text-red-600" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-gray-900 mb-1">
-                            Compatibility Issues Found
-                        </h3>
-                        <ul class="space-y-1 text-red-600 text-sm font-medium">
-                            @foreach($compatibilityWarnings as $warning)
-                                <li class="flex items-start gap-2">
-                                    <span class="mt-1.5 w-1 h-1 bg-red-400 rounded-full flex-shrink-0"></span>
-                                    {{ $warning['message'] }}
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
+        {{-- COMPARISON --}}
+        @if(count($selectedProducts) === 2)
+            @if($productsAreIdentical)
+                <div class="text-center py-16 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5"><svg class="w-10 h-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" /></svg></div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">These are the same product!</h2>
+                    <p class="text-gray-500 max-w-md mx-auto mb-6">All specifications are identical.</p>
+                    <button wire:click="clearComparison" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition-all">Choose Different Products</button>
                 </div>
-            </div>
-        @endif
+            @else
+                @php
+                    $p1 = $selectedProducts[0]; $p2 = $selectedProducts[1];
+                    $v = $overallVerdict;
+                    $isEnhanced = $isPcPart && in_array($selectedCategory, ['cpu', 'gpu']);
+                @endphp
 
-        <div class="overflow-x-auto pb-8 relative -mx-4 px-4 sm:mx-0 sm:px-0">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr>
-                        <th class="p-4 w-48 min-w-[12rem] bg-white z-20 sticky left-0 top-0 border-b border-gray-100 shadow-sm align-bottom pb-6">
-                            <div class="flex flex-col gap-2">
-                                <span class="text-xl font-bold text-gray-900">Specs</span>
-                                <label class="inline-flex items-center cursor-pointer group">
-                                    <input type="checkbox" wire:model.live="highlightDifferences" class="sr-only peer">
-                                    <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 transition-colors"></div>
-                                    <span class="ms-2 text-xs font-semibold text-gray-500 group-hover:text-indigo-600 transition-colors">Highlight Diff</span>
-                                </label>
+                {{-- HERO: Product VS Product --}}
+                <div class="bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 rounded-3xl overflow-hidden shadow-2xl mb-8">
+                    <div class="grid grid-cols-3 items-center p-8">
+                        {{-- Product 1 --}}
+                        <div class="text-center group">
+                            <div class="w-32 h-32 mx-auto bg-white/10 backdrop-blur rounded-2xl p-3 mb-4 border border-white/10 group-hover:border-white/30 transition-all">
+                                <img src="{{ $p1['image'] }}" class="w-full h-full object-contain">
                             </div>
-                        </th>
-                        @foreach($selectedProducts as $product)
-                            <th class="p-4 w-72 min-w-[18rem] align-top sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 transition-all duration-300">
-                                <div class="bg-white rounded-2xl p-4 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] border border-gray-100 hover:border-indigo-300 hover:shadow-lg transition-all duration-300 flex flex-col h-full relative group hover:-translate-y-1">
-                                    
-                                    <button 
-                                        wire:click="removeProduct('{{ $product['id'] }}')"
-                                        class="absolute top-2 right-2 p-1.5 bg-white shadow-sm text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100 z-30"
-                                    >
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-
-                                    <div class="aspect-[4/3] w-full bg-gray-50 rounded-xl overflow-hidden relative mb-4 flex items-center justify-center">
-                                        <img src="{{ $product['image'] }}" class="w-full h-full object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-500">
-                                    </div>
-
-                                    <div class="text-center flex-1 flex flex-col">
-                                        <span class="inline-flex self-center px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-600 uppercase tracking-wide mb-2">{{ $product['category'] }}</span>
-                                        <h3 class="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2 text-sm mb-2 h-10 flex items-center justify-center leading-tight">{{ $product['name'] }}</h3>
-                                        
-                                        <div class="mt-auto pt-4 w-full space-y-3">
-                                            <div class="text-xl font-bold text-gray-900">
-                                                {{ number_format($product['price']) }} IQD
-                                            </div>
-                                            
-                                            <button 
-                                                wire:click.prevent="addToCart({{ $product['id'] }})" 
-                                                class="w-full bg-gray-900 hover:bg-indigo-600 text-white font-bold text-sm py-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
-                                            >
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                                </svg>
-                                                Add to Cart
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Price Visual Bar -->
-                                    <div class="mt-4 pt-3 border-t border-gray-50/50">
-                                         @php
-                                            $maxPrice = max(array_column($selectedProducts, 'price'));
-                                            $percent = ($product['price'] / $maxPrice) * 100;
-                                            $tier = $this->winnerSpecs['price_rank'][$product['id']] ?? 'black';
-                                            
-                                            $barColor = match($tier) {
-                                                'green' => 'bg-emerald-500',
-                                                'blue' => 'bg-blue-500',
-                                                'red' => 'bg-rose-500',
-                                                default => 'bg-slate-300'
-                                            };
-                                        @endphp
-                                        <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                                            <span>Value</span>
-                                            <span class="{{ $tier === 'green' ? 'text-emerald-500' : '' }}">{{ round(100 - $percent) }}%</span>
-                                        </div>
-                                        <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                                            <div class="h-full rounded-full {{ $barColor }}" style="width: {{ $percent }}%"></div>
-                                        </div>
-                                    </div>
+                            <h3 class="text-white font-bold text-sm leading-tight mb-1">{{ $p1['name'] }}</h3>
+                            <div class="text-indigo-300 font-bold text-lg">{{ number_format($p1['price']) }} IQD</div>
+                            @if(!empty($v) && $v['verdict'] === 'product1')
+                                <span class="inline-block mt-2 px-3 py-1 bg-emerald-500/20 text-emerald-400 text-[10px] font-bold rounded-full border border-emerald-500/30">🏆 WINNER</span>
+                            @endif
+                        </div>
+                        {{-- VS --}}
+                        <div class="text-center">
+                            <div class="w-16 h-16 mx-auto rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-4">
+                                <span class="text-2xl font-black text-white/60">VS</span>
+                            </div>
+                            @if(!empty($v))
+                                <div class="flex h-2.5 rounded-full overflow-hidden bg-white/10 max-w-xs mx-auto gap-px">
+                                    @if($v['wins1'] > 0)<div class="bg-emerald-500 rounded-l-full" style="width:{{ $v['pct1'] }}%"></div>@endif
+                                    @if($v['ties'] > 0)<div class="bg-blue-400" style="width:{{ round(($v['ties']/$v['total'])*100) }}%"></div>@endif
+                                    @if($v['wins2'] > 0)<div class="bg-rose-500 rounded-r-full" style="width:{{ $v['pct2'] }}%"></div>@endif
                                 </div>
-                            </th>
-                        @endforeach
-                        
-                        <!-- Empty Slots -->
-                        @for($i = count($selectedProducts); $i < 3; $i++)
-                            <th class="p-4 w-72 min-w-[18rem] align-top bg-transparent">
-                                <button 
-                                    wire:click="$set('showPicker', true)"
-                                    class="w-full h-full min-h-[350px] border-2 border-dashed border-gray-200 hover:border-indigo-400 hover:bg-indigo-50/20 rounded-2xl flex flex-col items-center justify-center gap-4 text-gray-400 hover:text-indigo-600 transition-all group"
-                                >
-                                    <div class="w-16 h-16 rounded-full bg-white shadow-sm border border-gray-100 group-hover:border-indigo-200 group-hover:shadow-md flex items-center justify-center transition-all group-hover:scale-110">
-                                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                        </svg>
-                                    </div>
-                                    <span class="font-bold text-sm">Add Product</span>
-                                </button>
-                            </th>
-                        @endfor
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-50">
+                                <div class="flex justify-between mt-2 text-[10px] font-bold max-w-xs mx-auto">
+                                    <span class="text-emerald-400">{{ $v['wins1'] }} wins</span>
+                                    @if($v['ties'] > 0)<span class="text-blue-300">{{ $v['ties'] }} tied</span>@endif
+                                    <span class="text-rose-400">{{ $v['wins2'] }} wins</span>
+                                </div>
+                            @endif
+                        </div>
+                        {{-- Product 2 --}}
+                        <div class="text-center group">
+                            <div class="w-32 h-32 mx-auto bg-white/10 backdrop-blur rounded-2xl p-3 mb-4 border border-white/10 group-hover:border-white/30 transition-all">
+                                <img src="{{ $p2['image'] }}" class="w-full h-full object-contain">
+                            </div>
+                            <h3 class="text-white font-bold text-sm leading-tight mb-1">{{ $p2['name'] }}</h3>
+                            <div class="text-indigo-300 font-bold text-lg">{{ number_format($p2['price']) }} IQD</div>
+                            @if(!empty($v) && $v['verdict'] === 'product2')
+                                <span class="inline-block mt-2 px-3 py-1 bg-emerald-500/20 text-emerald-400 text-[10px] font-bold rounded-full border border-emerald-500/30">🏆 WINNER</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- Verdict Summary --}}
+                    @if(!empty($v) && $isPcPart)
+                        <div class="bg-white/5 border-t border-white/10 px-8 py-4 text-center">
+                            @if($v['verdict'] === 'tie')
+                                <p class="text-white/80 text-sm font-medium">Both products are <span class="text-blue-400 font-bold">equally matched</span> across all specifications</p>
+                            @else
+                                @php $winnerName = $v['verdict'] === 'product1' ? $p1['name'] : $p2['name']; $winPct = $v['verdict'] === 'product1' ? $v['pct1'] : $v['pct2']; @endphp
+                                <p class="text-white/80 text-sm font-medium"><span class="text-emerald-400 font-bold">{{ $winnerName }}</span> wins in <span class="text-white font-bold">{{ $winPct }}%</span> of comparable specs — our recommended choice</p>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+
+                {{-- Action Buttons --}}
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    @foreach($selectedProducts as $product)
+                        <button wire:click.prevent="addToCart({{ $product['id'] }})" class="flex items-center justify-center gap-2 py-3 bg-gray-900 hover:bg-indigo-600 text-white font-bold text-sm rounded-xl shadow-md transition-all active:scale-[0.98]">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                            Add {{ \Illuminate\Support\Str::limit($product['name'], 25) }} to Cart
+                        </button>
+                    @endforeach
+                </div>
+
+                {{-- SPEC ROWS (technical.city style) --}}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+                        <h3 class="font-bold text-gray-900 text-lg">Detailed Specifications</h3>
+                        <label class="inline-flex items-center cursor-pointer group">
+                            <input type="checkbox" wire:model.live="highlightDifferences" class="sr-only peer">
+                            <div class="relative w-9 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 transition-colors"></div>
+                            <span class="ms-2 text-xs font-semibold text-gray-500">Highlight Differences</span>
+                        </label>
+                    </div>
+
+                    {{-- Table header --}}
+                    <div class="grid grid-cols-3 text-center text-xs font-bold text-gray-400 uppercase tracking-wider px-5 py-3 bg-gray-50 border-b border-gray-100">
+                        <div class="text-left">{{ $p1['name'] }}</div>
+                        <div>Specification</div>
+                        <div class="text-right">{{ $p2['name'] }}</div>
+                    </div>
+
+                    {{-- Spec Rows --}}
                     @foreach($allSpecKeys as $key)
                         @php
-                            $values = [];
-                            foreach($selectedProducts as $p) {
-                                $val = $p['specs'][$key] ?? '';
-                                if (is_array($val)) $values[] = json_encode($val);
-                                else $values[] = $val;
+                            $val1 = $p1['specs'][$key] ?? '-'; $val2 = $p2['specs'][$key] ?? '-';
+                            $dv1 = is_array($val1) ? implode(', ', $val1) : $val1;
+                            $dv2 = is_array($val2) ? implode(', ', $val2) : $val2;
+                            $tier1 = $winnerSpecs[$key][$p1['id']] ?? 'black';
+                            $tier2 = $winnerSpecs[$key][$p2['id']] ?? 'black';
+                            $isDiff = $dv1 !== $dv2;
+                            $rowBg = $highlightDifferences && $isDiff ? 'bg-amber-50/60' : '';
+
+                            // Bar widths for numeric values
+                            $num1 = null; $num2 = null; $bar1 = 0; $bar2 = 0;
+                            if (preg_match('/(\d+(\.\d+)?)/', $dv1, $m1)) $num1 = (float)$m1[1];
+                            if (preg_match('/(\d+(\.\d+)?)/', $dv2, $m2)) $num2 = (float)$m2[1];
+                            if ($num1 !== null && $num2 !== null && max($num1, $num2) > 0) {
+                                $maxN = max($num1, $num2);
+                                $bar1 = ($num1 / $maxN) * 100;
+                                $bar2 = ($num2 / $maxN) * 100;
                             }
-                            $uniqueValues = array_unique($values);
-                            $isDifferent = count($uniqueValues) > 1 && count(array_filter($values)) > 0;
-                            
-                            $rowClass = $highlightDifferences && $isDifferent ? 'bg-amber-50/40' : 'hover:bg-slate-50/50';
                         @endphp
-                        <tr class="{{ $rowClass }} transition-colors group">
-                            <!-- Label Column -->
-                            <td class="p-4 font-bold text-gray-500 text-[11px] uppercase tracking-wider bg-white sticky left-0 group-hover:bg-gray-50/80 border-r border-gray-50/50 shadow-[4px_0_10px_-4px_rgba(0,0,0,0.01)] backdrop-blur-sm z-10 transition-colors">
-                                {{ str_replace('_', ' ', $key) }}
-                            </td>
-                            
-                            <!-- Product Columns -->
-                            @foreach($selectedProducts as $product)
-                                @php
-                                    $val = $product['specs'][$key] ?? '-';
-                                    $displayVal = is_array($val) ? implode(', ', $val) : $val;
-                                    
-                                    $tier = $this->winnerSpecs[$key][$product['id']] ?? 'black';
-                                    $textColor = match($tier) {
-                                        'green' => 'text-emerald-700',
-                                        'blue' => 'text-blue-700',
-                                        'red' => 'text-rose-700',
-                                        default => 'text-gray-700'
-                                    };
-                                    $bgColor = match($tier) {
-                                        'green' => 'bg-emerald-50/50 border-emerald-100',
-                                        'blue' => 'bg-blue-50/50 border-blue-100',
-                                        'red' => 'bg-rose-50/50 border-rose-100',
-                                        default => 'border-transparent'
-                                    };
-                                @endphp
-                                <td class="p-4 relative group/cell border-r border-gray-50/30">
-                                    <div class="flex flex-col gap-1 {{ $tier !== 'black' ? 'p-2 rounded-lg border ' . $bgColor : '' }} transition-all">
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-xs font-bold {{ $textColor }}">
-                                                {{ $displayVal }}
-                                            </span>
-                                            @if($tier === 'green')
-                                                <div class="bg-emerald-100 text-emerald-600 p-0.5 rounded-full">
-                                                    <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                </div>
-                                            @endif
-                                        </div>
-                                        
-                                        <!-- Visual Spec Bar -->
-                                        @if(preg_match('/^(\d+(\.\d+)?)\s*(GB|MB|TB|GHz|MHz|W|mm)$/i', $displayVal, $matches))
-                                             @php
-                                                $rowVals = [];
-                                                foreach($selectedProducts as $sp) {
-                                                    $raw = $sp['specs'][$key] ?? '';
-                                                    if(preg_match('/^(\d+(\.\d+)?)/', $raw, $m)) $rowVals[] = (float)$m[1];
-                                                }
-                                                $maxRow = max($rowVals) > 0 ? max($rowVals) : 1;
-                                                $currentVal = (float)$matches[1];
-                                                $width = ($currentVal / $maxRow) * 100;
-                                                
-                                                $barColor = match($tier) {
-                                                    'green' => 'bg-emerald-400',
-                                                    'blue' => 'bg-blue-400',
-                                                    'red' => 'bg-rose-400',
-                                                    default => 'bg-slate-300'
-                                                };
-                                             @endphp
-                                             <div class="h-1 w-full bg-white/50 rounded-full overflow-hidden shadow-inner mt-1">
-                                                 <div class="h-full rounded-full {{ $barColor }}" style="width: {{ $width }}%"></div>
-                                             </div>
-                                        @endif
-                                    </div>
-                                </td>
-                            @endforeach
-                            
-                            <!-- Spacer cells for empty slots -->
-                            @for($i = count($selectedProducts); $i < 3; $i++)
-                                <td class="p-4 bg-gray-50/10 border-r border-gray-50/30"></td>
-                            @endfor
-                        </tr>
+                        <div class="grid grid-cols-3 items-center px-5 py-3 border-b border-gray-50 {{ $rowBg }} hover:bg-gray-50/60 transition-colors group">
+                            {{-- Left value --}}
+                            <div class="text-left">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-semibold {{ $tier1 === 'green' ? 'text-emerald-700' : ($tier1 === 'red' ? 'text-rose-500' : ($tier1 === 'tie' ? 'text-blue-600' : 'text-gray-700')) }}">{{ $dv1 }}</span>
+                                    @if($tier1 === 'green')<span class="text-emerald-500 text-xs">✓</span>@endif
+                                </div>
+                                @if($bar1 > 0)
+                                    <div class="mt-1 flex justify-start"><div class="h-1 rounded-full {{ $tier1 === 'green' ? 'bg-emerald-400' : ($tier1 === 'red' ? 'bg-rose-300' : ($tier1 === 'tie' ? 'bg-blue-300' : 'bg-gray-200')) }}" style="width:{{ $bar1 }}%"></div></div>
+                                @endif
+                            </div>
+                            {{-- Center label --}}
+                            <div class="text-center text-[11px] font-bold text-gray-400 uppercase tracking-wider">{{ str_replace('_', ' ', $key) }}</div>
+                            {{-- Right value --}}
+                            <div class="text-right">
+                                <div class="flex items-center gap-2 justify-end">
+                                    @if($tier2 === 'green')<span class="text-emerald-500 text-xs">✓</span>@endif
+                                    <span class="text-sm font-semibold {{ $tier2 === 'green' ? 'text-emerald-700' : ($tier2 === 'red' ? 'text-rose-500' : ($tier2 === 'tie' ? 'text-blue-600' : 'text-gray-700')) }}">{{ $dv2 }}</span>
+                                </div>
+                                @if($bar2 > 0)
+                                    <div class="mt-1 flex justify-end"><div class="h-1 rounded-full {{ $tier2 === 'green' ? 'bg-emerald-400' : ($tier2 === 'red' ? 'bg-rose-300' : ($tier2 === 'tie' ? 'bg-blue-300' : 'bg-gray-200')) }}" style="width:{{ $bar2 }}%"></div></div>
+                                @endif
+                            </div>
+                        </div>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
-    @else
-        <!-- Empty State -->
-        <div class="text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-100">
-            <div class="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-10 h-10 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
+
+                    {{-- Price Row --}}
+                    @php $pt1 = $winnerSpecs['price_rank'][$p1['id']] ?? 'black'; $pt2 = $winnerSpecs['price_rank'][$p2['id']] ?? 'black'; @endphp
+                    <div class="grid grid-cols-3 items-center px-5 py-4 bg-gray-50 border-t border-gray-200">
+                        <div class="text-left">
+                            <span class="text-base font-extrabold {{ $pt1 === 'green' ? 'text-emerald-700' : ($pt1 === 'red' ? 'text-rose-600' : 'text-gray-900') }}">{{ number_format($p1['price']) }} IQD</span>
+                            @if($pt1 === 'green')<span class="ml-1 text-emerald-500 text-xs font-bold">Better Price ✓</span>@endif
+                        </div>
+                        <div class="text-center text-xs font-bold text-gray-500 uppercase">Price</div>
+                        <div class="text-right">
+                            @if($pt2 === 'green')<span class="mr-1 text-emerald-500 text-xs font-bold">✓ Better Price</span>@endif
+                            <span class="text-base font-extrabold {{ $pt2 === 'green' ? 'text-emerald-700' : ($pt2 === 'red' ? 'text-rose-600' : 'text-gray-900') }}">{{ number_format($p2['price']) }} IQD</span>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @elseif(count($selectedProducts) < 2 && !$showPicker)
+            <div class="text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-100">
+                <div class="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg></div>
+                <h2 class="text-xl font-bold text-gray-900 mb-2">Select {{ 2 - count($selectedProducts) }} more product{{ (2 - count($selectedProducts)) > 1 ? 's' : '' }}</h2>
+                <p class="text-gray-400 mb-6">Pick {{ $categories[$selectedCategory] ?? 'items' }} to compare</p>
+                <button wire:click="togglePicker" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition-all">Browse {{ $categories[$selectedCategory] ?? 'Products' }}</button>
             </div>
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ __('messages.compare.no_products') }}</h2>
-            <p class="text-gray-500 mb-6 max-w-sm mx-auto">{{ __('messages.compare.select_products') }}</p>
-            <button 
-                wire:click="$toggle('showPicker')"
-                class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 transition-all hover:-translate-y-1 active:translate-y-0"
-            >
-                Start Comparing
-            </button>
-        </div>
+        @endif
     @endif
 </div>

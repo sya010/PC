@@ -15,29 +15,33 @@ class Compare extends Component
 
     // --- Search & Filter Properties (from Shop) ---
     public $search = '';
-    public $category = '';
     public $sort = 'newest';
     public $minPrice = 0;
     public $maxPrice = 5000000;
     public $selectedBrands = [];
-    public $showPicker = false; // Toggle for "Add Product" view
 
     // --- Comparison Properties ---
+    public $selectedCategory = ''; // The category the user is comparing in
     public $selectedProducts = [];
     public $compatibilityWarnings = [];
     public $allSpecKeys = [];
     public $highlightDifferences = false;
     public $winnerSpecs = [];
+    public $showPicker = false;
+    public $productsAreIdentical = false;
+    public $overallVerdict = []; // Overall winner data for PC parts
+    public $isPcPart = false; // Whether current category is a PC component
 
     // --- Constants ---
     protected $queryString = [
         'search' => ['except' => ''],
-        'category' => ['except' => ''],
         'sort' => ['except' => 'newest'],
         'minPrice' => ['except' => 0],
         'maxPrice' => ['except' => 5000000],
         'selectedBrands' => ['except' => []],
     ];
+
+    public $pcPartCategories = ['cpu', 'gpu', 'motherboard', 'ram', 'storage', 'psu', 'case', 'cooling'];
 
     public $categories = [
         'cpu' => 'Processors',
@@ -77,17 +81,63 @@ class Compare extends Component
         'speakers' => 'Speakers',
     ];
 
+    // Category icons for the selection grid
+    public $categoryIcons = [
+        'cpu' => 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z',
+        'gpu' => 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z',
+        'motherboard' => 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z',
+        'ram' => 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10',
+        'storage' => 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4',
+        'psu' => 'M13 10V3L4 14h7v7l9-11h-7z',
+        'case' => 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4',
+        'cooling' => 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+        'monitor' => 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+        'keyboard' => 'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2',
+        'mouse' => 'M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122',
+        'mousepad' => 'M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z',
+        'headset' => 'M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z',
+        'microphone' => 'M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z',
+        'webcam' => 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z',
+        'speakers' => 'M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z',
+    ];
+
     public function mount()
     {
-        $this->refreshComparison();
+        // Clear previous comparison on page load
+        session()->forget('compare_products');
+        $this->selectedProducts = [];
+        $this->selectedCategory = '';
+        $this->showPicker = false;
+        $this->productsAreIdentical = false;
     }
 
     // --- Property Hooks ---
     public function updatedSearch() { $this->resetPage(); }
-    public function updatedCategory() { $this->resetPage(); }
     public function updatedMinPrice() { $this->resetPage(); }
     public function updatedMaxPrice() { $this->resetPage(); }
     public function updatedSelectedBrands() { $this->resetPage(); }
+
+    // --- Category Selection ---
+    public function selectCategory($category)
+    {
+        $this->selectedCategory = $category;
+        $this->isPcPart = in_array($category, $this->pcPartCategories);
+        $this->showPicker = true;
+        $this->search = '';
+        $this->selectedBrands = [];
+        $this->minPrice = 0;
+        $this->maxPrice = 5000000;
+        $this->sort = 'newest';
+        $this->resetPage();
+    }
+
+    public function changeCategory()
+    {
+        $this->clearComparison();
+        $this->selectedCategory = '';
+        $this->isPcPart = false;
+        $this->showPicker = false;
+    }
 
     // --- Core Comparison Logic ---
     public function refreshComparison()
@@ -95,9 +145,9 @@ class Compare extends Component
         $compareList = session()->get('compare_products', []);
         
         if (!empty($compareList)) {
-            // Enforce limit of 3
-            if (count($compareList) > 3) {
-                $compareList = array_slice($compareList, 0, 3);
+            // Enforce limit of 2
+            if (count($compareList) > 2) {
+                $compareList = array_slice($compareList, 0, 2);
                 session()->put('compare_products', $compareList);
             }
 
@@ -116,31 +166,38 @@ class Compare extends Component
                 }
             }
             $this->selectedProducts = $data;
+
+            // Check if products are identical
+            if (count($data) === 2 && $data[0]['id'] === $data[1]['id']) {
+                $this->productsAreIdentical = true;
+            } else {
+                $this->productsAreIdentical = false;
+            }
         } else {
             $this->selectedProducts = [];
+            $this->productsAreIdentical = false;
         }
 
         $this->compileSpecKeys();
-        $this->checkCompatibility();
         $this->calculateWinners();
+        $this->calculateOverallVerdict();
     }
 
     // --- Product Picker (Shop) Logic ---
     public function getAvailableProductsProperty()
     {
+        // Always filter by selected category
+        $dbCategory = $this->categoryMap[strtolower($this->selectedCategory)] ?? $this->selectedCategory;
+        
         return \App\Models\Product::query()
             ->where('is_active', true)
+            ->where('category', $dbCategory)
             ->whereNotIn('id', array_column($this->selectedProducts, 'id')) // Exclude already selected
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('description', 'like', '%' . $this->search . '%')
-                      ->orWhere('category', 'like', '%' . $this->search . '%');
+                      ->orWhere('description', 'like', '%' . $this->search . '%');
                 });
-            })
-            ->when($this->category, function ($query) {
-                 $dbCategory = $this->categoryMap[strtolower($this->category)] ?? $this->category;
-                 $query->where('category', $dbCategory);
             })
             ->when($this->minPrice > 0 || $this->maxPrice < 5000000, function ($query) {
                 $query->whereBetween('price', [$this->minPrice, $this->maxPrice]);
@@ -161,7 +218,7 @@ class Compare extends Component
             ->when($this->sort === 'newest', function ($query) {
                 $query->latest();
             })
-            ->paginate(9); // Smaller page size for picker
+            ->paginate(12);
     }
 
     public function addToCart($id)
@@ -186,17 +243,41 @@ class Compare extends Component
     {
         $compareList = session()->get('compare_products', []);
         
-        if (!in_array($productId, $compareList)) {
-            if (count($compareList) >= 3) {
-                $this->dispatch('toast-message', message: 'Maximum 3 products allowed.');
-                return;
-            }
-            $compareList[] = $productId;
-            session()->put('compare_products', $compareList);
-            $this->refreshComparison();
-            $this->showPicker = false; // Close picker on success
-            $this->dispatch('toast-message', message: 'Product added.');
+        // Block duplicates
+        if (in_array($productId, $compareList)) {
+            $this->dispatch('toast-message', message: 'This product is already selected for comparison.');
+            return;
         }
+
+        // Block if already at max (2)
+        if (count($compareList) >= 2) {
+            $this->dispatch('toast-message', message: 'Maximum 2 products for comparison.');
+            return;
+        }
+
+        // Verify product belongs to the selected category
+        $product = \App\Models\Product::find($productId);
+        if (!$product) {
+            $this->dispatch('toast-message', message: 'Product not found.');
+            return;
+        }
+
+        $expectedCategory = $this->categoryMap[strtolower($this->selectedCategory)] ?? $this->selectedCategory;
+        if (strtolower($product->category) !== strtolower($expectedCategory)) {
+            $this->dispatch('toast-message', message: 'Product does not match the selected category.');
+            return;
+        }
+
+        $compareList[] = $productId;
+        session()->put('compare_products', $compareList);
+        $this->refreshComparison();
+
+        // Close picker if 2 products selected
+        if (count($compareList) >= 2) {
+            $this->showPicker = false;
+        }
+
+        $this->dispatch('toast-message', message: 'Product added to comparison.');
     }
 
     public function removeProduct($productId)
@@ -214,24 +295,61 @@ class Compare extends Component
     public function clearComparison()
     {
         session()->forget('compare_products');
-        $this->refreshComparison();
+        $this->selectedProducts = [];
+        $this->allSpecKeys = [];
+        $this->winnerSpecs = [];
+        $this->productsAreIdentical = false;
         $this->dispatch('toast-message', message: 'Comparison cleared.');
     }
 
     public function togglePicker()
     {
-        if (count($this->selectedProducts) >= 3) {
-             $this->dispatch('toast-message', message: 'Comparison full (Max 3). Remove a product to add another.');
+        if (count($this->selectedProducts) >= 2) {
+             $this->dispatch('toast-message', message: 'Comparison full (Max 2). Remove a product to add another.');
              return;
         }
         $this->showPicker = !$this->showPicker;
     }
 
     // --- Helpers ---
+
+    // Important specs whitelist per category - only these will be shown in comparison
+    protected $importantSpecs = [
+        'cpu' => ['cores', 'threads', 'base_clock', 'boost_clock', 'tdp', 'socket', 'architecture', 'generation', 'performance_tier', 'supported_memory_type', 'longevity_score'],
+        'gpu' => ['vram', 'tdp', 'architecture', 'generation', 'performance_tier', 'longevity_score', 'pcie_version', 'memory_gb'],
+        'motherboard' => ['socket', 'chipset', 'form_factor', 'memory_type', 'max_memory_speed', 'memory_slots', 'pcie_version', 'vrm_power_delivery', 'max_ram_capacity', 'performance_tier'],
+        'ram' => ['type', 'capacity', 'speed', 'capacity_gb', 'speed_mhz', 'modules', 'voltage', 'performance_tier'],
+        'storage' => ['interface', 'capacity', 'capacity_gb', 'read_speed', 'write_speed', 'performance_tier'],
+        'psu' => ['wattage', 'efficiency', 'modular', 'atx_version', 'performance_tier'],
+        'case' => ['motherboard_support', 'max_gpu_length', 'radiator_support', 'airflow_rating', 'form_factor_support'],
+        'cooling' => ['type', 'socket_support', 'tdp_rating', 'radiator_size', 'noise_level', 'performance_tier'],
+        'monitor' => ['size', 'resolution', 'refresh_rate', 'panel', 'response_time'],
+        'keyboard' => ['switch_type', 'layout', 'wireless', 'backlight'],
+        'mouse' => ['dpi', 'weight', 'wireless', 'sensor'],
+        'mousepad' => ['size', 'surface'],
+        'headset' => ['type', 'surround', 'driver', 'wireless'],
+        'microphone' => ['type', 'pattern', 'sample_rate'],
+        'webcam' => ['resolution', 'fps', 'autofocus'],
+        'speakers' => ['type', 'watts', 'wireless'],
+    ];
+
     private function compileSpecKeys()
     {
         $keys = [];
-        $excludedKeys = ['facts', 'needs', 'provides', 'limits', 'meta'];
+        // Always exclude internal nested layers and model
+        $excludedKeys = ['facts', 'needs', 'provides', 'limits', 'meta', 'model', 'brand',
+            // Physical/internal keys not useful for comparison
+            'length', 'length_mm', 'max_length', 'slot_width', 'height_mm', 'max_height_mm',
+            'psu_min_wattage', 'case_max_length', 'case_max_height', 'cpu_performance_tier_min',
+            'cpu_tdp', 'system_total_power', 'min_psu_wattage', 'cpu_socket', 'ram_type',
+            'm2_slot', 'motherboard_max_speed', 'max_speed', 'max_cooler_height_mm',
+            'max_gpu_length_mm', 'radiator_support_mm', 'headroom_recommended_pct',
+            'supported_chipsets', 'upgrade_friendly', 'upgrade_path', 'recommended_cooler_tdp',
+            'max_memory_speed', 'max_cooler_height', 'pcie_lanes',
+        ];
+
+        // Get whitelist for current category
+        $whitelist = $this->importantSpecs[strtolower($this->selectedCategory)] ?? [];
 
         foreach ($this->selectedProducts as $product) {
             if (isset($product['specs']) && is_array($product['specs'])) {
@@ -240,43 +358,51 @@ class Compare extends Component
                 $keys = array_merge($keys, $filteredKeys);
             }
         }
-        $this->allSpecKeys = array_unique($keys);
+
+        $keys = array_unique($keys);
+
+        // If we have a whitelist, only keep whitelisted keys
+        if (!empty($whitelist)) {
+            $keys = array_intersect($keys, $whitelist);
+        }
+
+        $this->allSpecKeys = array_values($keys);
         sort($this->allSpecKeys);
     }
 
     private function calculateWinners()
     {
-        $this->winnerSpecs = []; // Structure: [key => [id => 'green'|'blue'|'red']]
+        $this->winnerSpecs = [];
         
-        // Helper to determine tier
+        // Helper to determine tier – handles ties
         $assignTiers = function($idsValues, $isHigherBetter) {
             if (count($idsValues) < 2) return [];
             
-            asort($idsValues); // Sort by value
+            $values = array_values($idsValues);
+            $ids = array_keys($idsValues);
+            
+            // Check for tie (identical values)
+            if (count(array_unique($values)) === 1) {
+                $tiers = [];
+                foreach ($ids as $id) {
+                    $tiers[$id] = 'tie'; // Same value = tie
+                }
+                return $tiers;
+            }
+            
+            // Sort values
+            asort($idsValues);
             if ($isHigherBetter) {
-                $idsValues = array_reverse($idsValues, true); // Highest first
+                $idsValues = array_reverse($idsValues, true);
             }
             
             $rankedIds = array_keys($idsValues);
-            $count = count($rankedIds);
-            
             $tiers = [];
             
-            // Assign tiers based on rank index
-            foreach ($rankedIds as $index => $id) {
-                if ($count === 2) {
-                    // 2 items: 0=Green, 1=Red
-                    $tiers[$id] = ($index === 0) ? 'green' : 'red';
-                } elseif ($count === 3) {
-                    // 3 items: 0=Green, 1=Blue, 2=Red
-                    if ($index === 0) $tiers[$id] = 'green';
-                    elseif ($index === 1) $tiers[$id] = 'blue';
-                    else $tiers[$id] = 'red';
-                } else {
-                    $tiers[$id] = 'black'; // Fallback
-                }
-            }
-            // Check for ties in values (reset tied items to same color if needed, but simple rank is ok for now)
+            // 2 items: winner = green, loser = red
+            $tiers[$rankedIds[0]] = 'green';
+            $tiers[$rankedIds[1]] = 'red';
+            
             return $tiers;
         };
 
@@ -292,7 +418,6 @@ class Compare extends Component
             }
             
             if (count($values) > 1) {
-                // Heuristic: Price & Latency = Lower is better. Others = Higher is better.
                 $isLowerBetter = (stripos($key, 'latency') !== false || stripos($key, 'price') !== false);
                 $this->winnerSpecs[$key] = $assignTiers($values, !$isLowerBetter);
             }
@@ -305,68 +430,63 @@ class Compare extends Component
         }
     }
 
-    private function getComponentByCategory($category)
+    private function calculateOverallVerdict()
     {
-        foreach ($this->selectedProducts as $product) {
-            if (strtolower($product['category']) === strtolower($category)) {
-                return $product;
-            }
-        }
-        return null;
-    }
+        $this->overallVerdict = [];
+        if (count($this->selectedProducts) !== 2 || $this->productsAreIdentical) return;
 
-    private function checkCompatibility()
-    {
-        $this->compatibilityWarnings = [];
-        
-        $cpu = $this->getComponentByCategory('cpu');
-        $mb = $this->getComponentByCategory('motherboard');
-        $case = $this->getComponentByCategory('case');
-        $gpu = $this->getComponentByCategory('gpu');
-        $ram = $this->getComponentByCategory('ram');
-        $psu = $this->getComponentByCategory('psu');
-        $cooling = $this->getComponentByCategory('cooling');
+        $id1 = $this->selectedProducts[0]['id'];
+        $id2 = $this->selectedProducts[1]['id'];
+        $wins1 = 0;
+        $wins2 = 0;
+        $ties = 0;
+        $total = 0;
 
-        // CPU & Motherboard Socket
-        if ($cpu && $mb) {
-            $cpuSocket = $cpu['specs']['socket'] ?? null;
-            $mbSocket = $mb['specs']['socket'] ?? null;
-
-            if ($cpuSocket && $mbSocket && $cpuSocket !== $mbSocket) {
-                $this->compatibilityWarnings[] = [
-                    'type' => 'error',
-                    'message' => "Incompatible Socket: CPU uses {$cpuSocket} but Motherboard uses {$mbSocket}."
-                ];
-            }
+        foreach ($this->winnerSpecs as $key => $tiers) {
+            if ($key === 'price_rank') continue;
+            $total++;
+            $t1 = $tiers[$id1] ?? 'black';
+            $t2 = $tiers[$id2] ?? 'black';
+            if ($t1 === 'green') $wins1++;
+            elseif ($t2 === 'green') $wins2++;
+            else $ties++;
         }
 
-        // RAM & Motherboard Type
-        if ($ram && $mb) {
-            $ramType = $ram['specs']['type'] ?? null;
-            $mbRam = $mb['specs']['memory_type'] ?? null;
-
-            if ($ramType && $mbRam && $ramType !== $mbRam) {
-                $this->compatibilityWarnings[] = [
-                    'type' => 'error',
-                    'message' => "Incompatible RAM: Memory is {$ramType} but Motherboard supports {$mbRam}."
-                ];
-            }
+        // Include price
+        if (isset($this->winnerSpecs['price_rank'])) {
+            $total++;
+            $pt1 = $this->winnerSpecs['price_rank'][$id1] ?? 'black';
+            if ($pt1 === 'green') $wins1++;
+            elseif ($pt1 === 'red') $wins2++;
+            else $ties++;
         }
 
-        // PSU Wattage Check
-        if ($psu && ($cpu || $gpu)) {
-            $psuWattage = isset($psu['specs']['wattage']) ? (float)filter_var($psu['specs']['wattage'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
-            $load = 100;
-            if ($cpu) $load += isset($cpu['specs']['tdp']) ? (float)filter_var($cpu['specs']['tdp'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 65;
-            if ($gpu) $load += isset($gpu['specs']['tdp']) ? (float)filter_var($gpu['specs']['tdp'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
+        if ($total === 0) return;
 
-            if ($psuWattage > 0 && $psuWattage < $load) {
-                $this->compatibilityWarnings[] = [
-                    'type' => 'error',
-                    'message' => "PSU Too Weak: Estimated load is {$load}W but PSU only provides {$psuWattage}W."
-                ];
-            }
+        $pct1 = round(($wins1 / $total) * 100);
+        $pct2 = round(($wins2 / $total) * 100);
+
+        if ($wins1 > $wins2) {
+            $winnerId = $id1;
+            $verdict = 'product1';
+        } elseif ($wins2 > $wins1) {
+            $winnerId = $id2;
+            $verdict = 'product2';
+        } else {
+            $winnerId = null;
+            $verdict = 'tie';
         }
+
+        $this->overallVerdict = [
+            'verdict' => $verdict,
+            'winnerId' => $winnerId,
+            'wins1' => $wins1,
+            'wins2' => $wins2,
+            'ties' => $ties,
+            'total' => $total,
+            'pct1' => $pct1,
+            'pct2' => $pct2,
+        ];
     }
 
     public function render()
