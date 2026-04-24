@@ -12,9 +12,6 @@ class Users extends Component
 
     public $search = '';
 
-    // No need for a modal for basic role management, we can do it inline or simple actions
-    // But for consistency let's stick to inline actions for simple promote/demote
-
     public function render()
     {
         $users = User::where(function($query) {
@@ -31,11 +28,6 @@ class Users extends Component
 
     public function promote($id)
     {
-        // Prevent self-promotion loop issues if any, but mainly just toggle is_admin
-        // Assuming User model has is_admin boolean or similar. checking User model...
-        // Actually User model was showing sizeBytes 1009, I should verify if it has is_admin.
-        // If not, I'll assumne it's a column in DB.
-        
         $user = User::find($id);
         if ($user) {
             $user->is_admin = true;
@@ -56,6 +48,31 @@ class Users extends Component
             $user->is_admin = false;
             $user->save();
             session()->flash('success', "User {$user->name} demoted to User.");
+        }
+    }
+
+    public function block($id)
+    {
+        if ($id == auth()->id()) {
+            session()->flash('error', "You cannot block yourself!");
+            return;
+        }
+
+        $user = User::find($id);
+        if ($user) {
+            $user->is_blocked = true;
+            $user->save();
+            session()->flash('success', "User {$user->name} has been blocked.");
+        }
+    }
+
+    public function unblock($id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            $user->is_blocked = false;
+            $user->save();
+            session()->flash('success', "User {$user->name} has been unblocked.");
         }
     }
 

@@ -70,7 +70,11 @@
                                 </a>
                             </td>
                             <td class="px-6 py-4">
-                                @if($user->is_admin)
+                                @if($user->is_blocked)
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                                        {{ __('messages.admin.users.blocked') }}
+                                    </span>
+                                @elseif($user->is_admin)
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-700 border border-purple-200">
                                         {{ __('messages.admin.users.admin_role') }}
                                     </span>
@@ -85,23 +89,33 @@
                             </td>
                             <td class="px-6 py-4 text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'left' : 'right' }}">
                                 <div class="flex items-center {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'justify-start' : 'justify-end' }} gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
-                                    <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate class="px-3 py-1.5 text-xs font-bold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 hover:text-gray-900 transition-colors">
-                                        {{ __('messages.admin.users.edit') }}
-                                    </a>
-                                    
-                                    @if($user->is_admin)
-                                        <button wire:click="demote({{ $user->id }})" wire:confirm="{{ str_replace(':name', $user->name, __('messages.admin.users.confirm_demote')) }}" class="px-3 py-1.5 text-xs font-bold text-yellow-700 bg-yellow-100 rounded-lg hover:bg-yellow-200 transition-colors">
-                                            {{ __('messages.admin.users.demote') }}
+                                    @if($user->id !== auth()->id())
+                                        @if($user->is_admin)
+                                            <button wire:click="demote({{ $user->id }})" wire:confirm="{{ str_replace(':name', $user->name, __('messages.admin.users.confirm_demote')) }}" class="px-3 py-1.5 text-xs font-bold text-yellow-700 bg-yellow-100 rounded-lg hover:bg-yellow-200 transition-colors">
+                                                {{ __('messages.admin.users.demote') }}
+                                            </button>
+                                        @else
+                                            <button wire:click="promote({{ $user->id }})" wire:confirm="{{ str_replace(':name', $user->name, __('messages.admin.users.confirm_promote')) }}" class="px-3 py-1.5 text-xs font-bold text-indigo-700 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors">
+                                                {{ __('messages.admin.users.make_admin') }}
+                                            </button>
+                                        @endif
+
+                                        @if($user->is_blocked)
+                                            <button wire:click="unblock({{ $user->id }})" wire:confirm="{{ str_replace(':name', $user->name, __('messages.admin.users.confirm_unblock')) }}" class="px-3 py-1.5 text-xs font-bold text-emerald-700 bg-emerald-100 rounded-lg hover:bg-emerald-200 transition-colors">
+                                                {{ __('messages.admin.users.unblock') }}
+                                            </button>
+                                        @else
+                                            <button wire:click="block({{ $user->id }})" wire:confirm="{{ str_replace(':name', $user->name, __('messages.admin.users.confirm_block')) }}" class="px-3 py-1.5 text-xs font-bold text-rose-700 bg-rose-100 rounded-lg hover:bg-rose-200 transition-colors">
+                                                {{ __('messages.admin.users.block') }}
+                                            </button>
+                                        @endif
+
+                                        <button wire:click="delete({{ $user->id }})" wire:confirm="{{ __('messages.admin.users.confirm_delete') }}" class="p-1.5 text-gray-400 hover:text-rose-600 transition-colors hover:bg-rose-50 rounded-lg">
+                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                         </button>
                                     @else
-                                        <button wire:click="promote({{ $user->id }})" wire:confirm="{{ str_replace(':name', $user->name, __('messages.admin.users.confirm_promote')) }}" class="px-3 py-1.5 text-xs font-bold text-indigo-700 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors">
-                                            {{ __('messages.admin.users.make_admin') }}
-                                        </button>
+                                        <span class="text-xs text-gray-400 italic">{{ __('messages.admin.users.you') }}</span>
                                     @endif
-                                    
-                                    <button wire:click="delete({{ $user->id }})" wire:confirm="{{ __('messages.admin.users.confirm_delete') }}" class="p-1.5 text-gray-400 hover:text-rose-600 transition-colors hover:bg-rose-50 rounded-lg">
-                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                    </button>
                                 </div>
                             </td>
                         </tr>

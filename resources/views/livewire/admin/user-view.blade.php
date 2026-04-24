@@ -17,9 +17,6 @@
             <p class="text-gray-500 mt-1 font-medium">{{ $user->email }}</p>
         </div>
         <div class="flex gap-3">
-            <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate class="px-4 py-2 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors shadow-sm">
-                {{ __('messages.admin.user_view.edit_user') }}
-            </a>
             <a href="{{ route('admin.users') }}" wire:navigate class="px-4 py-2 text-gray-500 font-medium hover:text-gray-900 transition-colors">
                 {{ __('messages.admin.user_view.back') }}
             </a>

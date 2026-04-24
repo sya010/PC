@@ -20,6 +20,11 @@ class Login extends Component
         $this->validate();
 
         if (auth()->attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+            if (auth()->user()->is_blocked) {
+                auth()->logout();
+                $this->addError('email', __('messages.admin.users.account_blocked'));
+                return;
+            }
             session()->regenerate();
             return $this->redirectIntended(route('home'), navigate: true);
         }

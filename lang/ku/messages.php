@@ -24,6 +24,7 @@ return [
     'login' => 'چوونەژوورەوە',
     'register' => 'تۆمارکردن',
     'logout' => 'چوونەدەرەوە',
+    'currency' => 'د.ع',
 
     // Languages
     'languages' => [
@@ -237,6 +238,8 @@ return [
             'no_specs' => 'هیچ تایبەتمەندییەک زیاد نەکراوە.',
             'organization' => 'ڕێکخستن',
             'select_category' => 'پۆل هەڵبژێرە',
+            'add_new_category' => 'زیادکردنی پۆلی نوێ...',
+            'add' => 'زیادکردن',
             'active_status' => 'بارودۆخی چالاکی',
             'media' => 'میدیا',
             'click_or_drop' => 'کلیک بکە یان وێنە دابنێ',
@@ -267,6 +270,21 @@ return [
             'actions' => 'کردارەکان',
             'update_status' => 'نوێکردنەوەی بارودۆخ',
             'no_orders' => 'هیچ داواکارییەک نەدۆزرایەوە.',
+            'order_items' => 'بەشەکانی داواکاری',
+            'product' => 'بەرهەم',
+            'qty' => 'بڕ',
+            'price' => 'نرخ',
+            'subtotal' => 'کۆی لاوەکی',
+            'customer_info' => 'زانیاری کڕیار',
+            'name' => 'ناو',
+            'email' => 'ئیمەیڵ',
+            'phone' => 'تەلەفۆن',
+            'shipping_info' => 'زانیاری گەیاندن',
+            'address' => 'ناونیشان',
+            'city' => 'شار',
+            'payment_method' => 'پارەدان',
+            'view' => 'بینین',
+            'back_to_orders' => 'گەڕانەوە بۆ داواکارییەکان',
         ],
 
         // Users Page
@@ -287,6 +305,13 @@ return [
             'confirm_promote' => 'دڵنیایت دەتەوێت :name بکەیت بە بەڕێوەبەر؟',
             'confirm_delete' => 'دڵنیایت دەتەوێت ئەم بەکارهێنەرە بسڕیتەوە؟',
             'no_users' => 'هیچ بەکارهێنەرێک نەدۆزرایەوە.',
+            'blocked' => 'بلۆک کراو',
+            'block' => 'بلۆک',
+            'unblock' => 'لابردنی بلۆک',
+            'confirm_block' => 'دڵنیایت دەتەوێت :name بلۆک بکەیت؟',
+            'confirm_unblock' => 'دڵنیایت دەتەوێت بلۆکی :name لاببەیت؟',
+            'you' => 'تۆ',
+            'account_blocked' => 'هەژمارەکەت بلۆک کراوە. تکایە پەیوەندی بە پشتگیری بکە.',
         ],
 
         // User Form

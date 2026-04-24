@@ -24,6 +24,7 @@ return [
     'login' => 'Login',
     'register' => 'Register',
     'logout' => 'Logout',
+    'currency' => 'IQD',
 
     // Languages
     'languages' => [
@@ -237,6 +238,8 @@ return [
             'no_specs' => 'No specifications added yet.',
             'organization' => 'Organization',
             'select_category' => 'Select Category',
+            'add_new_category' => 'Add new category...',
+            'add' => 'Add',
             'active_status' => 'Active Status',
             'media' => 'Media',
             'click_or_drop' => 'Click or drop image',
@@ -267,6 +270,21 @@ return [
             'actions' => 'Actions',
             'update_status' => 'Update Status',
             'no_orders' => 'No orders found.',
+            'order_items' => 'Order Items',
+            'product' => 'Product',
+            'qty' => 'Qty',
+            'price' => 'Price',
+            'subtotal' => 'Subtotal',
+            'customer_info' => 'Customer Info',
+            'name' => 'Name',
+            'email' => 'Email',
+            'phone' => 'Phone',
+            'shipping_info' => 'Shipping Info',
+            'address' => 'Address',
+            'city' => 'City',
+            'payment_method' => 'Payment',
+            'view' => 'View',
+            'back_to_orders' => 'Back to Orders',
         ],
 
         // Users Page
@@ -287,6 +305,13 @@ return [
             'confirm_promote' => 'Are you sure you want to promote :name to Admin?',
             'confirm_delete' => 'Are you sure you want to delete this user?',
             'no_users' => 'No users found matching your search.',
+            'blocked' => 'Blocked',
+            'block' => 'Block',
+            'unblock' => 'Unblock',
+            'confirm_block' => 'Are you sure you want to block :name?',
+            'confirm_unblock' => 'Are you sure you want to unblock :name?',
+            'you' => 'You',
+            'account_blocked' => 'Your account has been blocked. Please contact support.',
         ],
 
         // User Form

@@ -15,7 +15,7 @@ class Orders extends Component
 
     public function render()
     {
-        $orders = Order::query()
+        $orders = Order::with('items')
             ->when($this->search, function ($query) {
                 $query->where('id', 'like', '%'.$this->search.'%')
                       ->orWhere('full_name', 'like', '%'.$this->search.'%')
