@@ -82,6 +82,7 @@
                         <th class="px-6 py-4">{{ __('messages.admin.orders.customer') }}</th>
                         <th class="px-6 py-4">{{ __('messages.admin.orders.date') }}</th>
                         <th class="px-6 py-4">{{ __('messages.admin.orders.total') }}</th>
+                        <th class="px-6 py-4">Payment</th>
                         <th class="px-6 py-4">{{ __('messages.admin.orders.status') }}</th>
                         <th class="px-6 py-4 text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'left' : 'right' }}">{{ __('messages.admin.orders.actions') }}</th>
                     </tr>
@@ -111,6 +112,17 @@
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-500">{{ $order->created_at->format('M d, Y') }}</td>
                             <td class="px-6 py-4 font-bold text-gray-900">{{ number_format($order->total_amount) }} {{ __('messages.currency') }}</td>
+                            <td class="px-6 py-4">
+                                <div class="text-xs font-bold text-gray-400 uppercase mb-0.5">{{ $order->payment_method }}</div>
+                                @php
+                                    $pCol = match($order->payment_status) {
+                                        'paid' => 'text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded',
+                                        'failed' => 'text-rose-600 bg-rose-50 px-2 py-0.5 rounded',
+                                        default => 'text-amber-600 bg-amber-50 px-2 py-0.5 rounded'
+                                    };
+                                @endphp
+                                <span class="text-[10px] font-bold {{ $pCol }} uppercase tracking-wider">{{ $order->payment_status }}</span>
+                            </td>
                             <td class="px-6 py-4">
                                 <span class="px-3 py-1 rounded-full text-xs font-bold border {{ $color }} shadow-sm">
                                     {{ $statusKeys[$order->status] ?? $order->status }}
@@ -148,7 +160,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-gray-400 font-medium">
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-400 font-medium">
                                 {{ __('messages.admin.orders.no_orders') }}
                             </td>
                         </tr>
