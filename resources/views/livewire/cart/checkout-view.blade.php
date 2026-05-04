@@ -4,6 +4,12 @@
         <div class="flex-1 space-y-8">
             <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Review & Pay</h1>
             
+            @if(session()->has('error'))
+                <div class="p-4 mb-4 text-red-800 bg-red-100 rounded-xl flex items-center">
+                    <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @endif
             <!-- Delivery Info Review -->
             <div class="neu-card p-6 bg-white/80 backdrop-blur-md">
                 <div class="flex justify-between items-start mb-4">
@@ -35,11 +41,11 @@
                         </div>
                     </label>
 
-                    <label class="flex items-center p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors {{ $paymentMethod === 'card' ? 'border-indigo-500 bg-indigo-50/50' : 'border-gray-200' }}">
-                        <input type="radio" wire:model.live="paymentMethod" value="card" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" disabled>
-                        <div class="ml-4 opacity-50">
-                            <span class="block text-sm font-medium text-gray-900">Credit / Debit Card (Coming Soon)</span>
-                            <span class="block text-sm text-gray-500">Secure online payment</span>
+                    <label class="flex items-center p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors {{ $paymentMethod === 'wayl' ? 'border-indigo-500 bg-indigo-50/50' : 'border-gray-200' }}">
+                        <input type="radio" wire:model.live="paymentMethod" value="wayl" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                        <div class="ml-4">
+                            <span class="block text-sm font-medium text-gray-900">Online Payment (Wayl)</span>
+                            <span class="block text-sm text-gray-500">Pay securely via Cards, ZainCash, FIB</span>
                         </div>
                     </label>
                 </div>

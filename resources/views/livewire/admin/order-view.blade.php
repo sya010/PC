@@ -127,7 +127,21 @@
                     </div>
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-500">{{ __('messages.admin.orders.payment_method') }}</span>
-                        <span class="font-semibold text-gray-900">{{ ucfirst($order->payment_method) }}</span>
+                        <span class="font-semibold text-gray-900">{{ strtoupper($order->payment_method) }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">Payment Status</span>
+                        @php
+                            $pColors = [
+                                'pending' => 'bg-amber-100 text-amber-800',
+                                'paid' => 'bg-emerald-100 text-emerald-800',
+                                'failed' => 'bg-rose-100 text-rose-800',
+                            ];
+                            $pColor = $pColors[$order->payment_status] ?? 'bg-gray-100 text-gray-800';
+                        @endphp
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold {{ $pColor }}">
+                            {{ strtoupper($order->payment_status) }}
+                        </span>
                     </div>
                 </div>
             </div>

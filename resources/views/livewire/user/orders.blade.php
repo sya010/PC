@@ -12,6 +12,13 @@
         </a>
     </div>
 
+    @if(session()->has('error'))
+        <div class="p-4 mb-6 text-rose-800 bg-rose-50 border border-rose-100 rounded-xl flex items-center shadow-sm">
+            <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+            <span class="font-medium">{{ session('error') }}</span>
+        </div>
+    @endif
+
     <div class="space-y-6">
         @forelse($orders as $order)
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
@@ -45,6 +52,16 @@
                         <span class="px-3 py-1 rounded-full text-xs font-bold border {{ $color }} capitalize shadow-sm">
                             {{ $order->status }}
                         </span>
+                        
+                        @if($order->payment_method === 'wayl' && $order->payment_status === 'pending' && $order->created_at->diffInMinutes(now()) < 58)
+                            <button wire:click="retryWaylPayment({{ $order->id }})" wire:loading.attr="disabled" class="ms-2 px-4 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl text-xs font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 active:scale-95">
+                                <span wire:loading.remove wire:target="retryWaylPayment({{ $order->id }})">Pay Now</span>
+                                <span wire:loading wire:target="retryWaylPayment({{ $order->id }})" class="flex items-center gap-1">
+                                    <svg class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    Loading...
+                                </span>
+                            </button>
+                        @endif
                     </div>
                 </div>
 

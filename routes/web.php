@@ -72,3 +72,8 @@ Route::get('/contact', function () {
 // Locale switching
 Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');
 
+// Wayl Webhook
+Route::post('/api/webhooks/wayl', [\App\Http\Controllers\WaylWebhookController::class, 'handle'])
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
+    ->name('wayl.webhook');
+
