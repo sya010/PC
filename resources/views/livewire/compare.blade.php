@@ -5,8 +5,8 @@
     </div>
 
     @if(!$selectedCategory)
-        <h2 class="text-lg font-bold text-gray-800 mb-2 text-center">Choose a category to compare</h2>
-        <p class="text-sm text-gray-400 text-center mb-6">PC Components get enhanced comparison with an overall verdict</p>
+        <h2 class="text-lg font-bold text-gray-800 mb-2 text-center">{{ __('messages.compare.choose_category') }}</h2>
+        <p class="text-sm text-gray-400 text-center mb-6">{{ __('messages.compare.enhanced_comparison') }}</p>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
             @foreach($categories as $key => $label)
                 @php $isPC = in_array($key, $pcPartCategories); @endphp
@@ -15,7 +15,7 @@
                         <svg class="w-6 h-6 {{ $isPC ? 'text-indigo-600' : 'text-gray-500' }} group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $categoryIcons[$key] ?? 'M4 6h16M4 12h16M4 18h16' }}" /></svg>
                     </div>
                     <span class="font-semibold text-sm text-gray-700">{{ $label }}</span>
-                    @if($isPC)<span class="text-[9px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">PC Part</span>@endif
+                    @if($isPC)<span class="text-[9px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">{{ __('messages.compare.pc_part') }}</span>@endif
                 </button>
             @endforeach
         </div>
@@ -50,8 +50,8 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="relative flex-1">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></div>
-                        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search {{ $categories[$selectedCategory] ?? '' }}..." class="block w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all">
+                        <div class="absolute inset-y-0 start-0 ps-3 flex items-center pointer-events-none"><svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></div>
+                        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search {{ $categories[$selectedCategory] ?? '' }}..." class="block w-full ps-10 pe-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all">
                     </div>
                     <select wire:model.live="sort" class="px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50">
                         <option value="newest">Newest</option>
@@ -234,11 +234,11 @@
                     <div class="grid grid-cols-3 items-center px-5 py-4 bg-gray-50 border-t border-gray-200">
                         <div class="text-left">
                             <span class="text-base font-extrabold {{ $pt1 === 'green' ? 'text-emerald-700' : ($pt1 === 'red' ? 'text-rose-600' : 'text-gray-900') }}">{{ number_format($p1['price']) }} IQD</span>
-                            @if($pt1 === 'green')<span class="ml-1 text-emerald-500 text-xs font-bold">Better Price ✓</span>@endif
+                            @if($pt1 === 'green')<span class="ms-1 text-emerald-500 text-xs font-bold">Better Price ✓</span>@endif
                         </div>
                         <div class="text-center text-xs font-bold text-gray-500 uppercase">Price</div>
                         <div class="text-right">
-                            @if($pt2 === 'green')<span class="mr-1 text-emerald-500 text-xs font-bold">✓ Better Price</span>@endif
+                            @if($pt2 === 'green')<span class="me-1 text-emerald-500 text-xs font-bold">✓ Better Price</span>@endif
                             <span class="text-base font-extrabold {{ $pt2 === 'green' ? 'text-emerald-700' : ($pt2 === 'red' ? 'text-rose-600' : 'text-gray-900') }}">{{ number_format($p2['price']) }} IQD</span>
                         </div>
                     </div>
