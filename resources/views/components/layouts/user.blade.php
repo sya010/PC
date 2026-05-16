@@ -40,18 +40,18 @@
                         <a href="{{ route('my-orders') }}" 
                            class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors {{ request()->routeIs('my-orders') ? 'bg-indigo-50 text-indigo-600 font-medium' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3"y1="6"x2="21"y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                            {{ __('My Orders') }}
+                            {{ __('messages.user_orders.title') }}
                         </a>
                         <a href="{{ route('profile') }}" 
                            class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors {{ request()->routeIs('profile') ? 'bg-indigo-50 text-indigo-600 font-medium' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12"cy="7"r="4"/></svg>
-                            {{ __('My Profile') }}
+                            {{ __('messages.user_orders.my_profile') }}
                         </a>
                         <form method="POST" action="{{ route('logout') }}" class="mt-4 pt-4 border-t border-gray-100">
                             @csrf
                             <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 rounded-md text-red-600 hover:bg-red-50 transition-colors text-left">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21"y1="12"x2="9"y2="12"/></svg>
-                                {{ __('Logout') }}
+                                {{ __('messages.logout') }}
                             </button>
                         </form>
                     </nav>

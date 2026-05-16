@@ -3,15 +3,15 @@
     <div class="bg-white border-b border-slate-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-between gap-4">
             <div>
-                <h1 class="text-xl sm:text-2xl font-black text-slate-900">PC Configurator</h1>
-                <p class="text-sm text-slate-500 hidden sm:block">Customize your dream rig, part by part.</p>
+                <h1 class="text-xl sm:text-2xl font-black text-slate-900">{{ __('messages.pc_builder.title') }}</h1>
+                <p class="text-sm text-slate-500 hidden sm:block">{{ __('messages.pc_builder.subtitle') }}</p>
             </div>
             
              <!-- Mobile Summary Toggle (Visible only on small screens) -->
             <div class="lg:hidden flex items-center gap-4">
-               <div class="text-right">
-                    <p class="text-[10px] uppercase font-bold text-slate-400">Total</p>
-                    <p class="font-black text-slate-900">{{ number_format($totalPrice, 0) }} <span class="text-xs">IQD</span></p>
+               <div class="text-end">
+                    <p class="text-[10px] uppercase font-bold text-slate-400">{{ __('messages.build.total') }}</p>
+                    <p class="font-black text-slate-900">{{ number_format($totalPrice, 0) }} <span class="text-xs">{{ __('messages.currency') }}</span></p>
                </div>
             </div>
         </div>
@@ -24,25 +24,25 @@
                 
                 @php
                     $groups = [
-                        'Core System' => [
-                            'cpu' => ['icon' => 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z', 'label' => 'Processor', 'desc' => 'The brain of your computer'],
-                            'motherboard' => ['icon' => 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z', 'label' => 'Motherboard', 'desc' => 'Connects all components'],
-                            'gpu' => ['icon' => 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'label' => 'Graphics Card', 'desc' => 'For gaming and rendering'],
-                            'ram' => ['icon' => 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10', 'label' => 'Memory', 'desc' => 'Multitasking capability'],
-                            'storage' => ['icon' => 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4', 'label' => 'Storage', 'desc' => 'Store games and files'],
-                            'cooling' => ['icon' => 'M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'Cooling', 'desc' => 'Keep temperatures low'],
-                            'psu' => ['icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'label' => 'Power Supply', 'desc' => 'Power your system'],
-                            'case' => ['icon' => 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4', 'label' => 'Case', 'desc' => 'Housing for your parts'],
+                        __('messages.pc_builder.core_system') => [
+                            'cpu' => ['icon' => 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z', 'label' => __('messages.pc_builder.processor'), 'desc' => __('messages.pc_builder.processor_desc')],
+                            'motherboard' => ['icon' => 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z', 'label' => __('messages.pc_builder.motherboard'), 'desc' => __('messages.pc_builder.motherboard_desc')],
+                            'gpu' => ['icon' => 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'label' => __('messages.pc_builder.graphics_card'), 'desc' => __('messages.pc_builder.graphics_card_desc')],
+                            'ram' => ['icon' => 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10', 'label' => __('messages.pc_builder.memory'), 'desc' => __('messages.pc_builder.memory_desc')],
+                            'storage' => ['icon' => 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4', 'label' => __('messages.pc_builder.storage'), 'desc' => __('messages.pc_builder.storage_desc')],
+                            'cooling' => ['icon' => 'M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => __('messages.pc_builder.cooling'), 'desc' => __('messages.pc_builder.cooling_desc')],
+                            'psu' => ['icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'label' => __('messages.pc_builder.power_supply'), 'desc' => __('messages.pc_builder.power_supply_desc')],
+                            'case' => ['icon' => 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4', 'label' => __('messages.pc_builder.case'), 'desc' => __('messages.pc_builder.case_desc')],
                         ],
-                        'Peripherals & Accessories' => [
-                            'monitor' => ['icon' => 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', 'label' => 'Monitor', 'desc' => 'Display screen'],
-                            'keyboard' => ['icon' => 'M15 12a1 1 0 11-2 0 1 1 0 012 0zm-7 0a1 1 0 11-2 0 1 1 0 012 0zm-5 6a1 1 0 100-2 1 1 0 000 2zm16 0a1 1 0 100-2 1 1 0 000 2zm-5 0a1 1 0 100-2 1 1 0 000 2z', 'label' => 'Keyboard', 'desc' => 'Typing interface'],
-                            'mouse' => ['icon' => 'M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122', 'label' => 'Mouse', 'desc' => 'Pointing device'],
-                            'headset' => ['icon' => 'M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z', 'label' => 'Headset', 'desc' => 'Audio output'],
-                             'mousepad' => ['icon' => 'M4 6h16M4 10h16M4 14h16M4 18h16', 'label' => 'Mousepad', 'desc' => 'Surface for mouse'],
-                            'microphone' => ['icon' => 'M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z', 'label' => 'Microphone', 'desc' => 'Input audio'],
-                            'webcam' => ['icon' => 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z', 'label' => 'Webcam', 'desc' => 'Video capture'],
-                            'speakers' => ['icon' => 'M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z', 'label' => 'Speakers', 'desc' => 'External audio'],
+                        __('messages.pc_builder.peripherals') => [
+                            'monitor' => ['icon' => 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', 'label' => __('messages.pc_builder.monitor'), 'desc' => __('messages.pc_builder.monitor_desc')],
+                            'keyboard' => ['icon' => 'M15 12a1 1 0 11-2 0 1 1 0 012 0zm-7 0a1 1 0 11-2 0 1 1 0 012 0zm-5 6a1 1 0 100-2 1 1 0 000 2zm16 0a1 1 0 100-2 1 1 0 000 2zm-5 0a1 1 0 100-2 1 1 0 000 2z', 'label' => __('messages.pc_builder.keyboard'), 'desc' => __('messages.pc_builder.keyboard_desc')],
+                            'mouse' => ['icon' => 'M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122', 'label' => __('messages.pc_builder.mouse'), 'desc' => __('messages.pc_builder.mouse_desc')],
+                            'headset' => ['icon' => 'M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z', 'label' => __('messages.pc_builder.headset'), 'desc' => __('messages.pc_builder.headset_desc')],
+                             'mousepad' => ['icon' => 'M4 6h16M4 10h16M4 14h16M4 18h16', 'label' => __('messages.pc_builder.mousepad'), 'desc' => __('messages.pc_builder.mousepad_desc')],
+                            'microphone' => ['icon' => 'M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z', 'label' => __('messages.pc_builder.microphone'), 'desc' => __('messages.pc_builder.microphone_desc')],
+                            'webcam' => ['icon' => 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z', 'label' => __('messages.pc_builder.webcam'), 'desc' => __('messages.pc_builder.webcam_desc')],
+                            'speakers' => ['icon' => 'M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z', 'label' => __('messages.pc_builder.speakers'), 'desc' => __('messages.pc_builder.speakers_desc')],
                         ],
                     ];
                 @endphp
@@ -56,11 +56,11 @@
                                     $selectedCount = count(array_filter($items, fn($item, $key) => $selectedComponents[$key] ?? null, ARRAY_FILTER_USE_BOTH));
                                 @endphp
                                 @if($selectedCount > 0)
-                                    <button wire:click="confirmReset('{{ $groupName === 'Core System' ? 'core' : 'peripherals' }}')" class="text-xs font-bold text-red-500 hover:text-red-600 transition-colors">
-                                        Reset {{ $groupName === 'Core System' ? 'Core' : 'Peripherals' }}
+                                    <button wire:click="confirmReset('{{ $groupName === __('messages.pc_builder.core_system') ? 'core' : 'peripherals' }}')" class="text-xs font-bold text-red-500 hover:text-red-600 transition-colors">
+                                        {{ __('messages.compatibility.reset_group') }} {{ $groupName }}
                                     </button>
                                 @endif
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">{{ $selectedCount }} Selected</span>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">{{ $selectedCount }} {{ __('messages.pc_builder.selected') }}</span>
                             </div>
                         </div>
                         
@@ -113,9 +113,9 @@
                                                         <div class="flex-1 min-w-0">
                                                             <p class="font-bold text-slate-900 truncate text-sm">{{ $component['name'] }}</p>
                                                             <div class="flex items-center gap-2">
-                                                                <p class="text-emerald-600 font-bold text-sm">{{ number_format($component['price'], 0) }} IQD</p>
+                                                                <p class="text-emerald-600 font-bold text-sm">{{ number_format($component['price'], 0) }} {{ __('messages.currency') }}</p>
                                                                 @if($isQtyType && $qty > 1)
-                                                                    <span class="text-slate-400 text-xs font-medium">× {{ $qty }} = {{ number_format($component['price'] * $qty, 0) }} IQD</span>
+                                                                    <span class="text-slate-400 text-xs font-medium">× {{ $qty }} = {{ number_format($component['price'] * $qty, 0) }} {{ __('messages.currency') }}</span>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -164,7 +164,7 @@
                                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                                         </svg>
-                                                        Select {{ $info['label'] }}
+                                                        {{ __('messages.build.select') }} {{ $info['label'] }}
                                                     </span>
                                                 </a>
                                             @endif
@@ -172,7 +172,7 @@
                                              @if($hasError)
                                                 <p class="mt-2 text-xs font-bold text-red-500 flex items-center gap-1">
                                                     <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                                    Compatibility Issue
+                                                    {{ __('messages.compatibility.issue') }}
                                                 </p>
                                              @endif
                                         </div>
@@ -180,7 +180,7 @@
 
                                     {{-- Extra Slots (Multiple components of the same type) --}}
                                     @if($this->isMultiSlotType($type) && $isSelected)
-                                        <div class="mt-4 sm:pl-[calc(33.333333%+1rem)] flex flex-col gap-3">
+                                        <div class="mt-4 sm:ps-[calc(33.333333%+1rem)] flex flex-col gap-3">
                                             
                                             {{-- Render existing extra components --}}
                                             @foreach($this->extraComponents[$type] ?? [] as $index => $extraComp)
@@ -190,9 +190,9 @@
                                                     <div class="flex-1 min-w-0">
                                                         <p class="font-bold text-slate-900 truncate text-sm">{{ $extraComp['name'] }}</p>
                                                         <div class="flex items-center gap-2">
-                                                            <p class="text-emerald-600 font-bold text-sm">{{ number_format($extraComp['price'], 0) }} IQD</p>
+                                                            <p class="text-emerald-600 font-bold text-sm">{{ number_format($extraComp['price'], 0) }} {{ __('messages.currency') }}</p>
                                                             @if($extraQty > 1)
-                                                                <span class="text-slate-400 text-xs font-medium">× {{ $extraQty }} = {{ number_format($extraComp['price'] * $extraQty, 0) }} IQD</span>
+                                                                <span class="text-slate-400 text-xs font-medium">× {{ $extraQty }} = {{ number_format($extraComp['price'] * $extraQty, 0) }} {{ __('messages.currency') }}</span>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -232,7 +232,7 @@
                                                 <div class="pt-1">
                                                     <a href="{{ route('pc.select', $type) }}?extra=1" wire:navigate class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100">
                                                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" /></svg>
-                                                        Add Another {{ $info['label'] }}
+                                                        + {{ $info['label'] }}
                                                     </a>
                                                 </div>
                                             @endif
@@ -251,10 +251,10 @@
             <div class="lg:w-96 flex-shrink-0">
                 <div class="bg-white rounded-3xl border border-slate-100 shadow-xl p-6 lg:sticky lg:top-24 space-y-6">
                      <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-black text-slate-900">System Summary</h3>
+                        <h3 class="text-xl font-black text-slate-900">{{ __('messages.pc_builder.system_summary') }}</h3>
                         @if($this->getSelectedCount() > 0)
                             <button wire:click="confirmReset('all')" class="text-xs font-bold text-red-500 hover:text-red-600 px-3 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100">
-                                Reset Build
+                            {{ __('messages.pc_builder.reset_build') }}
                             </button>
                         @endif
                      </div>
@@ -264,11 +264,11 @@
                             <!-- Stats Grid -->
                             <div class="grid grid-cols-2 gap-3">
                                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                                    <span class="text-xs font-bold text-slate-400 uppercase">Parts</span>
+                                    <span class="text-xs font-bold text-slate-400 uppercase">{{ __('messages.pc_builder.parts') }}</span>
                                     <p class="text-lg font-black text-slate-900">{{ $this->getSelectedCount() }}</p>
                                 </div>
                                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                                    <span class="text-xs font-bold text-slate-400 uppercase">Power</span>
+                                    <span class="text-xs font-bold text-slate-400 uppercase">{{ __('messages.pc_builder.power') }}</span>
                                     <p class="text-lg font-black text-slate-900">{{ $systemAnalysis['power']['total_draw'] ?? 0 }}W</p>
                                 </div>
                             </div>
@@ -279,7 +279,7 @@
                                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                      </svg>
-                                     <span class="font-bold">{{ $compatibilityLabel }}</span>
+                                     <span class="font-bold">{{ __('messages.compatibility.' . $compatibilityStatus) }}</span>
                                 </div>
                                 <div class="w-full h-1.5 bg-black/10 rounded-full overflow-hidden">
                                     <div class="h-full bg-current" style="width: {{ $compatibilityScore }}%"></div>
@@ -302,7 +302,7 @@
 
                             <!-- Selected Parts Summary with Quantities -->
                             <div class="space-y-2 pt-2">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Price Breakdown</span>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">{{ __('messages.pc_builder.price_breakdown') }}</span>
                                 @foreach($selectedComponents as $type => $comp)
                                     @if($comp)
                                         @php
@@ -316,7 +316,7 @@
                                                     <span class="text-slate-400 font-medium">× {{ $q }}</span>
                                                 @endif
                                             </span>
-                                            <span class="font-bold text-slate-900 ml-3 whitespace-nowrap">{{ number_format($comp['price'] * $q, 0) }} IQD</span>
+                                            <span class="font-bold text-slate-900 ms-3 whitespace-nowrap">{{ number_format($comp['price'] * $q, 0) }} {{ __('messages.currency') }}</span>
                                         </div>
                                     @endif
                                 @endforeach
@@ -329,14 +329,14 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                 </svg>
                             </div>
-                            <p class="text-slate-500 font-medium text-sm">Start selecting parts to build your custom PC.</p>
+                            <p class="text-slate-500 font-medium text-sm">{{ __('messages.pc_builder.start_selecting') }}</p>
                         </div>
                      @endif
                      
                      <div class="pt-6 border-t border-slate-100">
                         <div class="flex justify-between items-end mb-4">
-                            <span class="text-sm font-bold text-slate-500">Total Price</span>
-                            <span class="text-3xl font-black text-slate-900">{{ number_format($totalPrice, 0) }}<span class="text-sm text-slate-400 ml-1">IQD</span></span>
+                            <span class="text-sm font-bold text-slate-500">{{ __('messages.pc_builder.total_price') }}</span>
+                            <span class="text-3xl font-black text-slate-900">{{ number_format($totalPrice, 0) }}<span class="text-sm text-slate-400 ms-1">{{ __('messages.currency') }}</span></span>
                         </div>
                         
                         <button 
@@ -347,7 +347,7 @@
                                     : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none' }}"
                             {{ !$this->isValidBuild() ? 'disabled' : '' }}
                         >
-                            {{ $this->getSelectedCount() > 0 ? 'Add Build to Cart' : 'Make a Selection' }}
+                            {{ $this->getSelectedCount() > 0 ? __('messages.build.add_to_cart') : __('messages.pc_builder.make_selection') }}
                         </button>
                      </div>
                 </div>
@@ -372,30 +372,30 @@
                     
                     <h3 class="text-xl font-black text-slate-900 mb-2">
                         @if($resetTarget === 'all')
-                            Reset Entire Build?
+                            {{ __('messages.pc_builder.reset_all_title') }}
                         @elseif($resetTarget === 'core')
-                            Reset Core System?
+                            {{ __('messages.pc_builder.reset_core_title') }}
                         @else
-                            Reset Peripherals?
+                            {{ __('messages.pc_builder.reset_peri_title') }}
                         @endif
                     </h3>
                     
                     <p class="text-slate-500 text-sm">
                         @if($resetTarget === 'all')
-                            This will clear all your selected components and quantities. This action cannot be undone.
+                            {{ __('messages.pc_builder.reset_all_desc') }}
                         @elseif($resetTarget === 'core')
-                            This will clear all core PC parts like the CPU, GPU, and Motherboard. This action cannot be undone.
+                            {{ __('messages.pc_builder.reset_core_desc') }}
                         @else
-                            This will clear all selected peripherals and accessories. This action cannot be undone.
+                            {{ __('messages.pc_builder.reset_peri_desc') }}
                         @endif
                     </p>
                     
                     <div class="mt-8 flex gap-3">
                         <button wire:click="cancelReset" class="flex-1 px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-colors">
-                            Cancel
+                            {{ __('messages.pc_builder.cancel') }}
                         </button>
                         <button wire:click="executeReset" class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-colors shadow-lg shadow-red-500/30">
-                            Yes, Reset
+                            {{ __('messages.pc_builder.yes_reset') }}
                         </button>
                     </div>
                 </div>

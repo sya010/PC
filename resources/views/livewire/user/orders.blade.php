@@ -2,13 +2,13 @@
     <div class="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
             <h1 class="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
-                My Orders
+                {{ __('messages.user_orders.title') }}
             </h1>
-            <p class="text-gray-500 mt-1">Track and manage your recent purchases.</p>
+            <p class="text-gray-500 mt-1">{{ __('messages.user_orders.subtitle') }}</p>
         </div>
         <a href="{{ route('shop') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-50 text-indigo-600 rounded-xl font-bold hover:bg-indigo-100 transition-colors">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-            Continue Shopping
+            {{ __('messages.user_orders.continue_shopping') }}
         </a>
     </div>
 
@@ -26,15 +26,15 @@
                 <div class="bg-gray-50/50 px-6 py-4 border-b border-gray-100 flex flex-col md:flex-row justify-between md:items-center gap-4">
                     <div class="flex gap-8">
                         <div>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Order Placed</p>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{{ __('messages.user_orders.order_placed') }}</p>
                             <p class="text-sm font-bold text-gray-900">{{ $order->created_at->format('M d, Y') }}</p>
                         </div>
                         <div>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Total Amount</p>
-                            <p class="text-sm font-bold text-gray-900">{{ number_format($order->total_amount, 0) }} IQD</p>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{{ __('messages.user_orders.total_amount') }}</p>
+                            <p class="text-sm font-bold text-gray-900">{{ number_format($order->total_amount, 0) }} {{ __('messages.currency') }}</p>
                         </div>
                         <div>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Order ID</p>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{{ __('messages.user_orders.order_id') }}</p>
                             <p class="text-sm font-bold text-gray-900">#{{ $order->id }}</p>
                         </div>
                     </div>
@@ -50,15 +50,15 @@
                             $color = $colors[$order->status] ?? 'bg-gray-100 text-gray-800 border-gray-200';
                         @endphp
                         <span class="px-3 py-1 rounded-full text-xs font-bold border {{ $color }} capitalize shadow-sm">
-                            {{ $order->status }}
+                            {{ __('messages.status.' . $order->status) }}
                         </span>
                         
                         @if($order->payment_method === 'wayl' && $order->payment_status === 'pending' && $order->created_at->diffInMinutes(now()) < 58)
                             <button wire:click="retryWaylPayment({{ $order->id }})" wire:loading.attr="disabled" class="ms-2 px-4 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl text-xs font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 active:scale-95">
-                                <span wire:loading.remove wire:target="retryWaylPayment({{ $order->id }})">Pay Now</span>
+                                <span wire:loading.remove wire:target="retryWaylPayment({{ $order->id }})">{{ __('messages.user_orders.pay_now') }}</span>
                                 <span wire:loading wire:target="retryWaylPayment({{ $order->id }})" class="flex items-center gap-1">
                                     <svg class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                    Loading...
+                                    {{ __('messages.user_orders.loading') }}
                                 </span>
                             </button>
                         @endif
@@ -81,10 +81,10 @@
                                 </div>
                                 <div class="flex-1">
                                     <h4 class="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ $item->product_name }}</h4>
-                                    <p class="text-sm text-gray-500">Qty: {{ $item->quantity }} &times; {{ number_format($item->price, 0) }}</p>
+                                    <p class="text-sm text-gray-500">{{ __('messages.checkout.qty') }}: {{ $item->quantity }} &times; {{ number_format($item->price, 0) }}</p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="font-bold text-gray-900">{{ number_format($item->price * $item->quantity, 0) }} IQD</p>
+                                    <p class="font-bold text-gray-900">{{ number_format($item->price * $item->quantity, 0) }} {{ __('messages.currency') }}</p>
                                 </div>
                             </div>
                         @endforeach
@@ -98,10 +98,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">No orders yet</h2>
-                <p class="text-gray-500 mb-8 max-w-sm mx-auto">It looks like you haven't placed any orders yet. Start exploring our catalog to find your next upgrade!</p>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ __('messages.user_orders.no_orders') }}</h2>
+                <p class="text-gray-500 mb-8 max-w-sm mx-auto">{{ __('messages.user_orders.no_orders_desc') }}</p>
                 <a href="{{ route('shop') }}" class="inline-flex items-center px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
-                    Start Shopping
+                    {{ __('messages.user_orders.start_shopping') }}
                 </a>
             </div>
         @endforelse

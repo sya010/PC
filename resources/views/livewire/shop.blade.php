@@ -9,7 +9,7 @@
                 
                 <!-- Search -->
                 <div class="relative w-full lg:w-72">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <div class="absolute inset-y-0 start-0 ps-4 flex items-center pointer-events-none">
                         <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
@@ -17,12 +17,12 @@
                     <input 
                         wire:model.live.debounce.300ms="search" 
                         type="text" 
-                        class="block w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium text-slate-900 placeholder-slate-400" 
-                        placeholder="Search product..."
+                        class="block w-full ps-11 pe-4 py-3 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium text-slate-900 placeholder-slate-400" 
+                        placeholder="{{ __('messages.shop.search_product') }}"
                     >
                 </div>
 
-                <div class="flex flex-wrap items-center gap-3">
+                <div class="flex flex-nowrap items-center gap-3 overflow-x-auto pb-2 custom-scrollbar">
                     
                     <!-- Category Dropdown -->
                     <div x-data="{ open: false }" class="relative" @click.outside="open = false">
@@ -30,7 +30,7 @@
                             <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
-                            <span>{{ $category ? ucfirst($category) : 'All Categories' }}</span>
+                            <span>{{ $category ? ucfirst($category) : __('messages.shop.all_categories') }}</span>
                             <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
@@ -43,19 +43,19 @@
                              x-transition:leave="transition ease-in duration-75"
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 z-[100] py-2 max-h-80 overflow-y-auto custom-scrollbar"
+                             class="absolute start-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 z-[100] py-2 max-h-80 overflow-y-auto custom-scrollbar"
                              style="display: none;">
                             
                             <div class="px-4 py-2 border-b border-slate-50 mb-1">
                                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Select Category</span>
                             </div>
 
-                            <button wire:click="$set('category', null); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-colors {{ is_null($category) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600' }}">
-                                All Categories
+                            <button wire:click="$set('category', null); open = false" class="w-full text-start px-4 py-2.5 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-colors {{ is_null($category) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600' }}">
+                                {{ __('messages.shop.all_categories') }}
                             </button>
                             
                             @foreach($categories as $key => $label)
-                                <button wire:click="$set('category', '{{ $key }}'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-colors {{ $category === $key ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600' }}">
+                                <button wire:click="$set('category', '{{ $key }}'); open = false" class="w-full text-start px-4 py-2.5 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-colors {{ $category === $key ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600' }}">
                                     <div class="flex items-center justify-between">
                                         <span>{{ $label }}</span>
                                         <span class="text-xs font-bold {{ $category === $key ? 'text-indigo-500 bg-indigo-100' : 'text-slate-400 bg-slate-100' }} px-2 py-0.5 rounded-full">{{ $categoryCounts[$key] ?? 0 }}</span>
@@ -71,7 +71,7 @@
                             <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                             </svg>
-                            <span>Brands {{ count($selectedBrands) > 0 ? '('.count($selectedBrands).')' : '' }}</span>
+                            <span>{{ __('messages.shop.brands') }} {{ count($selectedBrands) > 0 ? '('.count($selectedBrands).')' : '' }}</span>
                             <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
@@ -84,7 +84,7 @@
                              x-transition:leave="transition ease-in duration-75"
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute left-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-100 z-[100] p-5"
+                             class="absolute start-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-100 z-[100] p-5"
                              style="display: none;">
                             
                             <div class="mb-4 flex items-center justify-between">
@@ -114,7 +114,7 @@
                             <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span>Price Range</span>
+                            <span>{{ __('messages.shop.price_range') }}</span>
                             <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
@@ -127,7 +127,7 @@
                              x-transition:leave="transition ease-in duration-75"
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute left-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-100 z-[100] p-6"
+                             class="absolute start-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-100 z-[100] p-6"
                              style="display: none;">
                             
                             <div class="mb-4 flex items-center justify-between">
@@ -162,12 +162,12 @@
                            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
                            </svg>
-                           <span class="text-slate-400 font-normal">Sort by:</span>
+                           <span class="text-slate-400 font-normal">{{ __('messages.shop.sort_by') }}</span>
                            <span class="text-slate-900">
-                               @if($sort === 'featured') Featured
-                               @elseif($sort === 'newest') Newest Arrivals
-                               @elseif($sort === 'price_low') Price: Low to High
-                               @elseif($sort === 'price_high') Price: High to Low
+                               @if($sort === 'featured') {{ __('messages.shop.sort_featured') }}
+                               @elseif($sort === 'newest') {{ __('messages.shop.newest') }}
+                               @elseif($sort === 'price_low') {{ __('messages.shop.price_low') }}
+                               @elseif($sort === 'price_high') {{ __('messages.shop.price_high') }}
                                @elseif($sort === 'name_asc') Name: A-Z
                                @elseif($sort === 'name_desc') Name: Z-A
                                @endif
@@ -179,15 +179,15 @@
                    </button>
                    
                    <div x-show="open" 
-                        class="absolute right-0 mt-2 w-full lg:w-64 bg-white rounded-2xl shadow-xl border border-slate-100 z-[100] py-2"
+                        class="absolute end-0 mt-2 w-full lg:w-64 bg-white rounded-2xl shadow-xl border border-slate-100 z-[100] py-2"
                         style="display: none;">
-                       <button wire:click="$set('sort', 'featured'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'featured' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Featured</button>
-                       <button wire:click="$set('sort', 'newest'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'newest' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Newest Arrivals</button>
-                       <button wire:click="$set('sort', 'price_low'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'price_low' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Price: Low to High</button>
-                       <button wire:click="$set('sort', 'price_high'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'price_high' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Price: High to Low</button>
+                       <button wire:click="$set('sort', 'featured'); open = false" class="w-full text-start px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'featured' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">{{ __('messages.shop.sort_featured') }}</button>
+                       <button wire:click="$set('sort', 'newest'); open = false" class="w-full text-start px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'newest' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">{{ __('messages.shop.newest') }}</button>
+                       <button wire:click="$set('sort', 'price_low'); open = false" class="w-full text-start px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'price_low' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">{{ __('messages.shop.price_low') }}</button>
+                       <button wire:click="$set('sort', 'price_high'); open = false" class="w-full text-start px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'price_high' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">{{ __('messages.shop.price_high') }}</button>
                        <div class="h-px bg-slate-100 my-1"></div>
-                       <button wire:click="$set('sort', 'name_asc'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'name_asc' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Name: A-Z</button>
-                       <button wire:click="$set('sort', 'name_desc'); open = false" class="w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'name_desc' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Name: Z-A</button>
+                       <button wire:click="$set('sort', 'name_asc'); open = false" class="w-full text-start px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'name_asc' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Name: A-Z</button>
+                       <button wire:click="$set('sort', 'name_desc'); open = false" class="w-full text-start px-4 py-2.5 text-sm font-medium hover:bg-slate-50 {{ $sort === 'name_desc' ? 'text-indigo-600 bg-indigo-50/50' : 'text-slate-600' }}">Name: Z-A</button>
                    </div>
                </div>
 

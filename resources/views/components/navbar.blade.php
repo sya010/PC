@@ -28,7 +28,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}" />
                         </svg>
                         {{ __($item['label']) }}
-                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                        <span class="absolute bottom-0 start-0 w-full h-0.5 bg-indigo-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rtl:origin-right"></span>
                     </a>
                 @endforeach
             </div>
@@ -36,16 +36,18 @@
             <!-- Right Side Actions -->
             <div class="flex items-center gap-4">
                 <!-- Cart & Language -->
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 md:gap-4">
                     <livewire:cart-counter />
-                    <livewire:language-switcher />
+                    <div class="hidden md:block">
+                        <livewire:language-switcher />
+                    </div>
                 </div>
 
                 <!-- User Profile -->
-                <div class="relative" x-data="{ open: false }">
+                <div class="relative hidden md:block" x-data="{ open: false }">
                     <button 
                         @click="open = !open" 
-                        class="flex items-center gap-3 pl-4 border-l border-gray-200 hover:opacity-80 transition-opacity group"
+                        class="flex items-center gap-3 ps-4 border-s border-gray-200 hover:opacity-80 transition-opacity group"
                     >
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -64,7 +66,7 @@
                         x-transition:leave="transition ease-in duration-150"
                         x-transition:leave-start="opacity-100 translate-y-0"
                         x-transition:leave-end="opacity-0 translate-y-2"
-                        class="absolute {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'left-0' : 'right-0' }} mt-4 w-56 bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-gray-100 overflow-hidden py-2"
+                        class="absolute end-0 mt-4 w-56 bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-gray-100 overflow-hidden py-2"
                         style="display: none;"
                     >
                         @auth
@@ -80,7 +82,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
-                                        Administration
+                                        {{ __('messages.admin.panel_title') }}
                                     </a>
                                 @endif
 
@@ -88,7 +90,7 @@
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                     </svg>
-                                    My Orders
+                                    {{ __('messages.user_orders.title') }}
                                 </a>
 
                                 <livewire:auth.logout />
@@ -155,6 +157,40 @@
                     {{ __($item['label']) }}
                 </a>
             @endforeach
-        </div>
+            
+            <div class="pt-4 mt-4 border-t border-gray-100 flex flex-col gap-4">
+                <div class="flex items-center justify-between px-4">
+                    <span class="text-sm font-medium text-slate-600">{{ __('Language') }}</span>
+                    <livewire:language-switcher />
+                </div>
+                
+                @auth
+                    <a href="{{ route('profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        {{ __('messages.user_orders.my_profile') }}
+                    </a>
+                    @if(auth()->user()->is_admin)
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            {{ __('messages.admin.panel_title') }}
+                        </a>
+                    @endif
+                    <div class="px-4">
+                        <livewire:auth.logout />
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                        {{ __('messages.login') }}
+                    </a>
+                    <a href="{{ route('register') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-colors">
+                        {{ __('messages.register') }}
+                    </a>
+                @endauth
+            </div>
     </div>
 </nav>
