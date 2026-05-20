@@ -15,6 +15,12 @@
     <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <script>
+        window.TechBuildTranslations = {
+            theme: @json(__('messages.theme')),
+        };
+    </script>
     
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -25,10 +31,10 @@
     <!-- Additional Head Content -->
     @stack('styles')
 </head>
-<body class="min-h-screen antialiased bg-white">
+<body class="min-h-screen antialiased bg-surface-primary dark:bg-dark-950 text-content-primary dark:text-dark-100 transition-colors duration-300">
     <!-- Subtle Background Pattern -->
     <div class="fixed inset-0 pointer-events-none z-0">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-50 via-white to-white opacity-70"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-base/5 via-surface-primary to-surface-primary dark:via-dark-950 dark:to-dark-950 opacity-70"></div>
     </div>
 
     <!-- Main Application Container -->

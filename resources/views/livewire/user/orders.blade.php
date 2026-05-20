@@ -1,12 +1,12 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+            <h1 class="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-brand-base to-brand-accent">
                 {{ __('messages.user_orders.title') }}
             </h1>
             <p class="text-gray-500 mt-1">{{ __('messages.user_orders.subtitle') }}</p>
         </div>
-        <a href="{{ route('shop') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-50 text-indigo-600 rounded-xl font-bold hover:bg-indigo-100 transition-colors">
+        <a href="{{ route('shop') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-base/5 text-brand-base rounded-xl font-bold hover:bg-brand-base/10 transition-colors">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
             {{ __('messages.user_orders.continue_shopping') }}
         </a>
@@ -54,7 +54,7 @@
                         </span>
                         
                         @if($order->payment_method === 'wayl' && $order->payment_status === 'pending' && $order->created_at->diffInMinutes(now()) < 58)
-                            <button wire:click="retryWaylPayment({{ $order->id }})" wire:loading.attr="disabled" class="ms-2 px-4 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl text-xs font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 active:scale-95">
+                            <button wire:click="retryWaylPayment({{ $order->id }})" wire:loading.attr="disabled" class="ms-2 px-4 py-1.5 bg-gradient-to-r from-brand-base to-brand-accent hover:from-brand-accent hover:to-brand-dark text-white rounded-xl text-xs font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-accent active:scale-95">
                                 <span wire:loading.remove wire:target="retryWaylPayment({{ $order->id }})">{{ __('messages.user_orders.pay_now') }}</span>
                                 <span wire:loading wire:target="retryWaylPayment({{ $order->id }})" class="flex items-center gap-1">
                                     <svg class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
@@ -80,7 +80,7 @@
                                      @endif
                                 </div>
                                 <div class="flex-1">
-                                    <h4 class="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ $item->product_name }}</h4>
+                                    <h4 class="font-bold text-gray-900 group-hover:text-brand-base transition-colors">{{ $item->product_name }}</h4>
                                     <p class="text-sm text-gray-500">{{ __('messages.checkout.qty') }}: {{ $item->quantity }} &times; {{ number_format($item->price, 0) }}</p>
                                 </div>
                                 <div class="text-right">
@@ -93,14 +93,14 @@
             </div>
         @empty
             <div class="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
-                <div class="inline-flex items-center justify-center w-24 h-24 bg-indigo-50 rounded-full mb-6">
-                    <svg class="w-12 h-12 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-brand-base/5 rounded-full mb-6">
+                    <svg class="w-12 h-12 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
                 </div>
                 <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ __('messages.user_orders.no_orders') }}</h2>
                 <p class="text-gray-500 mb-8 max-w-sm mx-auto">{{ __('messages.user_orders.no_orders_desc') }}</p>
-                <a href="{{ route('shop') }}" class="inline-flex items-center px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
+                <a href="{{ route('shop') }}" class="inline-flex items-center px-8 py-3.5 bg-gradient-to-r from-brand-base to-brand-accent text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
                     {{ __('messages.user_orders.start_shopping') }}
                 </a>
             </div>

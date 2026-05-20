@@ -143,7 +143,7 @@ class Shop extends Component
         $product = \App\Models\Product::find($id);
 
         if (!$product) {
-            $this->dispatch('toast-message', message: 'Product not found.');
+            $this->dispatch('toast-message', message: __('messages.compare.product_not_found'));
             return;
         }
 
@@ -152,7 +152,7 @@ class Shop extends Component
             $product->id,
             $product->name,
             $product->price,
-            $product->image,
+            $product->image_url,
             $product->category
         );
     }
@@ -167,12 +167,19 @@ class Shop extends Component
             }
             $compareList[] = $id;
             session()->put('compare_products', $compareList);
-            $this->dispatch('toast-message', message: 'Product added to comparison!');
+            $this->dispatch('toast-message', message: __('messages.compare.added'));
         } else {
-            $this->dispatch('toast-message', message: 'Product already in comparison list.');
+            $this->dispatch('toast-message', message: __('messages.compare.already_selected'));
         }
 
         return $this->redirect(route('compare'), navigate: true);
+    }
+
+    protected function localizedCategories(): array
+    {
+        return collect(array_keys($this->categories))
+            ->mapWithKeys(fn ($key) => [$key => __('messages.categories.' . $key)])
+            ->all();
     }
 
     public function render()
@@ -187,6 +194,7 @@ class Shop extends Component
         return view('livewire.shop', [
             'products' => $this->products,
             'categoryCounts' => $categoryCounts,
+            'categories' => $this->localizedCategories(),
         ])->layout('components.layouts.app');
     }
 }

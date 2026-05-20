@@ -5,7 +5,7 @@
             <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
                 {{ $user->name }}
                 @if($user->is_admin)
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-700 border border-purple-200 align-middle">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-brand-base/10 text-brand-dark border border-brand-base/20 align-middle">
                         {{ __('messages.admin.users.admin_role') }}
                     </span>
                 @else
@@ -51,7 +51,7 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <svg class="w-5 h-5 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         {{ __('messages.admin.user_view.activity_log') }}
                     </h3>
                     @if(!$user->is_admin)

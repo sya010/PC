@@ -88,7 +88,7 @@ class ComponentSelector extends Component
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
-                'image' => (string) $product->image,
+                'image' => (string) $product->image_url,
                 'specs' => $product->specs,
                 'category' => $product->category
             ];
@@ -172,36 +172,41 @@ class ComponentSelector extends Component
 
         $title = $this->getComponentTitle($this->type);
         if ($this->isExtra) {
-            $title = 'Add Another ' . ($this->type === 'storage' ? 'Storage Drive' : 'Cooling Fan');
+            $title = $this->type === 'storage'
+                ? __('messages.component_selector.add_another_storage')
+                : __('messages.component_selector.add_another_cooling');
         }
 
         return view('livewire.component-selector', [
             'products' => $products,
-            'title' => $title
+            'title' => $title,
+            'componentLabel' => __('messages.categories.' . $this->type),
         ])->layout('components.layouts.app'); // Ensure it uses the main layout
     }
 
     protected function getComponentTitle($type)
     {
         $titles = [
-            'cpu' => 'Select Processor (CPU)',
-            'motherboard' => 'Select Motherboard',
-            'gpu' => 'Select Graphics Card',
-            'ram' => 'Select Memory (RAM)',
-            'storage' => 'Select Storage',
-            'psu' => 'Select Power Supply',
-            'case' => 'Select Case',
-            'cooling' => 'Select Cooling',
-             'monitor' => 'Select Monitor',
-            'keyboard' => 'Select Keyboard',
-            'mouse' => 'Select Mouse',
-            'headset' => 'Select Headset',
-            'mousepad' => 'Select Mousepad',
-            'microphone' => 'Select Microphone',
-            'webcam' => 'Select Webcam',
-            'speakers' => 'Select Speakers',
+            'cpu' => 'messages.pc_builder.select_processor',
+            'motherboard' => 'messages.pc_builder.select_motherboard',
+            'gpu' => 'messages.pc_builder.select_graphics_card',
+            'ram' => 'messages.pc_builder.select_memory',
+            'storage' => 'messages.pc_builder.select_storage',
+            'psu' => 'messages.pc_builder.select_power_supply',
+            'case' => 'messages.pc_builder.select_case',
+            'cooling' => 'messages.pc_builder.select_cooling',
+            'monitor' => 'messages.pc_builder.select_monitor',
+            'keyboard' => 'messages.pc_builder.select_keyboard',
+            'mouse' => 'messages.pc_builder.select_mouse',
+            'headset' => 'messages.pc_builder.select_headset',
+            'mousepad' => 'messages.pc_builder.select_mousepad',
+            'microphone' => 'messages.pc_builder.select_microphone',
+            'webcam' => 'messages.pc_builder.select_webcam',
+            'speakers' => 'messages.pc_builder.select_speakers',
         ];
 
-        return $titles[$type] ?? 'Select Component';
+        return isset($titles[$type])
+            ? __($titles[$type])
+            : __('messages.component_selector.select_component');
     }
 }

@@ -226,7 +226,7 @@ class Compare extends Component
         $product = \App\Models\Product::find($id);
 
         if (!$product) {
-            $this->dispatch('toast-message', message: 'Product not found.');
+            $this->dispatch('toast-message', message: __('messages.compare.product_not_found'));
             return;
         }
 
@@ -234,7 +234,7 @@ class Compare extends Component
             $product->id,
             $product->name,
             $product->price,
-            $product->image,
+            $product->image_url,
             $product->category
         );
     }
@@ -245,26 +245,26 @@ class Compare extends Component
         
         // Block duplicates
         if (in_array($productId, $compareList)) {
-            $this->dispatch('toast-message', message: 'This product is already selected for comparison.');
+            $this->dispatch('toast-message', message: __('messages.compare.already_selected'));
             return;
         }
 
         // Block if already at max (2)
         if (count($compareList) >= 2) {
-            $this->dispatch('toast-message', message: 'Maximum 2 products for comparison.');
+            $this->dispatch('toast-message', message: __('messages.compare.max_products'));
             return;
         }
 
         // Verify product belongs to the selected category
         $product = \App\Models\Product::find($productId);
         if (!$product) {
-            $this->dispatch('toast-message', message: 'Product not found.');
+            $this->dispatch('toast-message', message: __('messages.compare.product_not_found'));
             return;
         }
 
         $expectedCategory = $this->categoryMap[strtolower($this->selectedCategory)] ?? $this->selectedCategory;
         if (strtolower($product->category) !== strtolower($expectedCategory)) {
-            $this->dispatch('toast-message', message: 'Product does not match the selected category.');
+            $this->dispatch('toast-message', message: __('messages.compare.category_mismatch'));
             return;
         }
 
@@ -277,7 +277,7 @@ class Compare extends Component
             $this->showPicker = false;
         }
 
-        $this->dispatch('toast-message', message: 'Product added to comparison.');
+        $this->dispatch('toast-message', message: __('messages.compare.added'));
     }
 
     public function removeProduct($productId)
@@ -299,19 +299,25 @@ class Compare extends Component
         $this->allSpecKeys = [];
         $this->winnerSpecs = [];
         $this->productsAreIdentical = false;
-        $this->dispatch('toast-message', message: 'Comparison cleared.');
+        $this->dispatch('toast-message', message: __('messages.compare.cleared'));
     }
 
     public function togglePicker()
     {
         if (count($this->selectedProducts) >= 2) {
-             $this->dispatch('toast-message', message: 'Comparison full (Max 2). Remove a product to add another.');
+             $this->dispatch('toast-message', message: __('messages.compare.full'));
              return;
         }
         $this->showPicker = !$this->showPicker;
     }
 
     // --- Helpers ---
+    protected function localizedCategories(): array
+    {
+        return collect(array_keys($this->categories))
+            ->mapWithKeys(fn ($key) => [$key => __('messages.categories.' . $key)])
+            ->all();
+    }
 
     // Important specs whitelist per category - only these will be shown in comparison
     protected $importantSpecs = [
@@ -491,6 +497,8 @@ class Compare extends Component
 
     public function render()
     {
-        return view('livewire.compare');
+        return view('livewire.compare', [
+            'categories' => $this->localizedCategories(),
+        ]);
     }
 }

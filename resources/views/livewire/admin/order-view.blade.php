@@ -2,7 +2,7 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-base to-brand-accent">
                 {{ __('messages.admin.orders.order_id') }} #{{ $order->id }}
             </h1>
             <p class="text-gray-500 mt-1">{{ $order->created_at->format('F d, Y - h:i A') }}</p>
@@ -19,7 +19,7 @@
             <!-- Order Items -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                    <svg class="w-5 h-5 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                     <h3 class="text-lg font-bold text-gray-800">{{ __('messages.admin.orders.order_items') }}</h3>
                 </div>
                 <table class="w-full text-sm text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'right' : 'left' }}">
@@ -44,9 +44,9 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="px-6 py-4 bg-gradient-to-r from-indigo-50 to-purple-50 border-t border-indigo-100 flex items-center justify-between">
+                <div class="px-6 py-4 bg-gradient-to-r from-brand-base/5 to-brand-base/5 border-t border-brand-base/10 flex items-center justify-between">
                     <span class="font-bold text-gray-700 uppercase text-xs tracking-wider">{{ __('messages.admin.orders.total') }}</span>
-                    <span class="text-xl font-bold text-indigo-600">{{ number_format($order->total_amount) }} {{ __('messages.currency') }}</span>
+                    <span class="text-xl font-bold text-brand-base">{{ number_format($order->total_amount) }} {{ __('messages.currency') }}</span>
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@
             <!-- Customer Info -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    <svg class="w-5 h-5 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                     {{ __('messages.admin.orders.customer_info') }}
                 </h3>
                 <div class="space-y-3">
@@ -113,7 +113,7 @@
             <!-- Shipping Info -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    <svg class="w-5 h-5 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                     {{ __('messages.admin.orders.shipping_info') }}
                 </h3>
                 <div class="space-y-3">

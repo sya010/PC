@@ -644,7 +644,7 @@ class PcBuilder extends Component
                     'id' => $product->id,
                     'name' => $product->name,
                     'price' => $product->price,
-                    'image' => (string) $product->image,
+                    'image' => (string) $product->image_url,
                     'specs' => $this->formatSpecsShort($product->specs),
                     'raw_specs' => $product->specs ?? []
                 ];
