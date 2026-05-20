@@ -1,17 +1,17 @@
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen bg-surface-secondary dark:bg-dark-950">
     <!-- Page Header - Minimalist -->
-    <div class="bg-white border-b border-slate-100">
+    <div class="bg-surface-primary dark:bg-dark-900 border-b border-border-subtle dark:border-dark-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-between gap-4">
             <div>
-                <h1 class="text-xl sm:text-2xl font-black text-slate-900">{{ __('messages.pc_builder.title') }}</h1>
-                <p class="text-sm text-slate-500 hidden sm:block">{{ __('messages.pc_builder.subtitle') }}</p>
+                <h1 class="text-xl sm:text-2xl font-black text-content-primary dark:text-dark-100">{{ __('messages.pc_builder.title') }}</h1>
+                <p class="text-sm text-content-muted dark:text-dark-500 hidden sm:block">{{ __('messages.pc_builder.subtitle') }}</p>
             </div>
             
              <!-- Mobile Summary Toggle (Visible only on small screens) -->
             <div class="lg:hidden flex items-center gap-4">
                <div class="text-end">
-                    <p class="text-[10px] uppercase font-bold text-slate-400">{{ __('messages.build.total') }}</p>
-                    <p class="font-black text-slate-900">{{ number_format($totalPrice, 0) }} <span class="text-xs">{{ __('messages.currency') }}</span></p>
+                    <p class="text-[10px] uppercase font-bold text-content-muted dark:text-dark-500">{{ __('messages.build.total') }}</p>
+                    <p class="font-black text-content-primary dark:text-dark-100">{{ number_format($totalPrice, 0) }} <span class="text-xs">{{ __('messages.currency') }}</span></p>
                </div>
             </div>
         </div>
@@ -48,23 +48,23 @@
                 @endphp
 
                 @foreach($groups as $groupName => $items)
-                    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-                        <div class="px-6 py-4 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between">
-                            <h2 class="text-lg font-bold text-slate-900">{{ $groupName }}</h2>
+                    <div class="bg-surface-primary dark:bg-dark-900 rounded-3xl border border-border-subtle dark:border-dark-800 shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 bg-surface-secondary/50 dark:bg-dark-950/50 border-b border-border-subtle dark:border-dark-800 flex items-center justify-between">
+                            <h2 class="text-lg font-bold text-content-primary dark:text-dark-100">{{ $groupName }}</h2>
                             <div class="flex items-center gap-4">
                                 @php
                                     $selectedCount = count(array_filter($items, fn($item, $key) => $selectedComponents[$key] ?? null, ARRAY_FILTER_USE_BOTH));
                                 @endphp
                                 @if($selectedCount > 0)
-                                    <button wire:click="confirmReset('{{ $groupName === __('messages.pc_builder.core_system') ? 'core' : 'peripherals' }}')" class="text-xs font-bold text-red-500 hover:text-red-600 transition-colors">
+                                    <button wire:click="confirmReset('{{ $groupName === __('messages.pc_builder.core_system') ? 'core' : 'peripherals' }}')" class="text-xs font-bold text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors">
                                         {{ __('messages.compatibility.reset_group') }} {{ $groupName }}
                                     </button>
                                 @endif
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">{{ $selectedCount }} {{ __('messages.pc_builder.selected') }}</span>
+                                <span class="text-xs font-bold text-content-muted dark:text-dark-500 uppercase tracking-wider">{{ $selectedCount }} {{ __('messages.pc_builder.selected') }}</span>
                             </div>
                         </div>
                         
-                        <div class="divide-y divide-slate-50">
+                        <div class="divide-y divide-border-subtle dark:divide-dark-800">
                             @foreach($items as $type => $info)
                                 @php
                                     $component = $selectedComponents[$type] ?? null;
@@ -72,70 +72,70 @@
                                     $hasError = $this->hasIssue($type);
                                     $isQtyType = $this->isQuantityType($type);
                                     $qty = $this->getQuantity($type);
-                                @endphp
+                                 @endphp
                                 
-                                <div class="group p-5 hover:bg-slate-50 transition-colors">
+                                <div class="group p-5 hover:bg-surface-secondary dark:hover:bg-dark-950 transition-colors">
                                     <div class="flex flex-col sm:flex-row gap-5 sm:items-center">
                                         <!-- Mobile Label (visible on small screens only) -->
                                         <div class="sm:hidden flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
+                                            <div class="w-10 h-10 rounded-xl bg-surface-secondary dark:bg-dark-850 flex items-center justify-center text-content-secondary dark:text-dark-300">
                                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $info['icon'] }}" />
                                                 </svg>
                                             </div>
                                             <div>
-                                                 <span class="font-bold text-slate-900">{{ $info['label'] }}</span>
-                                                 <p class="text-xs text-slate-500">{{ $info['desc'] }}</p>
+                                                 <span class="font-bold text-content-primary dark:text-dark-100">{{ $info['label'] }}</span>
+                                                 <p class="text-xs text-content-muted dark:text-dark-500">{{ $info['desc'] }}</p>
                                             </div>
                                         </div>
 
                                         <!-- Desktop Icon & Label -->
                                         <div class="hidden sm:flex items-center gap-4 w-1/3">
                                             <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-colors
-                                                {{ $isSelected ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400 group-hover:bg-white group-hover:shadow-sm' }}
-                                                {{ $hasError ? '!bg-red-100 !text-red-500' : '' }}">
+                                                {{ $isSelected ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-surface-secondary dark:bg-dark-850 text-content-muted dark:text-dark-500 group-hover:bg-surface-primary dark:group-hover:bg-dark-800 group-hover:shadow-sm' }}
+                                                {{ $hasError ? '!bg-red-100 dark:!bg-red-900/30 !text-red-500 dark:!text-red-400' : '' }}">
                                                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $info['icon'] }}" />
                                                 </svg>
                                             </div>
                                             <div>
-                                                <span class="block font-bold text-slate-700 group-hover:text-slate-900 transition-colors">{{ $info['label'] }}</span>
-                                                <span class="text-xs text-slate-500">{{ $info['desc'] }}</span>
+                                                <span class="block font-bold text-content-secondary group-hover:text-content-primary dark:text-dark-300 dark:group-hover:text-dark-100 transition-colors">{{ $info['label'] }}</span>
+                                                <span class="text-xs text-content-muted dark:text-dark-500">{{ $info['desc'] }}</span>
                                             </div>
                                         </div>
 
                                         <!-- Selection Area -->
                                         <div class="flex-1 min-w-0">
                                             @if($isSelected)
-                                                <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm group-hover:border-indigo-200 transition-all">
+                                                <div class="bg-surface-primary dark:bg-dark-900 border border-border-subtle dark:border-dark-800 rounded-xl p-3 shadow-sm group-hover:border-brand-base/20 transition-all">
                                                     <div class="flex items-center gap-4">
-                                                        <img src="{{ $component['image'] }}" alt="{{ $component['name'] }}" class="w-12 h-12 object-contain mix-blend-multiply">
+                                                        <img src="{{ $component['image'] }}" alt="{{ $component['name'] }}" class="w-12 h-12 object-contain mix-blend-multiply dark:mix-blend-normal">
                                                         <div class="flex-1 min-w-0">
-                                                            <p class="font-bold text-slate-900 truncate text-sm">{{ $component['name'] }}</p>
+                                                            <p class="font-bold text-content-primary dark:text-dark-100 truncate text-sm">{{ $component['name'] }}</p>
                                                             <div class="flex items-center gap-2">
-                                                                <p class="text-emerald-600 font-bold text-sm">{{ number_format($component['price'], 0) }} {{ __('messages.currency') }}</p>
+                                                                <p class="text-emerald-600 dark:text-emerald-400 font-bold text-sm">{{ number_format($component['price'], 0) }} {{ __('messages.currency') }}</p>
                                                                 @if($isQtyType && $qty > 1)
-                                                                    <span class="text-slate-400 text-xs font-medium">× {{ $qty }} = {{ number_format($component['price'] * $qty, 0) }} {{ __('messages.currency') }}</span>
+                                                                    <span class="text-content-muted dark:text-dark-500 text-xs font-medium">× {{ $qty }} = {{ number_format($component['price'] * $qty, 0) }} {{ __('messages.currency') }}</span>
                                                                 @endif
                                                             </div>
                                                         </div>
                                                         <div class="flex items-center gap-2">
                                                             {{-- Quantity controls for RAM, Storage, Cooling --}}
                                                             @if($isQtyType)
-                                                                <div class="flex items-center gap-1 bg-slate-50 rounded-lg border border-slate-200 p-0.5">
+                                                                <div class="flex items-center gap-1 bg-surface-secondary dark:bg-dark-950 rounded-lg border border-border-subtle dark:border-dark-800 p-0.5">
                                                                     <button 
                                                                         wire:click="decrementQuantity('{{ $type }}')" 
-                                                                        class="w-7 h-7 flex items-center justify-center rounded-md text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm transition-all {{ $qty <= 1 ? 'opacity-40 cursor-not-allowed' : '' }}"
+                                                                        class="w-7 h-7 flex items-center justify-center rounded-md text-content-secondary dark:text-dark-400 hover:bg-surface-primary dark:hover:bg-dark-800 hover:text-content-primary dark:hover:text-dark-100 hover:shadow-sm transition-all {{ $qty <= 1 ? 'opacity-40 cursor-not-allowed' : '' }}"
                                                                         {{ $qty <= 1 ? 'disabled' : '' }}
                                                                     >
                                                                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 12H4" />
                                                                         </svg>
                                                                     </button>
-                                                                    <span class="w-7 text-center text-sm font-black text-slate-900">{{ $qty }}</span>
+                                                                    <span class="w-7 text-center text-sm font-black text-content-primary dark:text-dark-100">{{ $qty }}</span>
                                                                     <button 
                                                                         wire:click="incrementQuantity('{{ $type }}')" 
-                                                                        class="w-7 h-7 flex items-center justify-center rounded-md text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm transition-all {{ $qty >= 8 ? 'opacity-40 cursor-not-allowed' : '' }}"
+                                                                        class="w-7 h-7 flex items-center justify-center rounded-md text-content-secondary dark:text-dark-400 hover:bg-surface-primary dark:hover:bg-dark-800 hover:text-content-primary dark:hover:text-dark-100 hover:shadow-sm transition-all {{ $qty >= 8 ? 'opacity-40 cursor-not-allowed' : '' }}"
                                                                         {{ $qty >= 8 ? 'disabled' : '' }}
                                                                     >
                                                                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -145,12 +145,12 @@
                                                                 </div>
                                                             @endif
 
-                                                            <a href="{{ route('pc.select', $type) }}" wire:navigate class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Change">
+                                                            <a href="{{ route('pc.select', $type) }}" wire:navigate class="p-2 text-content-muted dark:text-dark-500 hover:text-brand-base hover:bg-brand-base/5 rounded-lg transition-colors" title="Change">
                                                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                                 </svg>
                                                             </a>
-                                                            <button wire:click="removeComponent('{{ $type }}')" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Remove">
+                                                            <button wire:click="removeComponent('{{ $type }}')" class="p-2 text-content-muted dark:text-dark-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors" title="Remove">
                                                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                                                 </svg>
@@ -159,8 +159,8 @@
                                                     </div>
                                                 </div>
                                             @else
-                                                <a href="{{ route('pc.select', $type) }}" wire:navigate class="block w-full border-2 border-dashed border-slate-200 rounded-xl p-4 text-center hover:border-indigo-400 hover:bg-indigo-50/30 transition-all group/btn">
-                                                    <span class="text-sm font-bold text-slate-400 group-hover/btn:text-indigo-600 flex items-center justify-center gap-2">
+                                                <a href="{{ route('pc.select', $type) }}" wire:navigate class="block w-full border-2 border-dashed border-border-subtle dark:border-dark-850 rounded-xl p-4 text-center hover:border-brand-light hover:bg-brand-base/5 transition-all group/btn">
+                                                    <span class="text-sm font-bold text-content-muted dark:text-dark-500 group-hover/btn:text-brand-base flex items-center justify-center gap-2">
                                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                                         </svg>
@@ -170,7 +170,7 @@
                                             @endif
                                             
                                              @if($hasError)
-                                                <p class="mt-2 text-xs font-bold text-red-500 flex items-center gap-1">
+                                                <p class="mt-2 text-xs font-bold text-red-500 dark:text-red-400 flex items-center gap-1">
                                                     <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                                     {{ __('messages.compatibility.issue') }}
                                                 </p>
@@ -185,42 +185,42 @@
                                             {{-- Render existing extra components --}}
                                             @foreach($this->extraComponents[$type] ?? [] as $index => $extraComp)
                                                 @php $extraQty = $this->getExtraQuantity($type, $index); @endphp
-                                                <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm flex items-center gap-4">
-                                                    <img src="{{ $extraComp['image'] }}" alt="{{ $extraComp['name'] }}" class="w-10 h-10 object-contain mix-blend-multiply">
+                                                <div class="bg-surface-primary dark:bg-dark-900 border border-border-subtle dark:border-dark-800 rounded-xl p-3 shadow-sm flex items-center gap-4">
+                                                    <img src="{{ $extraComp['image'] }}" alt="{{ $extraComp['name'] }}" class="w-10 h-10 object-contain mix-blend-multiply dark:mix-blend-normal">
                                                     <div class="flex-1 min-w-0">
-                                                        <p class="font-bold text-slate-900 truncate text-sm">{{ $extraComp['name'] }}</p>
+                                                        <p class="font-bold text-content-primary dark:text-dark-100 truncate text-sm">{{ $extraComp['name'] }}</p>
                                                         <div class="flex items-center gap-2">
-                                                            <p class="text-emerald-600 font-bold text-sm">{{ number_format($extraComp['price'], 0) }} {{ __('messages.currency') }}</p>
+                                                            <p class="text-emerald-600 dark:text-emerald-400 font-bold text-sm">{{ number_format($extraComp['price'], 0) }} {{ __('messages.currency') }}</p>
                                                             @if($extraQty > 1)
-                                                                <span class="text-slate-400 text-xs font-medium">× {{ $extraQty }} = {{ number_format($extraComp['price'] * $extraQty, 0) }} {{ __('messages.currency') }}</span>
+                                                                <span class="text-content-muted dark:text-dark-500 text-xs font-medium">× {{ $extraQty }} = {{ number_format($extraComp['price'] * $extraQty, 0) }} {{ __('messages.currency') }}</span>
                                                             @endif
                                                         </div>
                                                     </div>
                                                     <div class="flex items-center gap-2">
                                                         {{-- Extra Quantity Controls --}}
-                                                        <div class="flex items-center gap-1 bg-slate-50 rounded-lg border border-slate-200 p-0.5">
+                                                        <div class="flex items-center gap-1 bg-surface-secondary dark:bg-dark-950 rounded-lg border border-border-subtle dark:border-dark-800 p-0.5">
                                                             <button 
                                                                 wire:click="decrementExtraQuantity('{{ $type }}', {{ $index }})" 
-                                                                class="w-6 h-6 flex items-center justify-center rounded-md text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm transition-all {{ $extraQty <= 1 ? 'opacity-40 cursor-not-allowed' : '' }}"
+                                                                class="w-6 h-6 flex items-center justify-center rounded-md text-content-secondary dark:text-dark-400 hover:bg-surface-primary dark:hover:bg-dark-800 hover:text-content-primary dark:hover:text-dark-100 hover:shadow-sm transition-all {{ $extraQty <= 1 ? 'opacity-40 cursor-not-allowed' : '' }}"
                                                                 {{ $extraQty <= 1 ? 'disabled' : '' }}
                                                             >
                                                                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" /></svg>
                                                             </button>
-                                                            <span class="w-6 text-center text-xs font-black text-slate-900">{{ $extraQty }}</span>
+                                                            <span class="w-6 text-center text-xs font-black text-content-primary dark:text-dark-100">{{ $extraQty }}</span>
                                                             <button 
                                                                 wire:click="incrementExtraQuantity('{{ $type }}', {{ $index }})" 
-                                                                class="w-6 h-6 flex items-center justify-center rounded-md text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm transition-all {{ $extraQty >= 8 ? 'opacity-40 cursor-not-allowed' : '' }}"
+                                                                class="w-6 h-6 flex items-center justify-center rounded-md text-content-secondary dark:text-dark-400 hover:bg-surface-primary dark:hover:bg-dark-800 hover:text-content-primary dark:hover:text-dark-100 hover:shadow-sm transition-all {{ $extraQty >= 8 ? 'opacity-40 cursor-not-allowed' : '' }}"
                                                                 {{ $extraQty >= 8 ? 'disabled' : '' }}
                                                             >
                                                                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                                                             </button>
                                                         </div>
-                                                            <a href="{{ route('pc.select', $type) }}?extra=1&edit_index={{ $index }}" wire:navigate class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Change">
+                                                            <a href="{{ route('pc.select', $type) }}?extra=1&edit_index={{ $index }}" wire:navigate class="p-1.5 text-content-muted dark:text-dark-500 hover:text-brand-base hover:bg-brand-base/5 rounded-lg transition-colors" title="Change">
                                                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                                 </svg>
                                                             </a>
-                                                            <button wire:click="removeExtraComponent('{{ $type }}', {{ $index }})" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Remove">
+                                                            <button wire:click="removeExtraComponent('{{ $type }}', {{ $index }})" class="p-1.5 text-content-muted dark:text-dark-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors" title="Remove">
                                                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                                                             </button>
                                                         </div>
@@ -230,7 +230,7 @@
                                             {{-- Add Another Button --}}
                                             @if($this->canAddExtra($type))
                                                 <div class="pt-1">
-                                                    <a href="{{ route('pc.select', $type) }}?extra=1" wire:navigate class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100">
+                                                    <a href="{{ route('pc.select', $type) }}?extra=1" wire:navigate class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-brand-base bg-brand-base/5 hover:bg-brand-base/10 rounded-lg transition-colors border border-brand-base/10">
                                                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" /></svg>
                                                         + {{ $info['label'] }}
                                                     </a>
@@ -249,11 +249,11 @@
 
             <!-- Sticky Summary Sidebar -->
             <div class="lg:w-96 flex-shrink-0">
-                <div class="bg-white rounded-3xl border border-slate-100 shadow-xl p-6 lg:sticky lg:top-24 space-y-6">
+                <div class="bg-surface-primary dark:bg-dark-900 rounded-3xl border border-border-subtle dark:border-dark-800 shadow-xl p-6 lg:sticky lg:top-24 space-y-6">
                      <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-black text-slate-900">{{ __('messages.pc_builder.system_summary') }}</h3>
+                        <h3 class="text-xl font-black text-content-primary dark:text-dark-100">{{ __('messages.pc_builder.system_summary') }}</h3>
                         @if($this->getSelectedCount() > 0)
-                            <button wire:click="confirmReset('all')" class="text-xs font-bold text-red-500 hover:text-red-600 px-3 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100">
+                            <button wire:click="confirmReset('all')" class="text-xs font-bold text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-colors border border-red-500/20">
                             {{ __('messages.pc_builder.reset_build') }}
                             </button>
                         @endif
@@ -263,18 +263,18 @@
                         <div class="space-y-4">
                             <!-- Stats Grid -->
                             <div class="grid grid-cols-2 gap-3">
-                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                                    <span class="text-xs font-bold text-slate-400 uppercase">{{ __('messages.pc_builder.parts') }}</span>
-                                    <p class="text-lg font-black text-slate-900">{{ $this->getSelectedCount() }}</p>
+                                <div class="p-3 bg-surface-secondary dark:bg-dark-950 rounded-xl border border-border-subtle dark:border-dark-800">
+                                    <span class="text-xs font-bold text-content-muted dark:text-dark-500 uppercase">{{ __('messages.pc_builder.parts') }}</span>
+                                    <p class="text-lg font-black text-content-primary dark:text-dark-100">{{ $this->getSelectedCount() }}</p>
                                 </div>
-                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                                    <span class="text-xs font-bold text-slate-400 uppercase">{{ __('messages.pc_builder.power') }}</span>
-                                    <p class="text-lg font-black text-slate-900">{{ $systemAnalysis['power']['total_draw'] ?? 0 }}W</p>
+                                <div class="p-3 bg-surface-secondary dark:bg-dark-950 rounded-xl border border-border-subtle dark:border-dark-800">
+                                    <span class="text-xs font-bold text-content-muted dark:text-dark-500 uppercase">{{ __('messages.pc_builder.power') }}</span>
+                                    <p class="text-lg font-black text-content-primary dark:text-dark-100">{{ $systemAnalysis['power']['total_draw'] ?? 0 }}W</p>
                                 </div>
                             </div>
                             
                             <!-- Compatibility Status -->
-                            <div class="p-4 rounded-xl {{ $compatibilityColor === 'green' ? 'bg-emerald-50 text-emerald-700' : 'bg-yellow-50 text-yellow-700' }}">
+                            <div class="p-4 rounded-xl {{ $compatibilityColor === 'green' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400' }}">
                                 <div class="flex items-center gap-3 mb-2">
                                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -291,9 +291,9 @@
                                 <div class="space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
                                     @foreach($compatibilityWarnings as $warning)
                                         <div class="p-2.5 rounded-lg text-xs font-medium border
-                                            {{ $warning['type'] === 'error' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
-                                            {{ $warning['type'] === 'warning' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
-                                            {{ $warning['type'] === 'info' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}">
+                                            {{ $warning['type'] === 'error' ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20' : '' }}
+                                            {{ $warning['type'] === 'warning' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' : '' }}
+                                            {{ $warning['type'] === 'info' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20' : '' }}">
                                             {{ $warning['message'] }}
                                         </div>
                                     @endforeach
@@ -302,7 +302,7 @@
 
                             <!-- Selected Parts Summary with Quantities -->
                             <div class="space-y-2 pt-2">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">{{ __('messages.pc_builder.price_breakdown') }}</span>
+                                <span class="text-xs font-bold text-content-muted dark:text-dark-500 uppercase tracking-wider">{{ __('messages.pc_builder.price_breakdown') }}</span>
                                 @foreach($selectedComponents as $type => $comp)
                                     @if($comp)
                                         @php
@@ -310,13 +310,13 @@
                                             $q = $this->getQuantity($type);
                                         @endphp
                                         <div class="flex items-center justify-between text-sm">
-                                            <span class="text-slate-600 truncate flex-1">
+                                            <span class="text-content-secondary dark:text-dark-300 truncate flex-1">
                                                 {{ $comp['name'] }}
                                                 @if($isQty && $q > 1)
-                                                    <span class="text-slate-400 font-medium">× {{ $q }}</span>
+                                                    <span class="text-content-muted dark:text-dark-500 font-medium">× {{ $q }}</span>
                                                 @endif
                                             </span>
-                                            <span class="font-bold text-slate-900 ms-3 whitespace-nowrap">{{ number_format($comp['price'] * $q, 0) }} {{ __('messages.currency') }}</span>
+                                            <span class="font-bold text-content-primary dark:text-dark-100 ms-3 whitespace-nowrap">{{ number_format($comp['price'] * $q, 0) }} {{ __('messages.currency') }}</span>
                                         </div>
                                     @endif
                                 @endforeach
@@ -324,27 +324,27 @@
                         </div>
                      @else
                         <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-300">
+                            <div class="w-16 h-16 bg-surface-secondary dark:bg-dark-950 rounded-full flex items-center justify-center mx-auto mb-3 text-content-muted dark:text-dark-600">
                                 <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                 </svg>
                             </div>
-                            <p class="text-slate-500 font-medium text-sm">{{ __('messages.pc_builder.start_selecting') }}</p>
+                            <p class="text-content-secondary dark:text-dark-300 font-medium text-sm">{{ __('messages.pc_builder.start_selecting') }}</p>
                         </div>
                      @endif
                      
-                     <div class="pt-6 border-t border-slate-100">
+                     <div class="pt-6 border-t border-border-subtle dark:border-dark-800">
                         <div class="flex justify-between items-end mb-4">
-                            <span class="text-sm font-bold text-slate-500">{{ __('messages.pc_builder.total_price') }}</span>
-                            <span class="text-3xl font-black text-slate-900">{{ number_format($totalPrice, 0) }}<span class="text-sm text-slate-400 ms-1">{{ __('messages.currency') }}</span></span>
+                            <span class="text-sm font-bold text-content-secondary dark:text-dark-300">{{ __('messages.pc_builder.total_price') }}</span>
+                            <span class="text-3xl font-black text-content-primary dark:text-dark-100">{{ number_format($totalPrice, 0) }}<span class="text-sm text-content-muted dark:text-dark-500 ms-1">{{ __('messages.currency') }}</span></span>
                         </div>
                         
                         <button 
                             wire:click="addBuildToCart"
                             class="w-full py-4 rounded-xl font-bold transition-all shadow-lg
                                 {{ $this->isValidBuild() 
-                                    ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white hover:shadow-xl hover:-translate-y-1' 
-                                    : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none' }}"
+                                    ? 'bg-gradient-to-r from-brand-base to-brand-accent text-white hover:shadow-xl hover:-translate-y-1' 
+                                    : 'bg-surface-secondary dark:bg-dark-800 text-content-muted dark:text-dark-500 cursor-not-allowed shadow-none' }}"
                             {{ !$this->isValidBuild() ? 'disabled' : '' }}
                         >
                             {{ $this->getSelectedCount() > 0 ? __('messages.build.add_to_cart') : __('messages.pc_builder.make_selection') }}
@@ -359,18 +359,18 @@
     @if($showResetModal)
         <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
             <!-- Backdrop -->
-            <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" wire:click="cancelReset"></div>
+            <div class="fixed inset-0 bg-black/50 transition-opacity" wire:click="cancelReset"></div>
             
             <!-- Modal Content -->
-            <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative z-10 transform transition-all">
+            <div class="bg-surface-primary dark:bg-dark-900 border border-border-subtle dark:border-dark-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative z-10 transform transition-all">
                 <div class="p-6 sm:p-8">
-                    <div class="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center mb-6">
+                    <div class="w-12 h-12 rounded-full bg-red-500/10 text-red-500 dark:text-red-400 flex items-center justify-center mb-6">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                     </div>
                     
-                    <h3 class="text-xl font-black text-slate-900 mb-2">
+                    <h3 class="text-xl font-black text-content-primary dark:text-dark-100 mb-2">
                         @if($resetTarget === 'all')
                             {{ __('messages.pc_builder.reset_all_title') }}
                         @elseif($resetTarget === 'core')
@@ -380,7 +380,7 @@
                         @endif
                     </h3>
                     
-                    <p class="text-slate-500 text-sm">
+                    <p class="text-content-secondary dark:text-dark-300 text-sm">
                         @if($resetTarget === 'all')
                             {{ __('messages.pc_builder.reset_all_desc') }}
                         @elseif($resetTarget === 'core')
@@ -391,10 +391,10 @@
                     </p>
                     
                     <div class="mt-8 flex gap-3">
-                        <button wire:click="cancelReset" class="flex-1 px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-colors">
+                        <button wire:click="cancelReset" class="flex-1 px-4 py-3 bg-surface-secondary hover:bg-surface-secondary/80 dark:bg-dark-800 dark:hover:bg-dark-700 text-content-secondary dark:text-dark-200 font-bold rounded-xl transition-colors">
                             {{ __('messages.pc_builder.cancel') }}
                         </button>
-                        <button wire:click="executeReset" class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-colors shadow-lg shadow-red-500/30">
+                        <button wire:click="executeReset" class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-red-500/30">
                             {{ __('messages.pc_builder.yes_reset') }}
                         </button>
                     </div>

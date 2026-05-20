@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Product;
 use App\Models\ActivityLog;
+use App\Services\ImageService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -72,7 +73,7 @@ class ProductForm extends Component
             $this->description = $this->product->description;
             $this->category = $this->product->category;
             $this->stock = $this->product->stock;
-            $this->existingImage = $this->product->image;
+            $this->existingImage = $this->product->image_url; // Use accessor for display
             $this->is_active = (bool) $this->product->is_active;
             
             if ($this->product->specs) {
@@ -99,19 +100,23 @@ class ProductForm extends Component
         $this->validate();
 
         // Handle Image Upload
-        $imageUrl = $this->existingImage ?? 'https://placehold.co/600x400';
-        
+        $imagePath = null;
+
         if ($this->image && !is_string($this->image)) {
-            // It's a file upload
-            // Store using a random secure filename
-            $path = $this->image->storeAs(
-                'products', 
-                Str::random(40) . '.' . $this->image->getClientOriginalExtension(), 
-                'public'
-            );
-            $imageUrl = Storage::url($path);
-        } elseif (is_string($this->image) && !empty($this->image)) {
-             $imageUrl = $this->image;
+            // New file upload — convert to WebP via ImageService
+            // Delete old image first if updating
+            if ($this->product && $this->product->image) {
+                ImageService::delete($this->product->image);
+            }
+
+            $result = ImageService::upload($this->image, 'products');
+            $imagePath = $result['image'];
+        } elseif (!empty($this->existingImage) && filter_var($this->existingImage, FILTER_VALIDATE_URL)) {
+            // URL entered in the fallback input field
+            $imagePath = $this->existingImage;
+        } elseif ($this->product) {
+            // Keep existing image (no change)
+            $imagePath = $this->product->image;
         }
 
         // Sanitize Strings
@@ -125,7 +130,7 @@ class ProductForm extends Component
             'description' => $description,
             'category' => $this->category,
             'stock' => $this->stock,
-            'image' => $imageUrl,
+            'image' => $imagePath,
             'is_active' => $this->is_active,
             'specs' => collect($this->specs)->mapWithKeys(function ($item) {
                 return [strip_tags($item['key']) => strip_tags($item['value'])];

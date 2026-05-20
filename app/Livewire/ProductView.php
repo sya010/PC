@@ -17,7 +17,7 @@ class ProductView extends Component
     public function mount($id)
     {
         $this->product = Product::findOrFail($id);
-        $this->activeImage = $this->product->image;
+        $this->activeImage = $this->product->image_url;
     }
 
     public function selectImage($image)
@@ -40,7 +40,7 @@ class ProductView extends Component
                 "name" => $this->product->name,
                 "quantity" => $this->quantity,
                 "price" => $this->product->price,
-                "image" => $this->product->image
+                "image" => $this->product->image_url
             ];
         }
         

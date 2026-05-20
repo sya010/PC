@@ -25,7 +25,7 @@
 >
     <!-- IQD Badge -->
     <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-        <span class="text-gray-400 font-bold sm:text-sm group-focus-within:text-indigo-500 transition-colors">IQD</span>
+        <span class="text-content-muted dark:text-dark-500 font-bold sm:text-sm group-focus-within:text-brand-accent transition-colors">IQD</span>
     </div>
     
     <input 
@@ -35,7 +35,7 @@
         maxlength="15"
         {{ $disabled ? 'disabled' : '' }} 
         {!! $attributes->whereDoesntStartWith('wire:model') !!}
-        class="block w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all duration-200 hover:border-indigo-300 shadow-sm pr-12 font-medium"
+        class="block w-full px-4 py-3 rounded-xl border border-border-subtle dark:border-dark-700 bg-surface-secondary/50 dark:bg-dark-800 text-content-primary dark:text-dark-100 placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-surface-primary dark:focus:bg-dark-900 transition-all duration-200 hover:border-brand-base/30 shadow-sm pr-12 font-medium"
         placeholder="0"
     >
 </div>
