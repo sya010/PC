@@ -314,7 +314,7 @@ body {
 /* Dark mode body */
 .dark body {
     background-color: var(--color-brand-dark);
-    color: var(--color-dark-400);
+    color: var(--color-dark-200);
 }
 
 /* RTL Font Family Override */
@@ -462,7 +462,7 @@ html[dir="rtl"] body {
 .dark .input-neu {
     background: var(--color-dark-800);
     border-color: var(--color-dark-600);
-    color: var(--color-dark-400);
+    color: var(--color-dark-100);
     box-shadow: none;
 }
 
@@ -473,6 +473,10 @@ html[dir="rtl"] body {
 
 .input-neu::placeholder {
     color: var(--color-content-muted);
+}
+
+.dark .input-neu::placeholder {
+    color: var(--color-dark-400);
 }
 
 /* ========================================

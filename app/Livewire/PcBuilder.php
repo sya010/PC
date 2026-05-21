@@ -43,6 +43,7 @@ class PcBuilder extends Component
     // Extra component slots for storage and cooling (multiple different products)
     // Structure: ['storage' => [0 => ['id'=>..., 'name'=>..., ...], 1 => [...]], 'cooling' => [...]]
     public $extraComponents = [
+        'ram' => [],
         'storage' => [],
         'cooling' => [],
     ];
@@ -50,6 +51,7 @@ class PcBuilder extends Component
     // Quantities for extra component slots
     // Structure: ['storage' => [0 => 1, 1 => 2], 'cooling' => [0 => 1]]
     public $extraQuantities = [
+        'ram' => [],
         'storage' => [],
         'cooling' => [],
     ];
@@ -95,7 +97,7 @@ class PcBuilder extends Component
     protected $quantityTypes = ['ram', 'storage', 'cooling'];
 
     // Types that support multiple different selections (extra slots)
-    protected $multiSlotTypes = ['storage', 'cooling'];
+    protected $multiSlotTypes = ['ram', 'storage', 'cooling'];
 
     // Maximum number of extra slots per type
     protected $maxExtraSlots = 4;
@@ -337,8 +339,10 @@ class PcBuilder extends Component
             $this->componentQuantities['ram'] = 1;
             $this->componentQuantities['storage'] = 1;
             $this->componentQuantities['cooling'] = 1;
+            $this->extraComponents['ram'] = [];
             $this->extraComponents['storage'] = [];
             $this->extraComponents['cooling'] = [];
+            $this->extraQuantities['ram'] = [];
             $this->extraQuantities['storage'] = [];
             $this->extraQuantities['cooling'] = [];
         }
@@ -360,9 +364,9 @@ class PcBuilder extends Component
         
         $this->showResetModal = false;
         
-        $message = 'PC Build reset successfully.';
-        if ($this->resetTarget === 'core') $message = 'Core System reset successfully.';
-        if ($this->resetTarget === 'peripherals') $message = 'Peripherals reset successfully.';
+        $message = __('messages.pc_builder.reset_all_success');
+        if ($this->resetTarget === 'core') $message = __('messages.pc_builder.reset_core_success');
+        if ($this->resetTarget === 'peripherals') $message = __('messages.pc_builder.reset_peripherals_success');
         
         $this->dispatch('notify', message: $message);
     }
@@ -370,7 +374,13 @@ class PcBuilder extends Component
     public function checkCompatibility()
     {
         $engine = new CompatibilityEngine();
-        $report = $engine->evaluate($this->selectedComponents);
+        
+        $components = $this->selectedComponents;
+        $components['extra_ram'] = $this->extraComponents['ram'] ?? [];
+        $components['extra_storage'] = $this->extraComponents['storage'] ?? [];
+        $components['extra_cooling'] = $this->extraComponents['cooling'] ?? [];
+        
+        $report = $engine->evaluate($components);
 
         $this->compatibilityScore = $report['overall_score'];
         $this->compatibilityStatus = $report['status'];

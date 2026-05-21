@@ -82,7 +82,9 @@
                                 </div>
                                 <div>
                                     <p class="font-medium text-content-primary dark:text-dark-100">{{ __('messages.contact.phone_label') }}</p>
-                                    <p class="text-sm text-content-muted dark:text-dark-400">{{ __('messages.footer.phone') }}</p>
+                                    <p class="text-sm text-content-muted dark:text-dark-400">
+                                        <span dir="ltr" style="display: inline-block;">{{ __('messages.footer.phone') }}</span>
+                                    </p>
                                 </div>
                             </div>
                             

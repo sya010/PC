@@ -3,7 +3,61 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? __('messages.admin.layout_title') }} - {{ __('messages.site_name') }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ $title ?? __('messages.admin.layout_title') }} | {{ __('messages.site_name') }}</title>
+    <meta name="description" content="{{ $description ?? __('messages.site_description') }}">
+
+    <!-- Canonical & SEO alternates -->
+    <link rel="canonical" href="{{ request()->url() }}">
+    <link rel="alternate" hreflang="x-default" href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}">
+    <link rel="alternate" hreflang="en" href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}">
+    <link rel="alternate" hreflang="ar" href="{{ request()->fullUrlWithQuery(['lang' => 'ar']) }}">
+    <link rel="alternate" hreflang="ku" href="{{ request()->fullUrlWithQuery(['lang' => 'ku']) }}">
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="{{ $title ?? __('messages.admin.layout_title') }} | {{ __('messages.site_name') }}">
+    <meta property="og:description" content="{{ $description ?? __('messages.site_description') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request()->url() }}">
+    <meta property="og:image" content="{{ asset('favicon/web-app-manifest-512x512.png') }}">
+    <meta property="og:locale" content="{{ app()->getLocale() }}">
+
+    <!-- Twitter Metadata -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title ?? __('messages.admin.layout_title') }} | {{ __('messages.site_name') }}">
+    <meta name="twitter:description" content="{{ $description ?? __('messages.site_description') }}">
+    <meta name="twitter:image" content="{{ asset('favicon/web-app-manifest-512x512.png') }}">
+
+    <!-- Favicons & Manifest -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon/favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicon/favicon-96x96.png') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon/favicon.svg') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}">
+    <meta name="theme-color" content="#6366f1">
+
+    <!-- FOUC Prevention: Apply theme + dark class before paint -->
+    <script>
+    (function () {
+        var darkThemes = ['dark-red', 'midnight', 'forest', 'cosmic', 'sunset', 'deep-teal', 'cherry', 'charcoal'];
+        var themeClasses = ['theme-ocean', 'theme-midnight', 'theme-emerald', 'theme-forest', 'theme-royal', 'theme-cosmic', 'theme-amber', 'theme-sunset', 'theme-teal', 'theme-deep-teal', 'theme-rose', 'theme-cherry', 'theme-slate', 'theme-charcoal'];
+        function initTheme() {
+            var t = localStorage.siteTheme || 'light-red';
+            themeClasses.forEach(function (c) { document.documentElement.classList.remove(c); });
+            var map = { ocean: 'theme-ocean', midnight: 'theme-midnight', emerald: 'theme-emerald', forest: 'theme-forest', royal: 'theme-royal', cosmic: 'theme-cosmic', amber: 'theme-amber', sunset: 'theme-sunset', teal: 'theme-teal', 'deep-teal': 'theme-deep-teal', rose: 'theme-rose', cherry: 'theme-cherry', slate: 'theme-slate', charcoal: 'theme-charcoal' };
+            if (map[t]) document.documentElement.classList.add(map[t]);
+            if (darkThemes.indexOf(t) > -1) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        initTheme();
+        document.addEventListener('livewire:navigated', initTheme);
+    })();
+    </script>
+
     <script>
         window.TechBuildTranslations = {
             theme: @json(__('messages.theme')),
@@ -16,7 +70,9 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-surface-primary dark:bg-dark-800 border-r border-border-subtle dark:border-dark-700 hidden md:flex flex-col fixed inset-y-0 z-50">
             <div class="p-6 flex items-center gap-2 border-b border-border-subtle dark:border-dark-700">
-                <div class="w-8 h-8 bg-brand-accent rounded-lg flex items-center justify-center text-white font-bold">TB</div>
+                <div class="w-8 h-8 bg-brand-accent rounded-lg flex items-center justify-center text-white font-bold p-1">
+                    <img src="{{ asset('favicon/favicon.svg') }}" alt="Logo" class="w-full h-full object-contain dark:invert">
+                </div>
                 <span class="font-bold text-xl text-content-primary dark:text-dark-100">TechBuild</span>
             </div>
             
@@ -39,13 +95,6 @@
                     </svg>
                     {{ __('messages.admin.sidebar.orders') }}
                 </a>
-                {{-- Users Link Placeholder --}}
-                {{-- <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-brand-base/5 hover:text-brand-base transition-colors">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    Users
-                </a> --}}
             </nav>
 
             <div class="p-4 border-t border-border-subtle dark:border-dark-700">

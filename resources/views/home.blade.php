@@ -159,7 +159,7 @@
                         </svg>
                     </div>
                     <h3 class="text-lg font-semibold mb-2">Expert Support</h3>
-                    <p class="text-sm text-content-muted dark:text-dark-400">AI-powered chatbot + human assistance</p>
+                    <p class="text-sm text-content-muted dark:text-dark-400">Expert human assistance & custom build guidance</p>
                 </div>
 
                 <!-- Feature 4 -->

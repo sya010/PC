@@ -2,10 +2,10 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-content-primary dark:text-dark-100 bg-clip-text text-transparent bg-gradient-to-r from-brand-base to-brand-light">
+            <h1 class="text-3xl font-bold text-brand-base dark:text-brand-light">
                 {{ __('messages.admin.products.title') }}
             </h1>
-            <p class="text-content-secondary dark:text-dark-400 mt-1">{{ __('messages.admin.products.subtitle') }}</p>
+            <p class="text-content-secondary dark:text-dark-200 mt-1">{{ __('messages.admin.products.subtitle') }}</p>
         </div>
         <a href="{{ route('admin.products.create') }}" wire:navigate class="flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-bold rounded-xl shadow-lg shadow-brand-base/20 hover:bg-brand-base hover:shadow-brand-base/30 transform hover:-translate-y-0.5 transition-all">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
@@ -21,10 +21,10 @@
                 wire:model.live.debounce.300ms="search" 
                 placeholder="{{ __('messages.admin.products.search_placeholder') }}" 
                 maxlength="100"
-                class="w-full {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'pr-12 pl-4' : 'pl-12 pr-4' }} py-3.5 rounded-2xl border border-border-subtle dark:border-dark-700 bg-surface-primary/50 dark:bg-dark-800/50 text-content-primary dark:text-dark-100 placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-4 focus:ring-brand-base/10 focus:border-brand-base focus:bg-surface-primary dark:focus:bg-dark-700 transition-all shadow-sm hover:border-brand-light"
+                class="w-full {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'pr-12 pl-4' : 'pl-12 pr-4' }} py-3.5 rounded-2xl border border-border-subtle dark:border-dark-700 bg-surface-primary/50 dark:bg-dark-800/50 text-content-primary dark:text-dark-100 placeholder-content-muted dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-base/10 focus:border-brand-base focus:bg-surface-primary dark:focus:bg-dark-700 transition-all shadow-sm hover:border-brand-light"
             >
             <div class="absolute inset-y-0 {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'right-0 pr-4' : 'left-0 pl-4' }} flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-content-muted dark:text-dark-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-5 w-5 text-content-muted dark:text-dark-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
@@ -51,7 +51,7 @@
 
                 <!-- Content -->
                 <div class="space-y-2 flex-grow flex flex-col">
-                    <div class="flex items-center justify-between text-xs font-bold text-content-muted dark:text-dark-500 uppercase tracking-wide">
+                    <div class="flex items-center justify-between text-xs font-bold text-content-muted dark:text-dark-300 uppercase tracking-wide">
                         <span>{{ $product->category }}</span>
                         <span>{{ __('messages.admin.products.stock') }}: {{ $product->stock }}</span>
                     </div>
@@ -62,7 +62,7 @@
                     
                     <div class="mt-auto pt-2 flex items-end justify-between">
                         <div class="text-xl font-bold text-content-primary dark:text-dark-100">
-                            ${{ number_format($product->price, 2) }}
+                            {{ number_format($product->price, 0) }} <span class="text-xs font-bold text-content-muted dark:text-dark-300">{{ __('messages.currency') }}</span>
                         </div>
                     </div>
                 </div>

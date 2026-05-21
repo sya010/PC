@@ -28,6 +28,45 @@ class ProductForm extends Component
     public $specs = [];
     public $availableCategories = [];
 
+    const CATEGORY_SPECS = [
+        'CPU' => [
+            'defaults' => ['socket', 'tdp', 'cores', 'threads', 'boost_clock'],
+            'additional' => ['brand', 'base_clock', 'generation', 'architecture']
+        ],
+        'GPU' => [
+            'defaults' => ['vram', 'tdp', 'length', 'pcie_version', 'brand'],
+            'additional' => ['model', 'slot_width', 'generation', 'architecture']
+        ],
+        'MOTHERBOARD' => [
+            'defaults' => ['socket', 'chipset', 'form_factor', 'memory_type', 'max_memory_speed'],
+            'additional' => ['brand', 'memory_slots', 'pcie_version', 'vrm_power_delivery']
+        ],
+        'RAM' => [
+            'defaults' => ['type', 'capacity', 'speed', 'modules', 'brand'],
+            'additional' => ['model', 'voltage', 'performance_tier']
+        ],
+        'STORAGE' => [
+            'defaults' => ['capacity', 'interface', 'read_speed', 'write_speed', 'brand'],
+            'additional' => ['model', 'form_factor']
+        ],
+        'PSU' => [
+            'defaults' => ['wattage', 'efficiency', 'modular', 'brand', 'model'],
+            'additional' => ['certification', 'fan_size']
+        ],
+        'CASE' => [
+            'defaults' => ['form_factor', 'gpu_length', 'cooler_height', 'radiator', 'brand'],
+            'additional' => ['model', 'color', 'weight']
+        ],
+        'COOLING' => [
+            'defaults' => ['type', 'tdp_rating', 'radiator', 'sockets', 'brand'],
+            'additional' => ['model', 'fan_rpm', 'noise_level']
+        ],
+        'default' => [
+            'defaults' => ['brand', 'model', 'type', 'wireless', 'color'],
+            'additional' => ['warranty', 'weight', 'dimensions', 'material']
+        ]
+    ];
+
     // Validation Rules
     protected function rules() 
     {
@@ -60,6 +99,40 @@ class ProductForm extends Component
         ];
     }
 
+    private function initializeSpecsForCategory($category)
+    {
+        $categoryUpper = strtoupper($category ?? '');
+        $specMap = self::CATEGORY_SPECS['default'];
+        foreach (self::CATEGORY_SPECS as $catKey => $map) {
+            if (strtoupper($catKey) === $categoryUpper) {
+                $specMap = $map;
+                break;
+            }
+        }
+
+        $newSpecs = [];
+        foreach ($specMap['defaults'] as $defaultKey) {
+            $newSpecs[] = ['key' => $defaultKey, 'value' => ''];
+        }
+        return $newSpecs;
+    }
+
+    public function updatedCategory($value)
+    {
+        // If specs is empty or only contains empty key/value rows, populate with defaults
+        $isEmpty = true;
+        foreach ($this->specs as $spec) {
+            if (!empty(trim($spec['key'] ?? '')) || !empty(trim($spec['value'] ?? ''))) {
+                $isEmpty = false;
+                break;
+            }
+        }
+
+        if ($isEmpty) {
+            $this->specs = $this->initializeSpecsForCategory($value);
+        }
+    }
+
     public function mount($id = null)
     {
         $existingCategories = Product::select('category')->distinct()->pluck('category')->filter()->toArray();
@@ -81,12 +154,70 @@ class ProductForm extends Component
                     $this->specs[] = ['key' => $key, 'value' => $value];
                 }
             }
+
+            // Pad existing specs up to 5 if needed using default keys
+            $categoryUpper = strtoupper($this->category ?? '');
+            $specMap = self::CATEGORY_SPECS['default'];
+            foreach (self::CATEGORY_SPECS as $catKey => $map) {
+                if (strtoupper($catKey) === $categoryUpper) {
+                    $specMap = $map;
+                    break;
+                }
+            }
+
+            $existingKeys = array_map('strtolower', array_column($this->specs, 'key'));
+            foreach ($specMap['defaults'] as $defaultKey) {
+                if (count($this->specs) >= 5) {
+                    break;
+                }
+                if (!in_array(strtolower($defaultKey), $existingKeys)) {
+                    $this->specs[] = ['key' => $defaultKey, 'value' => ''];
+                }
+            }
+
+            // If still less than 5 rows, pad with blank rows
+            while (count($this->specs) < 5) {
+                $this->specs[] = ['key' => '', 'value' => ''];
+            }
+        } else {
+            $this->category = $this->availableCategories[0] ?? 'CPU';
+            $this->specs = $this->initializeSpecsForCategory($this->category);
         }
     }
 
     public function addSpec()
     {
-        $this->specs[] = ['key' => '', 'value' => ''];
+        $categoryUpper = strtoupper($this->category ?? '');
+        $specMap = self::CATEGORY_SPECS['default'];
+        foreach (self::CATEGORY_SPECS as $catKey => $map) {
+            if (strtoupper($catKey) === $categoryUpper) {
+                $specMap = $map;
+                break;
+            }
+        }
+
+        $existingKeys = array_map('strtolower', array_filter(array_column($this->specs, 'key')));
+        
+        // Find a suggestion from defaults first that is not already in the list
+        $suggestedKey = '';
+        foreach ($specMap['defaults'] as $key) {
+            if (!in_array(strtolower($key), $existingKeys)) {
+                $suggestedKey = $key;
+                break;
+            }
+        }
+
+        // If all defaults are present, find a suggestion from additional keys
+        if (empty($suggestedKey)) {
+            foreach ($specMap['additional'] as $key) {
+                if (!in_array(strtolower($key), $existingKeys)) {
+                    $suggestedKey = $key;
+                    break;
+                }
+            }
+        }
+
+        $this->specs[] = ['key' => $suggestedKey, 'value' => ''];
     }
 
     public function removeSpec($index)
@@ -97,6 +228,11 @@ class ProductForm extends Component
 
     public function save()
     {
+        // Filter out completely empty spec rows before validation
+        $this->specs = array_values(array_filter($this->specs, function ($item) {
+            return !empty(trim($item['key'] ?? '')) || !empty(trim($item['value'] ?? ''));
+        }));
+
         $this->validate();
 
         // Handle Image Upload
@@ -140,27 +276,13 @@ class ProductForm extends Component
         if ($this->product) {
             $this->product->update($data);
             
-            ActivityLog::create([
-                'user_id' => auth()->id(),
-                'action' => 'updated_product',
-                'description' => 'Updated product: ' . $name,
-                'subject_type' => Product::class,
-                'subject_id' => $this->product->id,
-                'ip_address' => request()->ip(),
-            ]);
+            ActivityLog::log('updated_product', 'Updated product: ' . $name, $this->product);
 
             session()->flash('success', 'Product updated successfully.');
         } else {
             $product = Product::create($data);
 
-            ActivityLog::create([
-                'user_id' => auth()->id(),
-                'action' => 'created_product',
-                'description' => 'Created new product: ' . $name,
-                'subject_type' => Product::class,
-                'subject_id' => $product->id,
-                'ip_address' => request()->ip(),
-            ]);
+            ActivityLog::log('created_product', 'Created new product: ' . $name, $product);
 
             session()->flash('success', 'Product created successfully.');
         }

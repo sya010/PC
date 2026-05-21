@@ -7,12 +7,23 @@
                 <p class="text-sm text-content-muted dark:text-dark-500 hidden sm:block">{{ __('messages.pc_builder.subtitle') }}</p>
             </div>
             
-             <!-- Mobile Summary Toggle (Visible only on small screens) -->
-            <div class="lg:hidden flex items-center gap-4">
-               <div class="text-end">
-                    <p class="text-[10px] uppercase font-bold text-content-muted dark:text-dark-500">{{ __('messages.build.total') }}</p>
-                    <p class="font-black text-content-primary dark:text-dark-100">{{ number_format($totalPrice, 0) }} <span class="text-xs">{{ __('messages.currency') }}</span></p>
-               </div>
+            <div class="flex items-center gap-4">
+                @if($this->getSelectedCount() > 0)
+                    <button wire:click="confirmReset('all')" class="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-red-500/10 hover:shadow-lg hover:shadow-red-500/20 active:scale-95">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        {{ __('messages.pc_builder.reset_build') }}
+                    </button>
+                @endif
+
+                <!-- Mobile Summary Toggle (Visible only on small screens) -->
+                <div class="lg:hidden flex items-center gap-4">
+                   <div class="text-end">
+                        <p class="text-[10px] uppercase font-bold text-content-muted dark:text-dark-500">{{ __('messages.build.total') }}</p>
+                        <p class="font-black text-content-primary dark:text-dark-100">{{ number_format($totalPrice, 0) }} <span class="text-xs">{{ __('messages.currency') }}</span></p>
+                   </div>
+                </div>
             </div>
         </div>
     </div>

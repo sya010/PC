@@ -14,7 +14,8 @@ use App\Compatibility\Dimensions\{
     RamSpeedChecker,
     PsuHeadroomChecker,
     CoolerSocketChecker,
-    BottleneckChecker
+    BottleneckChecker,
+    StorageChecker
 };
 
 /**
@@ -40,6 +41,7 @@ class CompatibilityEngine
             new GpuLengthChecker(),
             new FormFactorChecker(),
             new PsuCapacityChecker(),
+            new StorageChecker(),
             
             // Soft constraints (affect score)
             new RamSpeedChecker(),

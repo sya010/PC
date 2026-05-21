@@ -24,17 +24,7 @@
             </div>
 
             <!-- Support Options -->
-            <div class="grid md:grid-cols-3 gap-6 mb-16">
-                <div class="neu-card p-6 text-center hover:scale-105 transition-transform cursor-pointer">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-brand-base flex items-center justify-center">
-                        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold mb-2">{{ __('messages.support_page.live_chat') }}</h3>
-                    <p class="text-sm text-content-muted dark:text-dark-400">{{ __('messages.support_page.live_chat_desc') }}</p>
-                </div>
-
+            <div class="grid md:grid-cols-2 gap-6 mb-16 max-w-2xl mx-auto">
                 <div class="neu-card p-6 text-center hover:scale-105 transition-transform cursor-pointer">
                     <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-brand-accent flex items-center justify-center">
                         <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,10 +53,10 @@
                 <div class="space-y-4">
                     @php
                         $faqs = [
-                            ['q' => __('messages.support_page.faq_1'), 'a' => 'You can track your order using the tracking number sent to your email after shipping.'],
-                            ['q' => __('messages.support_page.faq_2'), 'a' => 'We offer a 14-day return policy for unopened items in original packaging.'],
-                            ['q' => __('messages.support_page.faq_3'), 'a' => 'Yes, all products come with manufacturer warranty. Extended warranty is available.'],
-                            ['q' => __('messages.support_page.faq_4'), 'a' => 'Delivery within Iraq typically takes 2-5 business days depending on your location.'],
+                            ['q' => __('messages.support_page.faq_1'), 'a' => __('messages.support_page.faq_1_a')],
+                            ['q' => __('messages.support_page.faq_2'), 'a' => __('messages.support_page.faq_2_a')],
+                            ['q' => __('messages.support_page.faq_3'), 'a' => __('messages.support_page.faq_3_a')],
+                            ['q' => __('messages.support_page.faq_4'), 'a' => __('messages.support_page.faq_4_a')],
                         ];
                     @endphp
  

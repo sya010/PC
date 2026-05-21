@@ -172,9 +172,7 @@ class ComponentSelector extends Component
 
         $title = $this->getComponentTitle($this->type);
         if ($this->isExtra) {
-            $title = $this->type === 'storage'
-                ? __('messages.component_selector.add_another_storage')
-                : __('messages.component_selector.add_another_cooling');
+            $title = __('messages.component_selector.add_another_' . $this->type);
         }
 
         return view('livewire.component-selector', [
@@ -208,5 +206,107 @@ class ComponentSelector extends Component
         return isset($titles[$type])
             ? __($titles[$type])
             : __('messages.component_selector.select_component');
+    }
+
+    public function getCompatibilityStatus(Product $product): array
+    {
+        $components = session()->get('pc_build', []);
+        $extras = session()->get('pc_build_extras', []);
+        
+        $components['extra_ram'] = $extras['ram'] ?? [];
+        $components['extra_storage'] = $extras['storage'] ?? [];
+        $components['extra_cooling'] = $extras['cooling'] ?? [];
+
+        $componentData = [
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->price,
+            'image' => (string) $product->image_url,
+            'specs' => $product->specs,
+            'category' => $product->category
+        ];
+
+        // Simulate insertion
+        if ($this->isExtra) {
+            if ($this->editIndex !== null && isset($components['extra_' . $this->type][$this->editIndex])) {
+                $components['extra_' . $this->type][$this->editIndex] = $componentData;
+            } else {
+                $components['extra_' . $this->type][] = $componentData;
+            }
+        } else {
+            $components[$this->type] = $componentData;
+        }
+
+        $engine = new CompatibilityEngine();
+        $report = $engine->evaluate($components);
+
+        // First look for failed hard constraints that mention our type (or extra_type)
+        foreach ($report['hard_constraints'] as $c) {
+            if (!$c['pass']) {
+                $roles = $c['roles'] ?? [];
+                $isRelevant = false;
+                foreach ($roles as $roleValue) {
+                    if ($roleValue === $this->type || ($this->isExtra && $roleValue === 'extra_' . $this->type) || $roleValue === 'system') {
+                        $isRelevant = true;
+                        break;
+                    }
+                }
+                if ($isRelevant) {
+                    return [
+                        'status' => 'error',
+                        'compatible' => false,
+                        'reason' => $c['message']
+                    ];
+                }
+            }
+        }
+
+        // Next look for warning/soft constraints that mention our type (or extra_type)
+        foreach ($report['soft_constraints'] as $c) {
+            if ($c['score'] < 0.7) {
+                $roles = $c['roles'] ?? [];
+                $isRelevant = false;
+                foreach ($roles as $roleValue) {
+                    if ($roleValue === $this->type || ($this->isExtra && $roleValue === 'extra_' . $this->type) || $roleValue === 'system') {
+                        $isRelevant = true;
+                        break;
+                    }
+                }
+                if ($isRelevant) {
+                    return [
+                        'status' => 'warning',
+                        'compatible' => true,
+                        'reason' => $c['message']
+                    ];
+                }
+            }
+        }
+
+        // Lastly, look for advisory recommendations
+        foreach ($report['advisory'] as $c) {
+            if ($c['score'] < 0.85) {
+                $roles = $c['roles'] ?? [];
+                $isRelevant = false;
+                foreach ($roles as $roleValue) {
+                    if ($roleValue === $this->type || ($this->isExtra && $roleValue === 'extra_' . $this->type)) {
+                        $isRelevant = true;
+                        break;
+                    }
+                }
+                if ($isRelevant) {
+                    return [
+                        'status' => 'warning',
+                        'compatible' => true,
+                        'reason' => $c['message']
+                    ];
+                }
+            }
+        }
+
+        return [
+            'status' => 'success',
+            'compatible' => true,
+            'reason' => 'Compatible with your build'
+        ];
     }
 }

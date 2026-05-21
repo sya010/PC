@@ -4,12 +4,7 @@
             <!-- Logo -->
             <div class="flex-shrink-0">
                 <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-3 group">
-                    <div class="relative w-10 h-10 flex items-center justify-center bg-brand-accent dark:bg-dark-700 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-brand-base to-brand-light opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                        <svg class="w-6 h-6 text-white relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
+                    <img src="{{ asset('favicon/favicon.svg') }}" alt="Logo" class="w-8 h-8 object-contain dark:invert transition-transform duration-300 group-hover:scale-105">
                     <span class="font-bold text-xl tracking-tight text-content-primary dark:text-white">{{ __('messages.site_name') }}</span>
                 </a>
             </div>
