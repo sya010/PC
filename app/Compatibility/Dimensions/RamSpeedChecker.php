@@ -42,8 +42,19 @@ class RamSpeedChecker implements DimensionChecker
     {
         $ram = $components['ram'] ?? null;
         $motherboard = $components['motherboard'] ?? null;
+        $extraRam = $components['extra_ram'] ?? [];
 
-        if (!$ram || !$motherboard) {
+        $ramItems = [];
+        if ($ram) {
+            $ramItems[] = $ram;
+        }
+        foreach ($extraRam as $item) {
+            if ($item) {
+                $ramItems[] = $item;
+            }
+        }
+
+        if (empty($ramItems) || !$motherboard) {
             return [
                 'pass' => true,
                 'score' => 1.0,
@@ -52,10 +63,20 @@ class RamSpeedChecker implements DimensionChecker
             ];
         }
 
-        $ramSpeed = $this->parseSpeed($ram['specs']['speed'] ?? 0);
         $maxSpeed = $this->parseSpeed($motherboard['specs']['max_memory_speed'] ?? 9999);
 
-        if ($ramSpeed <= 0) {
+        $speeds = [];
+        foreach ($ramItems as $item) {
+            $speed = $this->parseSpeed($item['specs']['speed'] ?? 0);
+            if ($speed > 0) {
+                $speeds[] = [
+                    'name' => $item['name'],
+                    'speed' => $speed
+                ];
+            }
+        }
+
+        if (empty($speeds)) {
             return [
                 'pass' => true,
                 'score' => 0.8,
@@ -64,30 +85,62 @@ class RamSpeedChecker implements DimensionChecker
             ];
         }
 
-        // If max speed not defined, assume motherboard supports the RAM
-        if ($maxSpeed >= 9999) {
+        // Find min and max speed
+        $minSpeed = min(array_column($speeds, 'speed'));
+        $maxRamSpeed = max(array_column($speeds, 'speed'));
+
+        // Check if mixing different speeds
+        $isMixed = false;
+        if (count(array_unique(array_column($speeds, 'speed'))) > 1) {
+            $isMixed = true;
+        }
+
+        // Downclock due to motherboard limit
+        $downclocksToMb = $minSpeed > $maxSpeed;
+        $effectiveSpeed = min($minSpeed, $maxSpeed);
+
+        if ($isMixed) {
+            $score = 0.6; // lower score for mixing
+            $message = "RAM speeds differ: Modules will run at the slowest speed ({$effectiveSpeed}MHz) and may cause instability";
+            if ($downclocksToMb) {
+                $message .= " (downclocked further due to motherboard limit of {$maxSpeed}MHz)";
+            }
             return [
                 'pass' => true,
-                'score' => 1.0,
-                'message' => "RAM speed: {$ramSpeed}MHz",
-                'details' => ['ram_speed' => $ramSpeed, 'mb_max_speed' => 'not specified']
+                'score' => $score,
+                'message' => $message,
+                'details' => [
+                    'speeds' => $speeds,
+                    'mb_max_speed' => $maxSpeed,
+                    'effective_speed' => $effectiveSpeed,
+                    'mixed' => true
+                ]
             ];
         }
 
-        $score = min(1.0, $maxSpeed / $ramSpeed);
-        $effectiveSpeed = min($ramSpeed, $maxSpeed);
+        if ($downclocksToMb) {
+            $score = min(1.0, $maxSpeed / $minSpeed);
+            return [
+                'pass' => true,
+                'score' => $score,
+                'message' => "RAM will downclock to {$maxSpeed}MHz (rated: {$minSpeed}MHz)",
+                'details' => [
+                    'ram_speed' => $minSpeed,
+                    'mb_max_speed' => $maxSpeed,
+                    'effective_speed' => $effectiveSpeed,
+                    'efficiency' => round($score * 100, 1) . '%'
+                ]
+            ];
+        }
 
         return [
-            'pass' => true, // Soft constraint always passes
-            'score' => $score,
-            'message' => $ramSpeed <= $maxSpeed 
-                ? "RAM speed optimal: {$ramSpeed}MHz" 
-                : "RAM will downclock to {$maxSpeed}MHz (rated: {$ramSpeed}MHz)",
+            'pass' => true,
+            'score' => 1.0,
+            'message' => "RAM speed optimal: {$minSpeed}MHz",
             'details' => [
-                'ram_speed' => $ramSpeed,
+                'ram_speed' => $minSpeed,
                 'mb_max_speed' => $maxSpeed,
-                'effective_speed' => $effectiveSpeed,
-                'efficiency' => round($score * 100, 1) . '%'
+                'effective_speed' => $effectiveSpeed
             ]
         ];
     }

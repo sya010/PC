@@ -14,7 +14,8 @@ class Orders extends Component
 
     public function render()
     {
-        $orders = Order::where('user_id', auth()->id())
+        $orders = Order::with('items.product')
+            ->where('user_id', auth()->id())
             ->latest()
             ->paginate(5);
 

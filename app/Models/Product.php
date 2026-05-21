@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Services\ImageService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -26,6 +27,8 @@ class Product extends Model
         'images' => 'array',
         'specs' => 'array',
         'is_active' => 'boolean',
+        'price' => 'decimal:2',
+        'stock' => 'integer',
     ];
 
     /**
@@ -44,6 +47,14 @@ class Product extends Model
                 }
             }
         });
+    }
+
+    /**
+     * Get the order items associated with this product.
+     */
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
     }
 
     /**

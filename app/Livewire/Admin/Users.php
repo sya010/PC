@@ -11,6 +11,9 @@ class Users extends Component
     use WithPagination;
 
     public $search = '';
+    public $confirmingUserId = null;
+    public $confirmingAction = null; // 'promote', 'demote', 'block', 'unblock', 'delete'
+    public $confirmingUserName = '';
 
     public function render()
     {
@@ -26,64 +29,83 @@ class Users extends Component
         ])->layout('components.layouts.admin', ['title' => 'Users Management']);
     }
 
-    public function promote($id)
+    public function startConfirmation($id, $action)
     {
-        $user = User::find($id);
-        if ($user) {
-            $user->is_admin = true;
-            $user->save();
-            session()->flash('success', "User {$user->name} promoted to Admin.");
-        }
-    }
-
-    public function demote($id)
-    {
-        if ($id == auth()->id()) {
-            session()->flash('error', "You cannot demote yourself!");
+        if ($id == auth()->id() && in_array($action, ['demote', 'block', 'delete'])) {
+            session()->flash('error', "You cannot perform this action on yourself!");
             return;
         }
 
         $user = User::find($id);
         if ($user) {
-            $user->is_admin = false;
-            $user->save();
-            session()->flash('success', "User {$user->name} demoted to User.");
+            $this->confirmingUserId = $id;
+            $this->confirmingAction = $action;
+            $this->confirmingUserName = $user->name;
         }
     }
 
-    public function block($id)
+    public function cancelConfirmation()
     {
-        if ($id == auth()->id()) {
-            session()->flash('error', "You cannot block yourself!");
+        $this->confirmingUserId = null;
+        $this->confirmingAction = null;
+        $this->confirmingUserName = '';
+    }
+
+    public function executeAction()
+    {
+        if (!$this->confirmingUserId || !$this->confirmingAction) {
+            return;
+        }
+
+        $id = $this->confirmingUserId;
+        $action = $this->confirmingAction;
+
+        if ($id == auth()->id() && in_array($action, ['demote', 'block', 'delete'])) {
+            session()->flash('error', "You cannot perform this action on yourself!");
+            $this->cancelConfirmation();
             return;
         }
 
         $user = User::find($id);
-        if ($user) {
-            $user->is_blocked = true;
-            $user->save();
-            session()->flash('success', "User {$user->name} has been blocked.");
-        }
-    }
-
-    public function unblock($id)
-    {
-        $user = User::find($id);
-        if ($user) {
-            $user->is_blocked = false;
-            $user->save();
-            session()->flash('success', "User {$user->name} has been unblocked.");
-        }
-    }
-
-    public function delete($id)
-    {
-        if ($id == auth()->id()) {
-            session()->flash('error', "You cannot delete yourself!");
+        if (!$user && $action !== 'delete') {
+            $this->cancelConfirmation();
             return;
         }
 
-        User::find($id)->delete();
-        session()->flash('success', 'User deleted successfully.');
+        switch ($action) {
+            case 'promote':
+                $user->is_admin = true;
+                $user->save();
+                session()->flash('success', "User {$user->name} promoted to Admin.");
+                break;
+
+            case 'demote':
+                $user->is_admin = false;
+                $user->save();
+                session()->flash('success', "User {$user->name} demoted to User.");
+                break;
+
+            case 'block':
+                $user->is_blocked = true;
+                $user->save();
+                session()->flash('success', "User {$user->name} has been blocked.");
+                break;
+
+            case 'unblock':
+                $user->is_blocked = false;
+                $user->save();
+                session()->flash('success', "User {$user->name} has been unblocked.");
+                break;
+
+            case 'delete':
+                $name = $user ? $user->name : 'User';
+                if ($user) {
+                    $user->delete();
+                }
+                session()->flash('success', "User {$name} deleted successfully.");
+                break;
+        }
+
+        $this->cancelConfirmation();
     }
 }

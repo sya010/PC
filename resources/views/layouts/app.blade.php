@@ -9,8 +9,34 @@
     <title>{{ $title ?? __('messages.site_name') }} | {{ __('messages.site_tagline') }}</title>
     <meta name="description" content="{{ $description ?? __('messages.site_description') }}">
     
-    <!-- Favicon -->
-    <link rel="icon" href="{{ asset('favicon.ico') }}">
+    <!-- Canonical & SEO alternates -->
+    <link rel="canonical" href="{{ request()->url() }}">
+    <link rel="alternate" hreflang="x-default" href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}">
+    <link rel="alternate" hreflang="en" href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}">
+    <link rel="alternate" hreflang="ar" href="{{ request()->fullUrlWithQuery(['lang' => 'ar']) }}">
+    <link rel="alternate" hreflang="ku" href="{{ request()->fullUrlWithQuery(['lang' => 'ku']) }}">
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="{{ $title ?? __('messages.site_name') }} | {{ __('messages.site_tagline') }}">
+    <meta property="og:description" content="{{ $description ?? __('messages.site_description') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request()->url() }}">
+    <meta property="og:image" content="{{ asset('favicon/web-app-manifest-512x512.png') }}">
+    <meta property="og:locale" content="{{ app()->getLocale() }}">
+
+    <!-- Twitter Metadata -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title ?? __('messages.site_name') }} | {{ __('messages.site_tagline') }}">
+    <meta name="twitter:description" content="{{ $description ?? __('messages.site_description') }}">
+    <meta name="twitter:image" content="{{ asset('favicon/web-app-manifest-512x512.png') }}">
+
+    <!-- Favicons & Manifest -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon/favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicon/favicon-96x96.png') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon/favicon.svg') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}">
+    <meta name="theme-color" content="#6366f1">
     
     <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

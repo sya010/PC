@@ -49,14 +49,7 @@ class UserForm extends Component
             $this->user->update($data);
 
              // Log Activity
-             ActivityLog::create([
-                'user_id' => auth()->id(),
-                'action' => 'updated_user',
-                'description' => 'Updated user details: ' . $this->name,
-                'subject_type' => User::class,
-                'subject_id' => $this->user->id,
-                'ip_address' => request()->ip(),
-            ]);
+             ActivityLog::log('updated_user', 'Updated user details: ' . $this->name, $this->user);
 
             session()->flash('success', 'User updated successfully.');
         } else {

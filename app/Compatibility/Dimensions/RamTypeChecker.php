@@ -36,8 +36,19 @@ class RamTypeChecker implements DimensionChecker
     {
         $ram = $components['ram'] ?? null;
         $motherboard = $components['motherboard'] ?? null;
+        $extraRam = $components['extra_ram'] ?? [];
 
-        if (!$ram || !$motherboard) {
+        $ramItems = [];
+        if ($ram) {
+            $ramItems[] = $ram;
+        }
+        foreach ($extraRam as $item) {
+            if ($item) {
+                $ramItems[] = $item;
+            }
+        }
+
+        if (empty($ramItems) || !$motherboard) {
             return [
                 'pass' => true,
                 'score' => 1.0,
@@ -46,10 +57,14 @@ class RamTypeChecker implements DimensionChecker
             ];
         }
 
-        $ramType = strtoupper($ram['specs']['type'] ?? '');
         $mbType = strtoupper($motherboard['specs']['memory_type'] ?? '');
 
-        if (!$ramType || !$mbType) {
+        // Standardize form factor/memory types if they have extra text
+        if (str_contains($mbType, 'DDR5')) $mbType = 'DDR5';
+        elseif (str_contains($mbType, 'DDR4')) $mbType = 'DDR4';
+        elseif (str_contains($mbType, 'DDR3')) $mbType = 'DDR3';
+
+        if (!$mbType) {
             return [
                 'pass' => true,
                 'score' => 0.5,
@@ -58,18 +73,65 @@ class RamTypeChecker implements DimensionChecker
             ];
         }
 
-        $compatible = $ramType === $mbType;
+        $incompatibleRams = [];
+        $mixMatchedRams = false;
+        $firstRamType = null;
 
+        foreach ($ramItems as $item) {
+            $ramType = strtoupper($item['specs']['type'] ?? '');
+            if (str_contains($ramType, 'DDR5')) $ramType = 'DDR5';
+            elseif (str_contains($ramType, 'DDR4')) $ramType = 'DDR4';
+            elseif (str_contains($ramType, 'DDR3')) $ramType = 'DDR3';
+
+            if (!$ramType) {
+                continue;
+            }
+
+            if ($ramType !== $mbType) {
+                $incompatibleRams[] = $item['name'] . " ({$ramType})";
+            }
+
+            if ($firstRamType === null) {
+                $firstRamType = $ramType;
+            } elseif ($ramType !== $firstRamType) {
+                $mixMatchedRams = true;
+            }
+        }
+
+        if (!empty($incompatibleRams)) {
+            $names = implode(', ', $incompatibleRams);
+            return [
+                'pass' => false,
+                'score' => 0.0,
+                'message' => "Memory type mismatch: {$names} incompatible with motherboard supporting {$mbType}",
+                'details' => [
+                    'mb_type' => $mbType,
+                    'compatible' => false
+                ]
+            ];
+        }
+
+        if ($mixMatchedRams) {
+            return [
+                'pass' => false,
+                'score' => 0.0,
+                'message' => "Memory type mismatch: Cannot mix different memory generations (DDR4/DDR5) in the same build",
+                'details' => [
+                    'mb_type' => $mbType,
+                    'compatible' => false
+                ]
+            ];
+        }
+
+        $ramTypeStr = $firstRamType ?? $mbType;
         return [
-            'pass' => $compatible,
-            'score' => $compatible ? 1.0 : 0.0,
-            'message' => $compatible 
-                ? "Memory type match: {$ramType}" 
-                : "Memory type mismatch: RAM is {$ramType}, Motherboard supports {$mbType}",
+            'pass' => true,
+            'score' => 1.0,
+            'message' => "Memory type match: {$ramTypeStr}",
             'details' => [
-                'ram_type' => $ramType,
                 'mb_type' => $mbType,
-                'compatible' => $compatible
+                'ram_type' => $ramTypeStr,
+                'compatible' => true
             ]
         ];
     }
