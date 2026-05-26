@@ -29,13 +29,13 @@
                     <div class="space-y-5">
                         <div class="group">
                             <label class="block text-sm font-semibold text-gray-700 dark:text-dark-200 mb-1.5 group-focus-within:text-brand-base transition-colors">{{ __('messages.admin.product_form.product_name') }}</label>
-                            <input type="text" wire:model="name" maxlength="255" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-gray-50/50 dark:bg-dark-900/50 text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-base/10 focus:border-brand-base focus:bg-white dark:focus:bg-dark-700 transition-all duration-200 hover:border-brand-base/30 shadow-sm" placeholder="{{ __('messages.admin.product_form.product_name_placeholder') }}">
+                            <input type="text" wire:model="name" maxlength="255" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-gray-50/50 dark:bg-dark-900/50 text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-base/10 focus:border-brand-base focus:bg-white dark:focus:bg-dark-700 transition-all duration-200 hover:border-brand-base/30 shadow-sm @error('name') border-red-500 bg-red-50/5 focus:ring-red-500/15 focus:border-red-500 @enderror" placeholder="{{ __('messages.admin.product_form.product_name_placeholder') }}">
                             @error('name') <span class="text-red-500 text-sm font-medium mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="group">
                             <label class="block text-sm font-semibold text-gray-700 dark:text-dark-200 mb-1.5 group-focus-within:text-brand-base transition-colors">{{ __('messages.admin.product_form.description') }}</label>
-                            <textarea wire:model="description" maxlength="5000" rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-gray-50/50 dark:bg-dark-900/50 text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-base/10 focus:border-brand-base focus:bg-white dark:focus:bg-dark-700 transition-all duration-200 hover:border-brand-base/30 shadow-sm resize-none" placeholder="{{ __('messages.admin.product_form.description_placeholder') }}"></textarea>
+                            <textarea wire:model="description" maxlength="5000" rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-gray-50/50 dark:bg-dark-900/50 text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-base/10 focus:border-brand-base focus:bg-white dark:focus:bg-dark-700 transition-all duration-200 hover:border-brand-base/30 shadow-sm resize-none @error('description') border-red-500 bg-red-50/5 focus:ring-red-500/15 focus:border-red-500 @enderror" placeholder="{{ __('messages.admin.product_form.description_placeholder') }}"></textarea>
                             @error('description') <span class="text-red-500 text-sm font-medium mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -48,7 +48,7 @@
                             </div>
                             <div class="group">
                                 <label class="block text-sm font-semibold text-gray-700 dark:text-dark-200 mb-1.5 group-focus-within:text-brand-base transition-colors">{{ __('messages.admin.product_form.stock_quantity') }}</label>
-                                <input type="number" wire:model="stock" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-gray-50/50 dark:bg-dark-900/50 text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-white dark:focus:bg-dark-700 transition-all duration-200 hover:border-brand-base/30 shadow-sm">
+                                <input type="number" wire:model="stock" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-gray-50/50 dark:bg-dark-900/50 text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-white dark:focus:bg-dark-700 transition-all duration-200 hover:border-brand-base/30 shadow-sm @error('stock') border-red-500 bg-red-50/5 focus:ring-red-500/15 focus:border-red-500 @enderror">
                                 @error('stock') <span class="text-red-500 text-sm font-medium mt-1 block">{{ $message }}</span> @enderror
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                                             wire:model="specs.{{ $index }}.key" 
                                             maxlength="100" 
                                             placeholder="{{ __('messages.admin.product_form.key_placeholder') }}" 
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-dark-600 bg-gray-50/50 dark:bg-dark-900/50 text-sm text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-white dark:focus:bg-dark-700 transition-all shadow-sm font-medium"
+                                            class="w-full px-4 py-2.5 rounded-xl border bg-gray-50/50 dark:bg-dark-900/50 text-sm text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-white dark:focus:bg-dark-700 transition-all shadow-sm font-medium border-gray-200 dark:border-dark-600 @error('specs.'.$index.'.key') border-red-500 bg-red-50/5 focus:ring-red-500/15 focus:border-red-500 @enderror"
                                         >
                                         @error("specs.{$index}.key") <span class="text-red-500 text-xs mt-1 block absolute -bottom-4 left-0">{{ $message }}</span> @enderror
                                     </div>
@@ -87,7 +87,7 @@
                                             wire:model="specs.{{ $index }}.value" 
                                             maxlength="255" 
                                             placeholder="{{ __('messages.admin.product_form.value_placeholder') }}" 
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-dark-600 bg-gray-50/50 dark:bg-dark-900/50 text-sm text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-white dark:focus:bg-dark-700 transition-all shadow-sm"
+                                            class="w-full px-4 py-2.5 rounded-xl border bg-gray-50/50 dark:bg-dark-900/50 text-sm text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-white dark:focus:bg-dark-700 transition-all shadow-sm border-gray-200 dark:border-dark-600 @error('specs.'.$index.'.value') border-red-500 bg-red-50/5 focus:ring-red-500/15 focus:border-red-500 @enderror"
                                         >
                                         @error("specs.{$index}.value") <span class="text-red-500 text-xs mt-1 block absolute -bottom-4 left-0">{{ $message }}</span> @enderror
                                     </div>

@@ -14,7 +14,7 @@ class UserForm extends Component
     public $name;
     public $email;
     public $password;
-    public $is_admin = false;
+    public $is_admin = true;
 
     public function mount($id = null)
     {
@@ -24,6 +24,22 @@ class UserForm extends Component
             $this->email = $this->user->email;
             $this->is_admin = $this->user->is_admin;
         }
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => __('messages.validation.admin_user.name_required'),
+            'name.min' => __('messages.validation.admin_user.name_min'),
+            'name.max' => __('messages.validation.admin_user.name_max'),
+            'email.required' => __('messages.validation.admin_user.email_required'),
+            'email.email' => __('messages.validation.admin_user.email_email'),
+            'email.max' => __('messages.validation.admin_user.email_max'),
+            'email.unique' => __('messages.validation.admin_user.email_unique'),
+            'password.required' => __('messages.validation.admin_user.password_required'),
+            'password.min' => __('messages.validation.admin_user.password_min'),
+            'password.max' => __('messages.validation.admin_user.password_max'),
+        ];
     }
 
     public function save()
@@ -42,7 +58,7 @@ class UserForm extends Component
         ];
 
         if ($this->password) {
-            $data['password'] = bcrypt($this->password);
+            $data['password'] = $this->password;
         }
 
         if ($this->user) {
@@ -51,9 +67,19 @@ class UserForm extends Component
              // Log Activity
              ActivityLog::log('updated_user', 'Updated user details: ' . $this->name, $this->user);
 
-            session()->flash('success', 'User updated successfully.');
+            session()->flash('success', __('messages.admin.user_form.updated_success'));
         } else {
-            // Optional: Layout doesn't strictly link to create user yet, but good to have.
+            $user = User::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => $this->password,
+                'is_admin' => $this->is_admin,
+            ]);
+
+            // Log Activity
+            ActivityLog::log('created_user', 'Created new user: ' . $this->name, $user);
+
+            session()->flash('success', __('messages.admin.user_form.created_success'));
         }
 
         return $this->redirect(route('admin.users'), navigate: true);

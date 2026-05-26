@@ -14,7 +14,7 @@
         <div class="relative mt-8 space-y-6">
 
 
-            <form class="space-y-6" wire:submit="register">
+            <form class="space-y-6" wire:submit="register" novalidate>
                 <div>
                     <label for="name" class="block text-sm font-medium text-content-secondary dark:text-dark-300">{{ __('messages.auth.full_name') }}</label>
                     <div class="mt-1 relative">
@@ -23,7 +23,6 @@
                             name="name" 
                             type="text" 
                             autocomplete="name" 
-                            required 
                             maxlength="255"
                             class="input-neu block w-full px-4 py-3 border border-border-subtle dark:border-dark-700 rounded-xl shadow-sm placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent sm:text-sm transition-all bg-surface-secondary dark:bg-dark-900 text-content-primary dark:text-dark-100 @error('name') border-brand-accent bg-brand-accent/5 text-content-primary dark:text-dark-100 focus:ring-brand-accent/20 @enderror" 
                             wire:model.blur="name"
@@ -40,7 +39,6 @@
                             name="email" 
                             type="email" 
                             autocomplete="email" 
-                            required 
                             maxlength="255"
                             class="input-neu block w-full px-4 py-3 border border-border-subtle dark:border-dark-700 rounded-xl shadow-sm placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent sm:text-sm transition-all bg-surface-secondary dark:bg-dark-900 text-content-primary dark:text-dark-100 @error('email') border-brand-accent bg-brand-accent/5 text-content-primary dark:text-dark-100 focus:ring-brand-accent/20 @enderror" 
                             wire:model.blur="email"
@@ -57,7 +55,6 @@
                             name="password" 
                             type="password" 
                             autocomplete="new-password" 
-                            required 
                             maxlength="255"
                             class="input-neu block w-full px-4 py-3 border border-border-subtle dark:border-dark-700 rounded-xl shadow-sm placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent sm:text-sm transition-all bg-surface-secondary dark:bg-dark-900 text-content-primary dark:text-dark-100 @error('password') border-brand-accent bg-brand-accent/5 text-content-primary dark:text-dark-100 focus:ring-brand-accent/20 @enderror" 
                             wire:model.blur="password"
@@ -74,7 +71,6 @@
                             name="password_confirmation" 
                             type="password" 
                             autocomplete="new-password" 
-                            required 
                             maxlength="255"
                             class="input-neu block w-full px-4 py-3 border border-border-subtle dark:border-dark-700 rounded-xl shadow-sm placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent sm:text-sm transition-all bg-surface-secondary dark:bg-dark-900 text-content-primary dark:text-dark-100" 
                             wire:model="password_confirmation"
@@ -83,7 +79,7 @@
                 </div>
 
                 <div class="flex items-center">
-                    <input id="terms" name="terms" type="checkbox" required wire:model="terms" class="h-4 w-4 text-brand-base focus:ring-brand-accent border-border-subtle dark:border-dark-700 rounded cursor-pointer transition-colors">
+                    <input id="terms" name="terms" type="checkbox" wire:model="terms" class="h-4 w-4 text-brand-base focus:ring-brand-accent border-border-subtle dark:border-dark-700 rounded cursor-pointer transition-colors">
                     <label for="terms" class="ms-2 block text-sm text-content-primary dark:text-dark-100 cursor-pointer">
                         {{ __('messages.auth.agree_to') }} <a href="#" class="text-brand-base hover:text-brand-accent">{{ __('messages.footer.terms') }}</a> {{ __('messages.auth.and') }} <a href="#" class="text-brand-base hover:text-brand-accent">{{ __('messages.footer.privacy') }}</a>
                     </label>

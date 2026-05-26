@@ -130,6 +130,62 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Password Restoration Requests Inbox -->
+            <div class="bg-white dark:bg-dark-900 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 p-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-brand-base/5 rounded-bl-full -mr-8 -mt-8 pointer-events-none"></div>
+
+                <div class="relative">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-dark-100 flex items-center gap-2 mb-1">
+                        <svg class="w-5 h-5 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        {{ __('messages.admin.sidebar.password_requests') }} Inbox
+                    </h2>
+                    <p class="text-sm text-gray-500 dark:text-dark-300 mb-8">View the status and administrator updates for your submitted password restoration requests.</p>
+
+                    <div class="space-y-4">
+                        @forelse($passwordRequests as $req)
+                            <div class="p-5 rounded-xl border border-gray-100 dark:border-dark-800 bg-gray-50/50 dark:bg-dark-950 flex flex-col md:flex-row md:items-start justify-between gap-4">
+                                <div class="space-y-2 flex-1">
+                                    <div class="flex flex-wrap items-center gap-3">
+                                        <span class="font-bold text-gray-900 dark:text-dark-100 text-sm">
+                                            {{ __('messages.auth.reason_' . strtolower(explode(' ', trim($req->reason))[0])) ?: $req->reason }}
+                                        </span>
+                                        <span class="text-xs text-gray-400 dark:text-dark-500 font-medium">
+                                            {{ $req->created_at->format('Y-m-d H:i') }}
+                                        </span>
+                                    </div>
+                                    @if($req->admin_note)
+                                        <div class="p-3 rounded-xl bg-white dark:bg-dark-900 border border-gray-100 dark:border-dark-800 text-xs text-gray-600 dark:text-dark-300 font-medium relative mt-2 leading-relaxed">
+                                            <span class="block text-[10px] font-bold text-brand-base dark:text-brand-light uppercase tracking-wider mb-1">Response from Admin</span>
+                                            {{ $req->admin_note }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="flex-shrink-0">
+                                    @if($req->status === 'pending')
+                                        <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/30">
+                                            {{ __('messages.admin.password_requests.pending') }}
+                                        </span>
+                                    @elseif($req->status === 'completed')
+                                        <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-bold bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30">
+                                            {{ __('messages.admin.password_requests.completed') }}
+                                        </span>
+                                    @else
+                                        <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30">
+                                            {{ __('messages.admin.password_requests.cancelled') }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <div class="py-8 text-center text-gray-400 dark:text-dark-500 text-sm font-medium">
+                                <svg class="w-12 h-12 mx-auto mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0a2 2 0 01-2-2H6a2 2 0 01-2-2m16 0V9a2 2 0 00-2-2H6a2 2 0 00-2 2v2m4 4h4" /></svg>
+                                No restoration requests found.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

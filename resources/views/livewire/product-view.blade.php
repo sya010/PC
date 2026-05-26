@@ -91,12 +91,20 @@
                         
                         <button 
                             wire:click="addToCart" 
-                            class="flex-1 bg-dark-950 dark:bg-dark-800 hover:bg-brand-base dark:hover:bg-brand-accent text-white font-bold py-5 px-8 rounded-2xl shadow-xl dark:shadow-dark-950/20 hover:shadow-brand-base/30 dark:hover:shadow-brand-accent/30 transition-all active:scale-95 flex items-center justify-center gap-3 group"
+                            @if($product->stock <= 0) disabled @endif
+                            class="flex-1 {{ $product->stock <= 0 ? 'bg-slate-300 dark:bg-dark-800 text-slate-500 dark:text-dark-500 cursor-not-allowed' : 'bg-dark-950 dark:bg-dark-800 hover:bg-brand-base dark:hover:bg-brand-accent text-white hover:shadow-brand-base/30 dark:hover:shadow-brand-accent/30 active:scale-95' }} font-bold py-5 px-8 rounded-2xl shadow-xl dark:shadow-dark-950/20 transition-all flex items-center justify-center gap-3 group"
                         >
-                            <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
-                            {{ __('messages.product.add_to_cart') }}
+                            @if($product->stock > 0)
+                                <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                                {{ __('messages.product.add_to_cart') }}
+                            @else
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                </svg>
+                                {{ __('messages.product.out_of_stock') ?? 'Out of Stock' }}
+                            @endif
                         </button>
                     </div>
                 </div>

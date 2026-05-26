@@ -23,6 +23,7 @@ Route::get('/build-pc/select/{type}', App\Livewire\ComponentSelector::class)->na
 // Auth Routes
 Route::get('/login', App\Livewire\Auth\Login::class)->name('login');
 Route::get('/register', App\Livewire\Auth\Register::class)->name('register');
+Route::get('/forgot-password', App\Livewire\Auth\ForgotPassword::class)->name('password.request');
 Route::post('/logout', function () {
     auth()->logout();
     request()->session()->invalidate();
@@ -39,14 +40,18 @@ Route::middleware('auth')->group(function () {
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', App\Livewire\Admin\Dashboard::class)->name('dashboard');
+    Route::get('/reports', App\Livewire\Admin\Reports::class)->name('reports');
     Route::get('/products', App\Livewire\Admin\Products::class)->name('products');
     Route::get('/products/create', App\Livewire\Admin\ProductForm::class)->name('products.create');
     Route::get('/products/{id}/edit', App\Livewire\Admin\ProductForm::class)->name('products.edit');
     Route::get('/orders', App\Livewire\Admin\Orders::class)->name('orders');
     Route::get('/orders/{id}', App\Livewire\Admin\OrderView::class)->name('orders.view');
     Route::get('/users', App\Livewire\Admin\Users::class)->name('users');
+    Route::get('/users/create', App\Livewire\Admin\UserForm::class)->name('users.create');
     Route::get('/users/{id}', App\Livewire\Admin\UserView::class)->name('users.view');
     Route::get('/users/{id}/edit', App\Livewire\Admin\UserForm::class)->name('users.edit');
+    Route::get('/password-requests', App\Livewire\Admin\PasswordRequests::class)->name('password-requests');
+    Route::get('/password-requests/{id}', App\Livewire\Admin\PasswordRequestReview::class)->name('password-requests.review');
 });
 
 // Compare route

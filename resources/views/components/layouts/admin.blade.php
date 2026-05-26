@@ -89,6 +89,12 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                     {{ __('messages.admin.sidebar.dashboard') }}
                 </a>
+
+                <a href="{{ route('admin.reports') }}" 
+                   class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors {{ request()->routeIs('admin.reports') ? 'bg-brand-base text-white' : 'text-dark-200 hover:bg-dark-800 hover:text-white' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    Reports
+                </a>
                 
                 <div class="pt-4 pb-2 px-3 text-xs font-semibold text-dark-500 uppercase tracking-wider">{{ __('messages.admin.sidebar.management') }}</div>
                 
@@ -108,6 +114,12 @@
                    class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors {{ request()->routeIs('admin.users') ? 'bg-brand-base text-white' : 'text-dark-200 hover:bg-dark-800 hover:text-white' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     {{ __('messages.admin.sidebar.users') }}
+                </a>
+
+                <a href="{{ route('admin.password-requests') }}" 
+                   class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors {{ request()->routeIs('admin.password-requests') ? 'bg-brand-base text-white' : 'text-dark-200 hover:bg-dark-800 hover:text-white' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    {{ __('messages.admin.sidebar.password_requests') }}
                 </a>
 
                 <div class="pt-4 pb-2 px-3 text-xs font-semibold text-dark-500 uppercase tracking-wider">{{ __('messages.admin.sidebar.personal') }}</div>

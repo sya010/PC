@@ -1,5 +1,10 @@
 @props(['disabled' => false])
 
+@php
+    $wireModel = $attributes->wire('model')->value();
+    $hasError = $wireModel && $errors->has($wireModel);
+@endphp
+
 <div 
     x-data="{ 
         value: @entangle($attributes->wire('model')),
@@ -35,7 +40,7 @@
         maxlength="15"
         {{ $disabled ? 'disabled' : '' }} 
         {!! $attributes->whereDoesntStartWith('wire:model') !!}
-        class="block w-full px-4 py-3 rounded-xl border border-border-subtle dark:border-dark-700 bg-surface-secondary/50 dark:bg-dark-800 text-content-primary dark:text-dark-100 placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-surface-primary dark:focus:bg-dark-900 transition-all duration-200 hover:border-brand-base/30 shadow-sm pr-12 font-medium"
+        class="block w-full px-4 py-3 rounded-xl border {{ $hasError ? 'border-red-500 bg-red-50/5 text-content-primary focus:ring-red-500/15 focus:border-red-500' : 'border-border-subtle dark:border-dark-700 bg-surface-secondary/50 dark:bg-dark-800' }} text-content-primary dark:text-dark-100 placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-surface-primary dark:focus:bg-dark-900 transition-all duration-200 hover:border-brand-base/30 shadow-sm pr-12 font-medium"
         placeholder="0"
     >
 </div>

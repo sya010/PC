@@ -3,10 +3,15 @@
 <div class="group bg-surface-primary dark:bg-dark-900 rounded-[2rem] border {{ ($compatibility && !$compatibility['compatible']) ? 'border-rose-500/30 bg-rose-500/[0.01]' : 'border-border-subtle dark:border-dark-700' }} p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full relative overflow-hidden {{ ($compatibility && !$compatibility['compatible']) ? 'opacity-80 hover:opacity-100' : '' }}">
     
     <!-- Badge -->
-    <div class="absolute top-5 left-5 z-20">
+    <div class="absolute top-5 left-5 z-20 flex flex-col gap-1.5">
         <span class="px-3 py-1 bg-surface-primary/90 dark:bg-dark-800/90 backdrop-blur border border-border-subtle dark:border-dark-700 rounded-full text-[10px] font-bold text-content-secondary dark:text-dark-400 uppercase tracking-wider shadow-sm">
             {{ Str::limit($product->category, 10) }}
         </span>
+        @if(!$action && $product->stock <= 0)
+            <span class="px-3 py-1 bg-rose-500/10 backdrop-blur border border-rose-500/20 rounded-full text-[10px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider shadow-sm">
+                {{ __('messages.product.out_of_stock') ?? 'Out of Stock' }}
+            </span>
+        @endif
     </div>
 
     @if($compatibility)
@@ -55,7 +60,7 @@
             src="{{ $product->image_url }}" 
             alt="{{ $product->name }}" 
             loading="lazy" 
-            class="w-3/4 h-3/4 object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:scale-110"
+            class="w-3/4 h-3/4 object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:scale-110 {{ ($product->stock <= 0 && !$action) ? 'opacity-50' : '' }}"
         >
     </div>
 
@@ -98,10 +103,16 @@
                         <svg class="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </a>
                 @else
-                    <button wire:click="addToCart({{ $product->id }})"
-                        class="w-12 h-12 bg-dark-900 dark:bg-dark-800 hover:bg-brand-base text-white rounded-2xl flex items-center justify-center transition-all shadow-lg shadow-black/5 dark:shadow-black/20 hover:shadow-brand-base/30 active:scale-95 group/btn">
-                        <svg class="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-                    </button>
+                    @if($product->stock > 0)
+                        <button wire:click="addToCart({{ $product->id }})"
+                            class="w-12 h-12 bg-dark-900 dark:bg-dark-800 hover:bg-brand-base text-white rounded-2xl flex items-center justify-center transition-all shadow-lg shadow-black/5 dark:shadow-black/20 hover:shadow-brand-base/30 active:scale-95 group/btn">
+                            <svg class="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                        </button>
+                    @else
+                        <span class="inline-flex items-center justify-center px-2 py-1.5 bg-rose-500/10 text-rose-500 text-[10px] font-bold rounded-lg border border-rose-500/20 select-none">
+                            {{ __('messages.product.out_of_stock') ?? 'Out of Stock' }}
+                        </span>
+                    @endif
                 @endif
             </div>
         </div>

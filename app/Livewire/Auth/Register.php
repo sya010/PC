@@ -19,6 +19,21 @@ class Register extends Component
         'terms' => 'accepted',
     ];
 
+    public function messages()
+    {
+        return [
+            'name.required' => __('messages.validation.register.name_required'),
+            'name.min' => __('messages.validation.register.name_min'),
+            'email.required' => __('messages.validation.register.email_required'),
+            'email.email' => __('messages.validation.register.email_email'),
+            'email.unique' => __('messages.validation.register.email_unique'),
+            'password.required' => __('messages.validation.register.password_required'),
+            'password.confirmed' => __('messages.validation.register.password_confirmed'),
+            'password.min' => __('messages.validation.register.password_min'),
+            'terms.accepted' => __('messages.validation.register.terms_accepted'),
+        ];
+    }
+
     public function register()
     {
         $this->validate();

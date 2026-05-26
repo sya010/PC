@@ -19,7 +19,7 @@
             </div>
 
             <div class="space-y-6">
-                <form class="space-y-5" wire:submit="login">
+                <form class="space-y-5" wire:submit="login" novalidate>
                     <div>
                         <label for="email" class="block text-sm font-semibold text-content-secondary dark:text-dark-300 mb-1.5">{{ __('messages.auth.email') }}</label>
                         <div class="relative group">
@@ -28,7 +28,6 @@
                                 name="email" 
                                 type="email" 
                                 autocomplete="email" 
-                                required 
                                 class="w-full h-12 px-4 bg-surface-secondary dark:bg-dark-900 border border-border-subtle dark:border-dark-700 rounded-xl text-content-primary dark:text-dark-100 placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition-all duration-200 @error('email') border-brand-accent bg-brand-accent/5 text-content-primary dark:text-dark-100 focus:ring-brand-accent/20 focus:border-brand-accent @enderror" 
                                 placeholder="name@company.com"
                                 wire:model.blur="email"
@@ -52,8 +51,7 @@
                                 name="password" 
                                 type="password" 
                                 autocomplete="current-password" 
-                                required 
-                                class="w-full h-12 px-4 bg-surface-secondary dark:bg-dark-900 border border-border-subtle dark:border-dark-700 rounded-xl text-content-primary dark:text-dark-100 placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition-all duration-200" 
+                                class="w-full h-12 px-4 bg-surface-secondary dark:bg-dark-900 border border-border-subtle dark:border-dark-700 rounded-xl text-content-primary dark:text-dark-100 placeholder-content-muted dark:placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition-all duration-200 @error('password') border-brand-accent bg-brand-accent/5 text-content-primary dark:text-dark-100 focus:ring-brand-accent/20 focus:border-brand-accent @enderror" 
                                 placeholder="••••••••"
                                 wire:model="password"
                             >
@@ -68,7 +66,7 @@
                         </div>
 
                         <div class="text-sm">
-                            <a href="#" class="font-semibold text-brand-base hover:text-brand-accent transition-colors">
+                            <a href="{{ route('password.request') }}" wire:navigate class="font-semibold text-brand-base hover:text-brand-accent transition-colors">
                                 {{ __('messages.auth.forgot_password') }}
                             </a>
                         </div>

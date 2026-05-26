@@ -15,6 +15,15 @@ class Login extends Component
         'password' => 'required',
     ];
 
+    public function messages()
+    {
+        return [
+            'email.required' => __('messages.validation.login.email_required'),
+            'email.email' => __('messages.validation.login.email_email'),
+            'password.required' => __('messages.validation.login.password_required'),
+        ];
+    }
+
     public function login()
     {
         $this->validate();
@@ -29,7 +38,7 @@ class Login extends Component
             return $this->redirectIntended(route('home'), navigate: true);
         }
 
-        $this->addError('email', trans('auth.failed'));
+        $this->addError('email', __('messages.validation.login.failed'));
     }
 
     public function render()

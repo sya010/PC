@@ -6,6 +6,12 @@
             </h1>
             <p class="text-content-secondary dark:text-dark-200 mt-1">{{ __('messages.admin.users.subtitle') }}</p>
         </div>
+        <div>
+            <a href="{{ route('admin.users.create') }}" wire:navigate class="px-5 py-3 bg-brand-base text-white font-bold rounded-xl shadow-lg shadow-brand-base/20 hover:bg-brand-accent transition-all flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="11" x2="19" y2="17"/><line x1="16" y1="14" x2="22" y2="14"/></svg>
+                {{ __('messages.admin.users.create_admin') }}
+            </a>
+        </div>
     </div>
 
     <!-- Search -->
@@ -30,16 +36,24 @@
     </div>
 
     @if (session('success'))
-        <div class="mb-6 p-4 bg-brand-base/10 dark:bg-brand-base/20 border border-brand-base/20 dark:border-brand-base/30 text-brand-base dark:text-brand-light rounded-xl flex items-center gap-3 shadow-sm" role="alert">
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span class="font-medium text-brand-base dark:text-brand-light">{{ session('success') }}</span>
+        <div class="mb-6 p-4 bg-green-500/10 dark:bg-green-500/20 border border-green-500/20 dark:border-green-500/30 text-green-600 dark:text-green-400 rounded-xl flex items-center gap-3 shadow-md shadow-green-500/5 animate-in fade-in slide-in-from-top-4 duration-300" role="alert">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-600 dark:text-green-400 animate-bounce">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <div>
+                <span class="font-bold text-sm tracking-wide">{{ session('success') }}</span>
+            </div>
         </div>
     @endif
     
     @if (session('error'))
-        <div class="mb-6 p-4 bg-brand-accent/10 dark:bg-brand-accent/20 border border-brand-accent/20 dark:border-brand-accent/30 text-brand-accent dark:text-brand-light rounded-xl flex items-center gap-3 shadow-sm" role="alert">
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span class="font-medium text-brand-accent dark:text-brand-light">{{ session('error') }}</span>
+        <div class="mb-6 p-4 bg-rose-500/10 dark:bg-rose-500/20 border border-rose-500/20 dark:border-rose-500/30 text-rose-600 dark:text-rose-400 rounded-xl flex items-center gap-3 shadow-md shadow-rose-500/5 animate-in fade-in slide-in-from-top-4 duration-300" role="alert">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-600 dark:text-rose-400 animate-pulse">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div>
+                <span class="font-bold text-sm tracking-wide">{{ session('error') }}</span>
+            </div>
         </div>
     @endif
 
@@ -94,7 +108,15 @@
                                             <button wire:click="startConfirmation({{ $user->id }}, 'demote')" class="px-3 py-1.5 text-xs font-bold text-brand-light bg-brand-light/20 dark:text-brand-light dark:bg-brand-light/30 rounded-lg hover:bg-brand-light/30 dark:hover:bg-brand-light/40 transition-colors">
                                                 {{ __('messages.admin.users.demote') }}
                                             </button>
+                                            <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate class="px-3 py-1.5 text-xs font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 dark:text-amber-400 dark:bg-amber-950/30 rounded-lg transition-colors flex items-center gap-1 border border-amber-100 dark:border-amber-900/30">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                                {{ __('messages.admin.products.edit') }}
+                                            </a>
                                         @else
+                                            <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate class="px-3 py-1.5 text-xs font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 dark:text-amber-400 dark:bg-amber-950/30 rounded-lg transition-colors flex items-center gap-1 border border-amber-100 dark:border-amber-900/30">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                                {{ __('messages.admin.products.edit') }}
+                                            </a>
                                             <button wire:click="startConfirmation({{ $user->id }}, 'promote')" class="px-3 py-1.5 text-xs font-bold text-brand-accent bg-brand-base/10 rounded-lg hover:bg-brand-base/20 transition-colors">
                                                 {{ __('messages.admin.users.make_admin') }}
                                             </button>
