@@ -157,9 +157,19 @@
                 {{-- Action Buttons --}}
                 <div class="grid grid-cols-2 gap-4 mb-8">
                     @foreach($selectedProducts as $product)
-                        <button wire:click.prevent="addToCart({{ $product['id'] }})" class="flex items-center justify-center gap-2 py-3 bg-brand-base hover:bg-brand-accent text-content-inverse font-bold text-sm rounded-xl shadow-md transition-all active:scale-[0.98]">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                            {{ __('messages.compare.add_named_to_cart', ['product' => \Illuminate\Support\Str::limit($product['name'], 25)]) }}
+                        @php $outOfStock = ($product['stock'] ?? 0) <= 0; @endphp
+                        <button 
+                            wire:click.prevent="addToCart({{ $product['id'] }})" 
+                            @if($outOfStock) disabled @endif
+                            class="flex items-center justify-center gap-2 py-3 {{ $outOfStock ? 'bg-slate-350 dark:bg-dark-800 text-slate-500 dark:text-dark-500 cursor-not-allowed' : 'bg-brand-base hover:bg-brand-accent text-content-inverse active:scale-[0.98]' }} font-bold text-sm rounded-xl shadow-md transition-all"
+                        >
+                            @if(!$outOfStock)
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                {{ __('messages.compare.add_named_to_cart', ['product' => \Illuminate\Support\Str::limit($product['name'], 25)]) }}
+                            @else
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                                {{ __('messages.product.out_of_stock') ?? 'Out of Stock' }}
+                            @endif
                         </button>
                     @endforeach
                 </div>
@@ -193,10 +203,10 @@
                             $isDiff = $dv1 !== $dv2;
                             $rowBg = $highlightDifferences && $isDiff ? 'bg-status-warning/10 dark:bg-status-warning/20' : '';
 
-                            // Bar widths for numeric values
-                            $num1 = null; $num2 = null; $bar1 = 0; $bar2 = 0;
-                            if (preg_match('/(\d+(\.\d+)?)/', $dv1, $m1)) $num1 = (float)$m1[1];
-                            if (preg_match('/(\d+(\.\d+)?)/', $dv2, $m2)) $num2 = (float)$m2[1];
+                            // Bar widths for numeric and normalized values
+                            $num1 = $this->normalizeValue($val1, $key);
+                            $num2 = $this->normalizeValue($val2, $key);
+                            $bar1 = 0; $bar2 = 0;
                             if ($num1 !== null && $num2 !== null && max($num1, $num2) > 0) {
                                 $maxN = max($num1, $num2);
                                 $bar1 = ($num1 / $maxN) * 100;

@@ -52,6 +52,12 @@ class Profile extends Component
 
     public function render()
     {
-        return view('livewire.user.profile')->layout('components.layouts.user');
+        $requests = \App\Models\PasswordRequest::where('email', auth()->user()->email)
+            ->latest()
+            ->get();
+
+        return view('livewire.user.profile', [
+            'passwordRequests' => $requests
+        ])->layout('components.layouts.user');
     }
 }

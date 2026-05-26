@@ -27,6 +27,11 @@ class ProductView extends Component
 
     public function addToCart()
     {
+        if ($this->product->stock <= 0) {
+            $this->dispatch('notify', type: 'error', message: __('messages.shop.out_of_stock') ?? 'This product is out of stock!');
+            return;
+        }
+
         $this->dispatch('cart-updated'); // Optimistic UI update if needed
         
         // Use the trait's logic but adapted for single item add

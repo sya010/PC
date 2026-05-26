@@ -85,10 +85,10 @@ class ProductForm extends Component
                     // Validate file upload manually if generic 'image' rule fails on strings
                     $allowedMimes = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
                     if (!in_array($value->extension(), $allowedMimes)) {
-                        $fail('The image must be a file of type: ' . implode(', ', $allowedMimes) . '.');
+                        $fail(__('messages.validation.admin_product.image_mimes'));
                     }
                     if ($value->getSize() > 5120 * 1024) { // 5MB
-                         $fail('The image must not be greater than 5MB.');
+                         $fail(__('messages.validation.admin_product.image_max'));
                     }
                 }, 
             ],
@@ -96,6 +96,30 @@ class ProductForm extends Component
             'specs' => 'nullable|array',
             'specs.*.key' => 'required|string|max:100',
             'specs.*.value' => 'required|string|max:255',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => __('messages.validation.admin_product.name_required'),
+            'name.min' => __('messages.validation.admin_product.name_min'),
+            'name.max' => __('messages.validation.admin_product.name_max'),
+            'price.required' => __('messages.validation.admin_product.price_required'),
+            'price.numeric' => __('messages.validation.admin_product.price_numeric'),
+            'price.min' => __('messages.validation.admin_product.price_min'),
+            'price.max' => __('messages.validation.admin_product.price_max'),
+            'stock.required' => __('messages.validation.admin_product.stock_required'),
+            'stock.integer' => __('messages.validation.admin_product.stock_integer'),
+            'stock.min' => __('messages.validation.admin_product.stock_min'),
+            'stock.max' => __('messages.validation.admin_product.stock_max'),
+            'category.required' => __('messages.validation.admin_product.category_required'),
+            'category.max' => __('messages.validation.admin_product.category_max'),
+            'description.max' => __('messages.validation.admin_product.description_max'),
+            'specs.*.key.required' => __('messages.validation.admin_product.specs_key_required'),
+            'specs.*.key.max' => __('messages.validation.admin_product.specs_key_max'),
+            'specs.*.value.required' => __('messages.validation.admin_product.specs_value_required'),
+            'specs.*.value.max' => __('messages.validation.admin_product.specs_value_max'),
         ];
     }
 

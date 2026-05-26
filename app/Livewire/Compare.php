@@ -230,6 +230,11 @@ class Compare extends Component
             return;
         }
 
+        if ($product->stock <= 0) {
+            $this->dispatch('notify', type: 'error', message: __('messages.shop.out_of_stock') ?? 'This product is out of stock!');
+            return;
+        }
+
         $this->traitAddToCart(
             $product->id,
             $product->name,
@@ -376,6 +381,76 @@ class Compare extends Component
         sort($this->allSpecKeys);
     }
 
+    public function normalizeValue($raw, string $key)
+    {
+        if ($raw === null || is_array($raw)) {
+            return null;
+        }
+
+        $rawStr = trim((string)$raw);
+        $upperStr = strtoupper($rawStr);
+
+        // 1. Handle Categorical Hierarchies
+        // A. PSU Modularity
+        if ($key === 'modular') {
+            if (str_contains($upperStr, 'FULL')) return 3;
+            if (str_contains($upperStr, 'SEMI')) return 2;
+            if (str_contains($upperStr, 'NONE') || str_contains($upperStr, 'NO')) return 1;
+            return 1;
+        }
+
+        // B. PSU Efficiency
+        if ($key === 'efficiency') {
+            if (str_contains($upperStr, 'TITANIUM')) return 6;
+            if (str_contains($upperStr, 'PLATINUM')) return 5;
+            if (str_contains($upperStr, 'GOLD')) return 4;
+            if (str_contains($upperStr, 'SILVER')) return 3;
+            if (str_contains($upperStr, 'BRONZE')) return 2;
+            if (str_contains($upperStr, '80+')) return 1;
+            return 0;
+        }
+
+        // C. Storage Interface
+        if ($key === 'interface') {
+            if (str_contains($upperStr, 'GEN5') || str_contains($upperStr, 'GEN 5')) return 4;
+            if (str_contains($upperStr, 'GEN4') || str_contains($upperStr, 'GEN 4')) return 3;
+            if (str_contains($upperStr, 'NVME')) return 2;
+            if (str_contains($upperStr, 'SATA')) return 1;
+            return 0;
+        }
+
+        // D. RAM / Motherboard Generation
+        if ($key === 'type' || $key === 'memory_type') {
+            if (str_contains($upperStr, 'DDR5')) return 3;
+            if (str_contains($upperStr, 'DDR4')) return 2;
+            if (str_contains($upperStr, 'DDR3')) return 1;
+            return 0;
+        }
+
+        // 2. Handle Numeric Extraction and Unit Conversions
+        if (preg_match('/(\d+(\.\d+)?)/', $rawStr, $matches)) {
+            $num = (float)$matches[1];
+
+            // Capacity Normalization (TB to GB)
+            if (stripos($key, 'capacity') !== false || stripos($key, 'storage') !== false || stripos($key, 'vram') !== false) {
+                if (str_contains($upperStr, 'TB')) {
+                    return $num * 1000;
+                }
+            }
+
+            // Speed Normalization (GHz to MHz)
+            if (stripos($key, 'clock') !== false || stripos($key, 'speed') !== false) {
+                if (str_contains($upperStr, 'GHZ')) {
+                    return $num * 1000;
+                }
+            }
+
+            return $num;
+        }
+
+        return null;
+    }
+
     private function calculateWinners()
     {
         $this->winnerSpecs = [];
@@ -416,15 +491,21 @@ class Compare extends Component
             $values = [];
             foreach ($this->selectedProducts as $p) {
                 $raw = $p['specs'][$key] ?? null;
-                if ($raw && !is_array($raw)) {
-                     if (preg_match('/(\d+(\.\d+)?)/', $raw, $matches)) {
-                         $values[$p['id']] = (float)$matches[1];
-                     }
+                $normalized = $this->normalizeValue($raw, $key);
+                if ($normalized !== null) {
+                    $values[$p['id']] = $normalized;
                 }
             }
             
             if (count($values) > 1) {
-                $isLowerBetter = (stripos($key, 'latency') !== false || stripos($key, 'price') !== false);
+                $lowerIsBetterKeys = ['price', 'tdp', 'noise_level', 'weight', 'response_time', 'voltage', 'latency', 'cl'];
+                $isLowerBetter = false;
+                foreach ($lowerIsBetterKeys as $lowKey) {
+                    if (stripos($key, $lowKey) !== false) {
+                        $isLowerBetter = true;
+                        break;
+                    }
+                }
                 $this->winnerSpecs[$key] = $assignTiers($values, !$isLowerBetter);
             }
         }
