@@ -27,17 +27,26 @@ class ProductView extends Component
 
     public function addToCart()
     {
+        if (!auth()->check()) {
+            $this->redirect(route('login'), navigate: true);
+            return;
+        }
+
         if ($this->product->stock <= 0) {
             $this->dispatch('notify', type: 'error', message: __('messages.shop.out_of_stock') ?? 'This product is out of stock!');
             return;
         }
 
-        $this->dispatch('cart-updated'); // Optimistic UI update if needed
-        
-        // Use the trait's logic but adapted for single item add
         $cart = session()->get('cart', []);
         $id = $this->product->id;
-        
+        $currentQty = isset($cart[$id]) ? $cart[$id]['quantity'] : 0;
+
+        // Check if adding would exceed stock
+        if (($currentQty + $this->quantity) > $this->product->stock) {
+            $this->dispatch('notify', type: 'error', message: __('messages.shop.insufficient_stock') ?? 'Not enough stock available.');
+            return;
+        }
+
         if (isset($cart[$id])) {
             $cart[$id]['quantity'] += $this->quantity;
         } else {

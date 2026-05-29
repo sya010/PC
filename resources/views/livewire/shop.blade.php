@@ -22,7 +22,7 @@
                     >
                 </div>
 
-                <div class="flex flex-nowrap items-center gap-3 overflow-x-auto pb-2 custom-scrollbar">
+                <div class="flex flex-wrap items-center gap-3">
                     
                     <!-- Category Dropdown -->
                     <div x-data="{ open: false }" class="relative" @click.outside="open = false">

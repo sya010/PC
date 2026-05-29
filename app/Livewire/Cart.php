@@ -56,6 +56,13 @@ class Cart extends Component
         }
 
         if (isset($this->cartItems[$id])) {
+            // Check stock availability
+            $product = \App\Models\Product::find($id);
+            if ($product && $quantity > $product->stock) {
+                $quantity = $product->stock;
+                $this->dispatch('notify', type: 'error', message: __('messages.shop.insufficient_stock') ?? 'Only ' . $product->stock . ' available in stock.');
+            }
+
             $this->cartItems[$id]['quantity'] = $quantity;
             session()->put('cart', $this->cartItems);
             $this->calculateTotal();

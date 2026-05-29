@@ -91,8 +91,8 @@
                         
                         <button 
                             wire:click="addToCart" 
-                            @if($product->stock <= 0) disabled @endif
-                            class="flex-1 {{ $product->stock <= 0 ? 'bg-slate-300 dark:bg-dark-800 text-slate-500 dark:text-dark-500 cursor-not-allowed' : 'bg-dark-950 dark:bg-dark-800 hover:bg-brand-base dark:hover:bg-brand-accent text-white hover:shadow-brand-base/30 dark:hover:shadow-brand-accent/30 active:scale-95' }} font-bold py-5 px-8 rounded-2xl shadow-xl dark:shadow-dark-950/20 transition-all flex items-center justify-center gap-3 group"
+                            @disabled($product->stock < 1)
+                            class="flex-1 {{ $product->stock < 1 ? 'bg-slate-300 dark:bg-dark-800 text-slate-500 dark:text-dark-500 cursor-not-allowed' : 'bg-dark-950 dark:bg-dark-800 hover:bg-brand-base dark:hover:bg-brand-accent text-white hover:shadow-brand-base/30 dark:hover:shadow-brand-accent/30 active:scale-95' }} font-bold py-5 px-8 rounded-2xl shadow-xl dark:shadow-dark-950/20 transition-all flex items-center justify-center gap-3 group"
                         >
                             @if($product->stock > 0)
                                 <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">

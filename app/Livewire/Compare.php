@@ -223,6 +223,11 @@ class Compare extends Component
 
     public function addToCart($id)
     {
+        if (!auth()->check()) {
+            $this->redirect(route('login'), navigate: true);
+            return;
+        }
+
         $product = \App\Models\Product::find($id);
 
         if (!$product) {
