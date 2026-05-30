@@ -16,6 +16,8 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->string('image')->nullable();
             $table->json('images')->nullable();
+            $table->json('specs')->nullable();
+            $table->boolean('has_specs')->default(true);
             $table->string('category')->nullable();
             $table->integer('stock')->default(0);
             $table->boolean('is_active')->default(true);

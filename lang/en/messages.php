@@ -138,6 +138,7 @@ return [
       'sign_out' => 'Sign Out',
       'users' => 'Users',
       'password_requests' => 'Password Requests',
+      'reports' => 'Reports',
     ],
     'user_form' => 
     [
@@ -265,6 +266,17 @@ return [
       'payment_split' => 'Payment Split',
       'cod' => 'Cash on Delivery',
       'wayl' => 'Wayl (Online)',
+      'period_7' => '7 Days',
+      'period_30' => '30 Days',
+      'period_90' => '3 Months',
+      'period_365' => '1 Year',
+      'period_all' => 'All Time',
+      'custom_range' => 'Custom Range',
+      'live_refresh' => 'Live · auto-refresh every 60s',
+      'total_orders' => 'Total Orders',
+      'completed_orders' => 'Completed Orders',
+      'cancelled_orders' => 'Cancelled Orders',
+      'order_overview' => 'Order Overview',
     ],
   ],
   'auth' => 
@@ -751,6 +763,7 @@ return [
   'support_page' => 
   [
     'email_support' => 'Email Support',
+    'faq' => 'Frequently Asked Questions',
     'email_support_desc' => 'Get a response within 24 hours',
     'faq_1' => 'How do I track my order?',
     'faq_1_a' => 'You can track your order using the tracking number sent to your email after shipping.',

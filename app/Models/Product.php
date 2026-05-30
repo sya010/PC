@@ -21,12 +21,14 @@ class Product extends Model
         'stock',
         'is_active',
         'specs',
+        'has_specs',
     ];
 
     protected $casts = [
         'images' => 'array',
         'specs' => 'array',
         'is_active' => 'boolean',
+        'has_specs' => 'boolean',
         'price' => 'decimal:2',
         'stock' => 'integer',
     ];
