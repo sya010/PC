@@ -14,7 +14,7 @@
         <!-- Live badge -->
         <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1.5 rounded-full border border-emerald-200 dark:border-emerald-900/30">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            Live · auto-refresh every 60s
+            {{ __('messages.admin.reports.live_refresh') }}
         </div>
     </div>
 
@@ -22,7 +22,7 @@
     <div class="bg-white dark:bg-dark-900 rounded-2xl border border-gray-100 dark:border-dark-800 shadow-sm p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center flex-wrap">
         <!-- Quick Buttons -->
         <div class="flex flex-wrap gap-2">
-            @foreach(['7' => '7 Days', '30' => '30 Days', '90' => '3 Months', '365' => '1 Year', 'all' => 'All Time'] as $val => $label)
+            @foreach(['7' => __('messages.admin.reports.period_7'), '30' => __('messages.admin.reports.period_30'), '90' => __('messages.admin.reports.period_90'), '365' => __('messages.admin.reports.period_365'), 'all' => __('messages.admin.reports.period_all')] as $val => $label)
                 <button wire:click="setPeriod('{{ $val }}')"
                     class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all
                         {{ $period === $val
@@ -36,7 +36,7 @@
                     {{ $period === 'custom'
                         ? 'bg-brand-base text-white shadow-md shadow-brand-base/20'
                         : 'bg-gray-100 dark:bg-dark-800 text-gray-600 dark:text-dark-300 hover:bg-gray-200 dark:hover:bg-dark-700' }}">
-                Custom Range
+                {{ __('messages.admin.reports.custom_range') }}
             </button>
         </div>
 
@@ -52,9 +52,9 @@
         @endif
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Revenue Card -->
+    <!-- Stats Grid: 2 rows of 4 cards (8 cards total) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Card 1: Revenue -->
         <div class="bg-white dark:bg-dark-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 flex items-center gap-5 hover:shadow-md transition-shadow relative overflow-hidden group">
             <div class="absolute top-0 right-0 w-16 h-16 bg-brand-base/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform"></div>
             <div class="w-12 h-12 rounded-xl bg-brand-base/10 text-brand-base flex items-center justify-center flex-shrink-0">
@@ -66,7 +66,7 @@
             </div>
         </div>
 
-        <!-- Profit Card -->
+        <!-- Card 2: Profit -->
         <div class="bg-white dark:bg-dark-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 flex items-center gap-5 hover:shadow-md transition-shadow relative overflow-hidden group">
             <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform"></div>
             <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center flex-shrink-0">
@@ -78,9 +78,9 @@
             </div>
         </div>
 
-        <!-- Active Deliveries Card (Clickable) -->
+        <!-- Card 3: Active Deliveries (Clickable) -->
         <button wire:click="toggleActiveDeliveriesModal"
-            class="bg-white dark:bg-dark-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 flex items-center gap-5 hover:shadow-lg hover:border-amber-200 dark:hover:border-amber-800/40 transition-all relative overflow-hidden group text-left cursor-pointer">
+            class="bg-white dark:bg-dark-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 flex items-center gap-5 hover:shadow-lg hover:border-amber-200 dark:hover:border-amber-800/40 transition-all relative overflow-hidden group text-start cursor-pointer w-full">
             <div class="absolute top-0 right-0 w-16 h-16 bg-amber-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform"></div>
             <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-500/20 transition-colors">
                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
@@ -94,9 +94,9 @@
             </div>
         </button>
 
-        <!-- Out of Stock Card (Clickable Button) -->
+        <!-- Card 4: Out of Stock (Clickable) -->
         <button wire:click="toggleOutOfStockModal"
-            class="bg-white dark:bg-dark-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 flex items-center gap-5 hover:shadow-lg hover:border-rose-200 dark:hover:border-rose-800/40 transition-all relative overflow-hidden group text-left cursor-pointer">
+            class="bg-white dark:bg-dark-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 flex items-center gap-5 hover:shadow-lg hover:border-rose-200 dark:hover:border-rose-800/40 transition-all relative overflow-hidden group text-start cursor-pointer w-full">
             <div class="absolute top-0 right-0 w-16 h-16 bg-rose-500/5 rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform"></div>
             <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center flex-shrink-0 group-hover:bg-rose-500/20 transition-colors">
                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
@@ -109,6 +109,67 @@
                 <svg class="w-5 h-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </div>
         </button>
+
+        <!-- Card 5: Total Orders -->
+        <div class="bg-white dark:bg-dark-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 flex items-center gap-5 hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-16 h-16 bg-indigo-500/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform"></div>
+            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+            </div>
+            <div>
+                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">{{ __('messages.admin.reports.total_orders') }}</span>
+                <span class="text-2xl font-black text-indigo-600 dark:text-indigo-400">{{ $totalOrders }}</span>
+            </div>
+        </div>
+
+        <!-- Card 6: Completed Orders -->
+        <div class="bg-white dark:bg-dark-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 flex items-center gap-5 hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform"></div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div>
+                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">{{ __('messages.admin.reports.completed_orders') }}</span>
+                <span class="text-2xl font-black text-emerald-600 dark:text-emerald-400">{{ $completedDeliveries }}</span>
+            </div>
+        </div>
+
+        <!-- Card 7: Cancelled Orders -->
+        <div class="bg-white dark:bg-dark-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 flex items-center gap-5 hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-16 h-16 bg-rose-500/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform"></div>
+            <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div>
+                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">{{ __('messages.admin.reports.cancelled_orders') }}</span>
+                <span class="text-2xl font-black text-rose-600 dark:text-rose-400">{{ $cancelledDeliveries }}</span>
+            </div>
+        </div>
+
+        <!-- Card 8: Payment Statistics (Mini Split) -->
+        <div class="bg-white dark:bg-dark-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-16 h-16 bg-violet-500/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform"></div>
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-violet-500/10 text-violet-500 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">{{ __('messages.admin.reports.payment_split') }}</span>
+                    <div class="flex items-center gap-2 text-xs font-bold">
+                        <span class="text-brand-base">COD: {{ $codOrders }}</span>
+                        <span class="text-gray-300">|</span>
+                        <span class="text-emerald-500">Online: {{ $waylOrders }}</span>
+                    </div>
+                </div>
+            </div>
+            @php
+                $totalPm = $codOrders + $waylOrders;
+                $codPmPct = $totalPm > 0 ? ($codOrders / $totalPm) * 100 : 0;
+            @endphp
+            <div class="mt-3.5 w-full h-1.5 bg-gray-100 dark:bg-dark-800 rounded-full overflow-hidden">
+                <div class="h-full bg-brand-base" style="width: {{ $codPmPct }}%"></div>
+            </div>
+        </div>
     </div>
 
     <!-- ============================== -->
@@ -129,7 +190,7 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-bold text-gray-900 dark:text-dark-100">{{ __('messages.admin.reports.out_of_stock_items') }}</h3>
-                        <p class="text-xs text-gray-500 dark:text-dark-400">{{ $outOfStockCount }} {{ __('messages.admin.reports.products') }} need restocking</p>
+                        <p class="text-xs text-gray-500 dark:text-dark-400">{{ $outOfStockCount }} {{ __('messages.admin.reports.products') }} {{ __('messages.admin.reports.need_restocking') }}</p>
                     </div>
                 </div>
                 <button wire:click="toggleOutOfStockModal"
@@ -164,7 +225,7 @@
                             <svg class="w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                         </div>
                         <h4 class="font-bold text-gray-900 dark:text-dark-100 mb-1">{{ __('messages.admin.reports.all_stocked') }}</h4>
-                        <p class="text-sm text-gray-400">All products are currently in stock</p>
+                        <p class="text-sm text-gray-400 dark:text-dark-500">{{ __('messages.admin.reports.all_stocked_desc') }}</p>
                     </div>
                 @endif
             </div>
@@ -190,7 +251,7 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-bold text-gray-900 dark:text-dark-100">{{ __('messages.admin.reports.active_deliveries') }}</h3>
-                        <p class="text-xs text-gray-500 dark:text-dark-400">{{ $activeDeliveries }} active orders in transit</p>
+                        <p class="text-xs text-gray-500 dark:text-dark-400">{{ $activeDeliveries }} {{ __('messages.admin.reports.active_transit') }}</p>
                     </div>
                 </div>
                 <button wire:click="toggleActiveDeliveriesModal"
@@ -263,8 +324,8 @@
                         <div class="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/20 flex items-center justify-center mx-auto mb-4">
                             <svg class="w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                         </div>
-                        <h4 class="font-bold text-gray-900 dark:text-dark-100 mb-1">No Active Deliveries</h4>
-                        <p class="text-sm text-gray-400">All orders have been delivered or cancelled</p>
+                        <h4 class="font-bold text-gray-900 dark:text-dark-100 mb-1">{{ __('messages.admin.reports.no_active_deliveries') }}</h4>
+                        <p class="text-sm text-gray-400 dark:text-dark-500">{{ __('messages.admin.reports.all_delivered_cancelled') }}</p>
                     </div>
                 @endif
             </div>
@@ -272,11 +333,11 @@
     </div>
     @endif
 
-    <!-- Revenue Sparkline Chart (shown when period is not 'all') -->
+    <!-- Revenue Sparkline Chart (shown when period is not 'all') — Full Width -->
     @if($period !== 'all' && count($dailyRevenue) > 0)
-    <div class="bg-white dark:bg-dark-900 rounded-2xl border border-gray-100 dark:border-dark-800 shadow-sm p-6">
+    <div class="bg-white dark:bg-dark-900 rounded-2xl border border-gray-100 dark:border-dark-800 shadow-sm p-6 col-span-full">
         <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-dark-100">Revenue Over Time</h3>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-dark-100">{{ __('messages.admin.reports.revenue_over_time') }}</h3>
             <span class="text-xs text-gray-400 dark:text-dark-500">
                 {{ $dateFrom }} → {{ $dateTo }}
             </span>
@@ -285,10 +346,10 @@
             $values = array_values($dailyRevenue);
             $labels = array_keys($dailyRevenue);
             $max = max(array_merge($values, [1]));
-            $chartH = 80;
+            $chartH = 150;
             $totalPts = count($values);
         @endphp
-        <div class="relative h-24 w-full overflow-hidden">
+        <div class="relative h-44 w-full overflow-hidden">
             <svg viewBox="0 0 {{ max($totalPts - 1, 1) * 10 }} {{ $chartH }}" preserveAspectRatio="none"
                  class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                 <!-- Gradient fill -->
@@ -302,7 +363,7 @@
                     $pts = [];
                     foreach ($values as $i => $v) {
                         $x = $i * 10;
-                        $y = $chartH - (($v / $max) * ($chartH - 4)) - 2;
+                        $y = $chartH - (($v / $max) * ($chartH - 8)) - 4;
                         $pts[] = "$x,$y";
                     }
                     $polyline = implode(' ', $pts);
@@ -312,36 +373,35 @@
                 <polyline points="{{ $polyline }}" fill="none" stroke="var(--color-brand-base)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
-        <!-- Summary row -->
-        <div class="flex gap-6 mt-4 text-sm">
-            <div>
-                <span class="text-gray-400 text-xs block">Total Orders</span>
-                <span class="font-black text-gray-900 dark:text-dark-100">{{ $totalOrders }}</span>
+        <!-- Summary badges -->
+        <div class="flex flex-wrap gap-4 mt-6 pt-4 border-t border-gray-100 dark:border-dark-800 text-xs font-bold">
+            <div class="bg-gray-50 dark:bg-dark-950 border border-gray-100 dark:border-dark-800 px-3 py-2 rounded-xl flex items-center gap-2">
+                <span class="text-gray-400">{{ __('messages.admin.reports.total_orders') }}:</span>
+                <span class="text-gray-900 dark:text-dark-100">{{ $totalOrders }}</span>
             </div>
-            <div>
-                <span class="text-gray-400 text-xs block">Completed</span>
-                <span class="font-black text-emerald-600 dark:text-emerald-400">{{ $completedDeliveries }}</span>
+            <div class="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30 px-3 py-2 rounded-xl flex items-center gap-2">
+                <span class="text-emerald-500">{{ __('messages.admin.reports.completed_orders') }}:</span>
+                <span class="text-emerald-600 dark:text-emerald-400">{{ $completedDeliveries }}</span>
             </div>
-            <div>
-                <span class="text-gray-400 text-xs block">Cancelled</span>
-                <span class="font-black text-rose-600 dark:text-rose-400">{{ $cancelledDeliveries }}</span>
+            <div class="bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 px-3 py-2 rounded-xl flex items-center gap-2">
+                <span class="text-rose-500">{{ __('messages.admin.reports.cancelled_orders') }}:</span>
+                <span class="text-rose-600 dark:text-rose-400">{{ $cancelledDeliveries }}</span>
             </div>
-            <div>
-                <span class="text-gray-400 text-xs block">COD</span>
-                <span class="font-black text-gray-900 dark:text-dark-100">{{ $codOrders }}</span>
+            <div class="bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/30 px-3 py-2 rounded-xl flex items-center gap-2">
+                <span class="text-indigo-500">{{ __('messages.admin.reports.cod') }}:</span>
+                <span class="text-indigo-600 dark:text-indigo-400">{{ $codOrders }}</span>
             </div>
-            <div>
-                <span class="text-gray-400 text-xs block">Wayl</span>
-                <span class="font-black text-brand-base dark:text-brand-light">{{ $waylOrders }}</span>
+            <div class="bg-brand-base/5 border border-brand-base/10 px-3 py-2 rounded-xl flex items-center gap-2">
+                <span class="text-brand-base">{{ __('messages.admin.reports.wayl') }}:</span>
+                <span class="text-brand-base dark:text-brand-light">{{ $waylOrders }}</span>
             </div>
         </div>
     </div>
     @endif
 
-    <!-- Layout Columns -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <!-- Top Selling Items -->
-        <div class="lg:col-span-8 bg-white dark:bg-dark-900 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 overflow-hidden">
+    <!-- Top Selling Items (Full Width) -->
+    <div class="bg-white dark:bg-dark-900 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 overflow-hidden flex flex-col justify-between">
+        <div>
             <div class="p-6 border-b border-gray-100 dark:border-dark-800">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-dark-100">{{ __('messages.admin.reports.top_selling') }}</h3>
                 <p class="text-xs text-gray-400 mt-1">{{ __('messages.admin.reports.top_selling_desc') }}</p>
@@ -350,6 +410,7 @@
                 <table class="w-full text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'right' : 'left' }} border-collapse text-sm">
                     <thead>
                         <tr class="bg-gray-50/50 dark:bg-dark-950 border-b border-gray-100 dark:border-dark-800 text-xs font-bold text-gray-500 dark:text-dark-400 uppercase tracking-wider">
+                            <th class="px-6 py-4 text-center w-12">#</th>
                             <th class="px-6 py-4">{{ __('messages.admin.reports.product') }}</th>
                             <th class="px-6 py-4 text-center">{{ __('messages.admin.reports.qty_sold') }}</th>
                             <th class="px-6 py-4">{{ __('messages.admin.reports.revenue') }}</th>
@@ -359,6 +420,11 @@
                     <tbody class="divide-y divide-gray-100 dark:divide-dark-800 font-medium text-gray-700 dark:text-dark-200">
                         @forelse($topSellingItems as $item)
                             <tr class="hover:bg-gray-50/30 dark:hover:bg-dark-900/30 transition-colors">
+                                <td class="px-6 py-4 text-center font-black text-gray-400">
+                                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg text-xs bg-gray-100 dark:bg-dark-800">
+                                        {{ $loop->iteration }}
+                                    </span>
+                                </td>
                                 <td class="px-6 py-4 flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-xl bg-gray-50 dark:bg-dark-950 border border-gray-100 dark:border-dark-800 p-1 flex items-center justify-center shrink-0">
                                         @if($item->image_url)
@@ -372,24 +438,32 @@
                                 <td class="px-6 py-4 text-center text-gray-900 dark:text-dark-100 font-extrabold">{{ $item->total_qty }}</td>
                                 <td class="px-6 py-4 text-brand-base dark:text-brand-light font-bold">{{ number_format($item->total_sales, 0) }} {{ __('messages.currency') }}</td>
                                 <td class="px-6 py-4 text-center">
-                                    @if($item->current_stock <= 0)
-                                        <span class="px-2 py-1 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30">
-                                            {{ __('messages.admin.reports.out_of_stock') }}
-                                        </span>
-                                    @elseif($item->current_stock < 5)
-                                        <span class="px-2 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/30">
-                                            {{ __('messages.admin.reports.low_stock') }} ({{ $item->current_stock }})
-                                        </span>
-                                    @else
-                                        <span class="px-2 py-1 rounded-full text-xs font-bold bg-green-50 dark:bg-green-950/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30">
-                                            {{ $item->current_stock }} {{ __('messages.admin.reports.in_stock') }}
-                                        </span>
-                                    @endif
+                                    <div class="flex flex-col items-center gap-1.5">
+                                        @if($item->current_stock <= 0)
+                                            <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30">
+                                                {{ __('messages.admin.reports.out_of_stock') }}
+                                            </span>
+                                        @elseif($item->current_stock < 5)
+                                            <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/30">
+                                                {{ __('messages.admin.reports.low_stock') }} ({{ $item->current_stock }})
+                                            </span>
+                                            <div class="w-16 h-1 bg-gray-100 dark:bg-dark-800 rounded-full overflow-hidden">
+                                                <div class="h-full bg-amber-400" style="width: {{ ($item->current_stock / 5) * 100 }}%"></div>
+                                            </div>
+                                        @else
+                                            <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-green-50 dark:bg-green-950/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30">
+                                                {{ $item->current_stock }} {{ __('messages.admin.reports.in_stock') }}
+                                            </span>
+                                            <div class="w-16 h-1 bg-gray-100 dark:bg-dark-800 rounded-full overflow-hidden">
+                                                <div class="h-full bg-green-500" style="width: {{ min(($item->current_stock / 20) * 100, 100) }}%"></div>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-12 text-center text-gray-400 dark:text-dark-500">
+                                <td colspan="5" class="px-6 py-12 text-center text-gray-400 dark:text-dark-500">
                                     {{ __('messages.admin.reports.no_data') }}
                                 </td>
                             </tr>
@@ -398,119 +472,147 @@
                 </table>
             </div>
         </div>
+    </div>
 
-        <!-- Sidebar -->
-        <div class="lg:col-span-4 space-y-6">
-            <!-- Low Stock Alerts — Redesigned -->
-            <div class="bg-white dark:bg-dark-900 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 overflow-hidden">
-                <!-- Header with gradient accent -->
-                <div class="px-6 py-5 border-b border-gray-100 dark:border-dark-800 bg-gradient-to-r from-amber-50/80 to-transparent dark:from-amber-950/10 dark:to-transparent">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
-                                <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                            </div>
-                            <h3 class="text-base font-bold text-gray-900 dark:text-dark-100">{{ __('messages.admin.reports.low_stock_alerts') }}</h3>
+    <!-- Stats & Breakdown Layout (Horizontal Grid Under the Table) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Order Overview -->
+        <div class="bg-white dark:bg-dark-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-dark-800">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-dark-100 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-brand-base" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                {{ __('messages.admin.reports.order_overview') }}
+            </h3>
+            <div class="space-y-4">
+                <!-- Active -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-amber-50/50 dark:bg-amber-950/10 border border-amber-100/50 dark:border-amber-900/10">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                         </div>
-                        @if($lowStockProducts->count() > 0)
-                            <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400">
-                                {{ $lowStockProducts->count() }}
-                            </span>
-                        @endif
+                        <span class="text-sm font-semibold text-gray-700 dark:text-dark-300">{{ __('messages.admin.reports.active_shipments') }}</span>
                     </div>
+                    <span class="font-black text-amber-600 dark:text-amber-400 text-base">{{ $activeDeliveries }}</span>
                 </div>
 
-                <!-- Products list -->
-                <div class="divide-y divide-gray-50 dark:divide-dark-800/50 max-h-[420px] overflow-y-auto">
-                    @forelse($lowStockProducts as $prod)
-                        <div class="px-5 py-4 hover:bg-gray-50/50 dark:hover:bg-dark-950/30 transition-colors">
-                            <div class="flex items-center gap-3">
-                                <div class="w-11 h-11 rounded-xl bg-gray-50 dark:bg-dark-950 border border-gray-100 dark:border-dark-800 p-1 flex items-center justify-center shrink-0 overflow-hidden">
+                <!-- Completed -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100/50 dark:border-emerald-900/10">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700 dark:text-dark-300">{{ __('messages.admin.reports.completed_shipments') }}</span>
+                    </div>
+                    <span class="font-black text-emerald-600 dark:text-emerald-400 text-base">{{ $completedDeliveries }}</span>
+                </div>
+
+                <!-- Cancelled -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-rose-50/50 dark:bg-rose-950/10 border border-rose-100/50 dark:border-rose-900/10">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700 dark:text-dark-300">{{ __('messages.admin.reports.cancelled_shipments') }}</span>
+                    </div>
+                    <span class="font-black text-rose-600 dark:text-rose-400 text-base">{{ $cancelledDeliveries }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Method Split -->
+        <div class="bg-white dark:bg-dark-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-dark-800">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-dark-100 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-brand-base" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                {{ __('messages.admin.reports.payment_split') }}
+            </h3>
+            @php
+                $total = $codOrders + $waylOrders;
+                $codPct  = $total > 0 ? round(($codOrders  / $total) * 100) : 0;
+                $waylPct = $total > 0 ? round(($waylOrders / $total) * 100) : 0;
+            @endphp
+            <div class="space-y-4">
+                <div>
+                    <div class="flex justify-between text-xs font-bold text-gray-600 dark:text-dark-300 mb-1.5">
+                        <span>{{ __('messages.admin.reports.cod') }}</span>
+                        <span>{{ $codOrders }} ({{ $codPct }}%)</span>
+                    </div>
+                    <div class="h-2 rounded-full bg-gray-100 dark:bg-dark-800 overflow-hidden">
+                        <div class="h-full rounded-full bg-brand-base transition-all duration-700" style="width: {{ $codPct }}%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs font-bold text-gray-600 dark:text-dark-300 mb-1.5">
+                        <span>{{ __('messages.admin.reports.wayl') }}</span>
+                        <span>{{ $waylOrders }} ({{ $waylPct }}%)</span>
+                    </div>
+                    <div class="h-2 rounded-full bg-gray-100 dark:bg-dark-800 overflow-hidden">
+                        <div class="h-full rounded-full bg-emerald-500 transition-all duration-700" style="width: {{ $waylPct }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Low Stock Alerts (Full Width Grid) -->
+    <div class="bg-white dark:bg-dark-900 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 overflow-hidden">
+        <!-- Header with gradient accent -->
+        <div class="px-6 py-5 border-b border-gray-100 dark:border-dark-800 bg-gradient-to-r from-amber-50/80 to-transparent dark:from-amber-950/10 dark:to-transparent">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                        <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-dark-100">{{ __('messages.admin.reports.low_stock_alerts') }}</h3>
+                </div>
+                @if($lowStockProducts->count() > 0)
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400">
+                        {{ $lowStockProducts->count() }}
+                    </span>
+                @endif
+            </div>
+        </div>
+
+        <div class="p-6">
+            @if($lowStockProducts->count() > 0)
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                    @foreach($lowStockProducts as $prod)
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-dark-950 border border-gray-100 dark:border-dark-800 hover:border-amber-200 dark:hover:border-amber-900/30 transition-all flex flex-col justify-between">
+                            <div class="flex gap-3 items-start">
+                                <div class="w-12 h-12 rounded-xl bg-white dark:bg-dark-900 border border-gray-100 dark:border-dark-800 p-1 flex items-center justify-center shrink-0 overflow-hidden">
                                     <img src="{{ $prod->image_url }}" alt="{{ $prod->name }}" class="w-full h-full object-contain">
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <h4 class="font-bold text-sm text-gray-900 dark:text-dark-100 truncate leading-tight">{{ $prod->name }}</h4>
-                                    <span class="text-xs text-gray-400 dark:text-dark-500">{{ $prod->category }}</span>
-                                </div>
-                                <div class="text-right shrink-0">
-                                    <span class="text-sm font-black {{ $prod->stock <= 2 ? 'text-rose-500' : 'text-amber-500' }}">{{ $prod->stock }}</span>
-                                    <span class="text-xs text-gray-400 block">{{ __('messages.admin.reports.left') }}</span>
+                                    <h4 class="font-bold text-xs text-gray-900 dark:text-dark-100 line-clamp-2 leading-snug">{{ $prod->name }}</h4>
+                                    <span class="text-[10px] text-gray-400 dark:text-dark-500 font-medium block mt-0.5">{{ $prod->category }}</span>
                                 </div>
                             </div>
-                            <!-- Stock level bar -->
-                            @php
-                                $stockPercent = min(($prod->stock / 5) * 100, 100);
-                                $barColor = $prod->stock <= 2 ? 'bg-rose-400' : 'bg-amber-400';
-                            @endphp
-                            <div class="mt-2.5 h-1.5 rounded-full bg-gray-100 dark:bg-dark-800 overflow-hidden">
-                                <div class="h-full rounded-full {{ $barColor }} transition-all duration-500" style="width: {{ $stockPercent }}%"></div>
+
+                            <div class="mt-4 flex items-center justify-between">
+                                <div class="flex-1 me-4">
+                                    <!-- Stock bar -->
+                                    @php
+                                        $stockPercent = min(($prod->stock / 5) * 100, 100);
+                                        $barColor = $prod->stock <= 2 ? 'bg-rose-500' : 'bg-amber-500';
+                                    @endphp
+                                    <div class="h-1 w-full bg-gray-200 dark:bg-dark-800 rounded-full overflow-hidden">
+                                        <div class="h-full rounded-full {{ $barColor }} transition-all duration-500" style="width: {{ $stockPercent }}%"></div>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-0.5 rounded-lg text-xs font-bold whitespace-nowrap {{ $prod->stock <= 2 ? 'bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400' : 'bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400' }}">
+                                    {{ $prod->stock }} {{ __('messages.admin.reports.left') }}
+                                </span>
                             </div>
                         </div>
-                    @empty
-                        <div class="px-6 py-12 text-center">
-                            <div class="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/20 flex items-center justify-center mx-auto mb-3">
-                                <svg class="w-6 h-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-                            </div>
-                            <p class="text-sm font-medium text-gray-500 dark:text-dark-400">{{ __('messages.admin.reports.all_stocked') }}</p>
-                        </div>
-                    @endforelse
+                    @endforeach
                 </div>
-            </div>
-
-            <!-- Deliveries Breakdown -->
-            <div class="bg-white dark:bg-dark-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-dark-800">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-dark-100 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-brand-base" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                    {{ __('messages.admin.reports.delivery_audits') }}
-                </h3>
-                <div class="space-y-3 font-medium text-sm text-gray-600 dark:text-dark-300">
-                    <div class="flex justify-between py-2 border-b border-gray-100 dark:border-dark-850">
-                        <span>{{ __('messages.admin.reports.active_shipments') }}</span>
-                        <span class="font-bold text-gray-900 dark:text-dark-100">{{ $activeDeliveries }}</span>
+            @else
+                <div class="py-12 text-center">
+                    <div class="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/20 flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                     </div>
-                    <div class="flex justify-between py-2 border-b border-gray-100 dark:border-dark-850">
-                        <span>{{ __('messages.admin.reports.completed_shipments') }}</span>
-                        <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ $completedDeliveries }}</span>
-                    </div>
-                    <div class="flex justify-between py-2">
-                        <span>{{ __('messages.admin.reports.cancelled_shipments') }}</span>
-                        <span class="font-bold text-rose-600 dark:text-rose-400">{{ $cancelledDeliveries }}</span>
-                    </div>
+                    <h4 class="font-bold text-gray-900 dark:text-dark-100 mb-1">{{ __('messages.admin.reports.all_stocked') }}</h4>
+                    <p class="text-sm text-gray-400 dark:text-dark-500">{{ __('messages.admin.reports.all_stocked_desc') }}</p>
                 </div>
-            </div>
-
-            <!-- Payment Method Split -->
-            <div class="bg-white dark:bg-dark-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-dark-800">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-dark-100 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-brand-base" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                    Payment Split
-                </h3>
-                @php
-                    $total = $codOrders + $waylOrders;
-                    $codPct  = $total > 0 ? round(($codOrders  / $total) * 100) : 0;
-                    $waylPct = $total > 0 ? round(($waylOrders / $total) * 100) : 0;
-                @endphp
-                <div class="space-y-3">
-                    <div>
-                        <div class="flex justify-between text-xs font-bold text-gray-600 dark:text-dark-300 mb-1">
-                            <span>Cash on Delivery</span>
-                            <span>{{ $codOrders }} ({{ $codPct }}%)</span>
-                        </div>
-                        <div class="h-2 rounded-full bg-gray-100 dark:bg-dark-800 overflow-hidden">
-                            <div class="h-full rounded-full bg-brand-base transition-all duration-700" style="width: {{ $codPct }}%"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-xs font-bold text-gray-600 dark:text-dark-300 mb-1">
-                            <span>Wayl (Online)</span>
-                            <span>{{ $waylOrders }} ({{ $waylPct }}%)</span>
-                        </div>
-                        <div class="h-2 rounded-full bg-gray-100 dark:bg-dark-800 overflow-hidden">
-                            <div class="h-full rounded-full bg-emerald-500 transition-all duration-700" style="width: {{ $waylPct }}%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endif
         </div>
     </div>
 </div>

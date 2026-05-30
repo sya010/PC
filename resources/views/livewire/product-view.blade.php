@@ -67,23 +67,21 @@
                             <p>{{ $product->description }}</p>
                         </div>
 
+                        @if($product->has_specs && is_array($product->specs) && count($product->specs) > 0)
                         <div>
                             <h3 class="text-xl font-bold text-content-primary dark:text-dark-100 mb-4">{{ __('messages.product.specifications') }}</h3>
-                            @if(is_array($product->specs))
-                                <div class="space-y-4">
-                                    @foreach($product->specs as $key => $value)
-                                        @if(is_scalar($value))
-                                            <div class="flex items-center justify-between py-2 border-b border-border-subtle dark:border-dark-800 hover:bg-surface-secondary dark:hover:bg-dark-950/30 px-2 rounded-lg transition-colors">
-                                                <span class="font-bold text-content-muted dark:text-dark-400 uppercase text-xs tracking-wider">{{ str_replace('_', ' ', $key) }}</span>
-                                                <span class="font-bold text-content-primary dark:text-dark-100">{{ $value }}</span>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            @else
-                                <p>{{ __('messages.product.no_specs') }}</p>
-                            @endif
+                            <div class="space-y-4">
+                                @foreach($product->specs as $key => $value)
+                                    @if(is_scalar($value))
+                                        <div class="flex items-center justify-between py-2 border-b border-border-subtle dark:border-dark-800 hover:bg-surface-secondary dark:hover:bg-dark-950/30 px-2 rounded-lg transition-colors">
+                                            <span class="font-bold text-content-muted dark:text-dark-400 uppercase text-xs tracking-wider">{{ str_replace('_', ' ', $key) }}</span>
+                                            <span class="font-bold text-content-primary dark:text-dark-100">{{ $value }}</span>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
                         </div>
+                        @endif
                     </div>
 
                     <div class="flex items-center gap-4 pt-6 border-t border-border-subtle dark:border-dark-800">

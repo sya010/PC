@@ -138,6 +138,7 @@ return [
       'sign_out' => 'تسجيل الخروج',
       'users' => 'المستخدمون',
       'password_requests' => 'طلبات كلمة المرور',
+      'reports' => 'التقارير',
     ],
     'user_form' => 
     [
@@ -265,6 +266,17 @@ return [
       'payment_split' => 'تقسيم الدفع',
       'cod' => 'الدفع عند الاستلام',
       'wayl' => 'وايل (أونلاين)',
+      'period_7' => '7 أيام',
+      'period_30' => '30 يوم',
+      'period_90' => '3 أشهر',
+      'period_365' => 'سنة واحدة',
+      'period_all' => 'كل الوقت',
+      'custom_range' => 'فترة مخصصة',
+      'live_refresh' => 'مباشر · تحديث تلقائي كل 60 ثانية',
+      'total_orders' => 'إجمالي الطلبات',
+      'completed_orders' => 'الطلبات المكتملة',
+      'cancelled_orders' => 'الطلبات الملغاة',
+      'order_overview' => 'نظرة عامة على الطلبات',
     ],
   ],
   'auth' => 

@@ -58,47 +58,90 @@
                 <!-- Specifications Card -->
                 <div class="bg-white dark:bg-dark-800 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-700 p-6">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-dark-100 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
-                            {{ __('messages.admin.product_form.specifications') }}
-                        </h3>
-                        <button type="button" wire:click="addSpec" class="text-sm px-4 py-2 bg-brand-base/10 dark:bg-brand-base/20 text-brand-base dark:text-brand-light rounded-lg hover:bg-brand-base/20 font-bold transition-all hover:shadow-sm">
-                            {{ __('messages.admin.product_form.add_spec') }}
-                        </button>
-                    </div>
-
-                    <div class="space-y-4">
-                        @foreach($specs as $index => $spec)
-                            <div class="flex items-center gap-3 group">
-                                <div class="flex-1 grid grid-cols-2 gap-3">
-                                    <div class="relative">
-                                        <input 
-                                            type="text" 
-                                            wire:model="specs.{{ $index }}.key" 
-                                            maxlength="100" 
-                                            placeholder="{{ __('messages.admin.product_form.key_placeholder') }}" 
-                                            class="w-full px-4 py-2.5 rounded-xl border bg-gray-50/50 dark:bg-dark-900/50 text-sm text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-white dark:focus:bg-dark-700 transition-all shadow-sm font-medium border-gray-200 dark:border-dark-600 @error('specs.'.$index.'.key') border-red-500 bg-red-50/5 focus:ring-red-500/15 focus:border-red-500 @enderror"
-                                        >
-                                        @error("specs.{$index}.key") <span class="text-red-500 text-xs mt-1 block absolute -bottom-4 left-0">{{ $message }}</span> @enderror
-                                    </div>
-                                    <div class="relative">
-                                        <input 
-                                            type="text" 
-                                            wire:model="specs.{{ $index }}.value" 
-                                            maxlength="255" 
-                                            placeholder="{{ __('messages.admin.product_form.value_placeholder') }}" 
-                                            class="w-full px-4 py-2.5 rounded-xl border bg-gray-50/50 dark:bg-dark-900/50 text-sm text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-white dark:focus:bg-dark-700 transition-all shadow-sm border-gray-200 dark:border-dark-600 @error('specs.'.$index.'.value') border-red-500 bg-red-50/5 focus:ring-red-500/15 focus:border-red-500 @enderror"
-                                        >
-                                        @error("specs.{$index}.value") <span class="text-red-500 text-xs mt-1 block absolute -bottom-4 left-0">{{ $message }}</span> @enderror
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-lg font-bold text-gray-800 dark:text-dark-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                                {{ __('messages.admin.product_form.specifications') }}
+                            </h3>
+                            <!-- Toggle Button -->
+                            <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out">
+                                <input type="checkbox" wire:model.live="has_specs" id="toggle-has-specs" class="peer absolute w-0 h-0 opacity-0" />
+                                <label for="toggle-has-specs" class="block w-12 h-6 bg-gray-200 dark:bg-dark-700 rounded-full cursor-pointer transition-colors peer-checked:bg-green-500"></label>
+                                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-6"></div>
+                            </div>
+                        </div>
+                        @if($has_specs)
+                            <div class="flex items-center gap-2">
+                                <!-- Preset Dropdown -->
+                                <div class="relative" x-data="{ open: false }">
+                                    <button type="button" @click="open = !open" @click.away="open = false" class="text-sm px-4 py-2 bg-gray-50 hover:bg-gray-100 dark:bg-dark-700/50 dark:hover:bg-dark-700 text-gray-700 dark:text-dark-200 border border-gray-200 dark:border-dark-600 rounded-xl font-bold transition-all flex items-center gap-1.5 hover:shadow-sm">
+                                        <span>Load Preset</span>
+                                        <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                                    </button>
+                                    
+                                    <!-- Dropdown Menu -->
+                                    <div x-show="open" 
+                                         x-transition
+                                         class="absolute right-0 z-50 w-48 mt-2 bg-white dark:bg-dark-800 rounded-xl shadow-xl border border-gray-100 dark:border-dark-700 overflow-hidden flex flex-col py-1"
+                                         style="display: none;">
+                                        @foreach(array_diff(array_keys($this::CATEGORY_SPECS), ['default']) as $catName)
+                                            <button type="button" wire:click="loadPresetSpecs('{{ $catName }}')" @click="open = false" class="px-4 py-2 hover:bg-brand-base/5 dark:hover:bg-dark-700 text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'right' : 'left' }} text-sm font-medium text-gray-700 dark:text-dark-200 hover:text-brand-accent transition-colors">
+                                                {{ $catName }}
+                                            </button>
+                                        @endforeach
                                     </div>
                                 </div>
-                                <button type="button" wire:click="removeSpec({{ $index }})" class="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition-colors flex-shrink-0">
-                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+
+                                <button type="button" wire:click="addSpec" class="text-sm px-4 py-2 bg-brand-base/10 dark:bg-brand-base/20 text-brand-base dark:text-brand-light rounded-xl hover:bg-brand-base/20 font-bold transition-all hover:shadow-sm border border-transparent">
+                                    {{ __('messages.admin.product_form.add_spec') }}
                                 </button>
                             </div>
-                            <div class="h-1"></div>
-                        @endforeach
+                        @endif
                     </div>
+
+                    @if($has_specs)
+                        <div class="space-y-4">
+                            @foreach($specs as $index => $spec)
+                                <div class="flex items-center gap-3 group" wire:key="spec-row-{{ $index }}">
+                                    <div class="flex-1 grid grid-cols-2 gap-3">
+                                        <div class="relative">
+                                            <input 
+                                                type="text" 
+                                                wire:model.live.debounce.250ms="specs.{{ $index }}.key" 
+                                                maxlength="100" 
+                                                placeholder="{{ __('messages.admin.product_form.key_placeholder') }}" 
+                                                class="w-full px-4 py-2.5 rounded-xl border bg-gray-50/50 dark:bg-dark-900/50 text-sm text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-white dark:focus:bg-dark-700 transition-all shadow-sm font-medium border-gray-200 dark:border-dark-600 @error('specs.'.$index.'.key') border-red-500 bg-red-50/5 focus:ring-red-500/15 focus:border-red-500 @enderror"
+                                            >
+                                            @error("specs.{$index}.key") <span class="text-red-500 text-xs mt-1 block absolute -bottom-4 left-0">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div class="relative">
+                                            <input 
+                                                type="text" 
+                                                wire:model="specs.{{ $index }}.value" 
+                                                maxlength="255" 
+                                                placeholder="{{ $this->getSpecPlaceholder($spec['key']) }}" 
+                                                class="w-full px-4 py-2.5 rounded-xl border bg-gray-50/50 dark:bg-dark-900/50 text-sm text-gray-900 dark:text-dark-100 placeholder-gray-400 dark:placeholder-dark-400 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent focus:bg-white dark:focus:bg-dark-700 transition-all shadow-sm border-gray-200 dark:border-dark-600 @error('specs.'.$index.'.value') border-red-500 bg-red-50/5 focus:ring-red-500/15 focus:border-red-500 @enderror"
+                                            >
+                                            @error("specs.{$index}.value") <span class="text-red-500 text-xs mt-1 block absolute -bottom-4 left-0">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <button type="button" wire:click="removeSpec({{ $index }})" class="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition-colors flex-shrink-0">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    </button>
+                                </div>
+                                <div class="h-1"></div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="flex flex-col items-center justify-center py-6 text-center border border-dashed border-gray-200 dark:border-dark-700 rounded-2xl bg-gray-50/30 dark:bg-dark-900/10">
+                            <svg class="w-10 h-10 text-gray-400 dark:text-dark-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                            </svg>
+                            <p class="text-sm font-semibold text-gray-500 dark:text-dark-400">
+                                {{ __('messages.admin.product_form.no_specs') }}
+                            </p>
+                        </div>
+                    @endif
                 </div>
             </div>
 
