@@ -96,10 +96,7 @@
                         <span>{{ __('messages.cart_page.subtotal') }}</span>
                         <span>{{ number_format($total, 0) }} {{ __('messages.currency') }}</span>
                     </div>
-                    <div class="flex justify-between text-content-secondary dark:text-dark-300">
-                        <span>{{ __('messages.cart_page.shipping') }}</span>
-                        <span class="text-status-success">{{ __('messages.cart_page.free') }}</span>
-                    </div>
+
                     <div class="flex justify-between font-bold text-lg text-content-primary dark:text-dark-100 pt-2 border-t border-border-subtle dark:border-dark-800 mt-2">
                         <span>{{ __('messages.cart_page.total') }}</span>
                         <span class="text-brand-base">{{ number_format($total, 0) }} {{ __('messages.currency') }}</span>

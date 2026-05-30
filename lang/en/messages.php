@@ -336,7 +336,7 @@ return [
     'empty_title' => 'Your cart is empty',
     'free' => 'Free',
     'order_summary' => 'Order Summary',
-    'proceed_delivery' => 'Proceed to Delivery',
+    'proceed_delivery' => 'Proceed to Checkout',
     'product' => 'Product',
     'promo_code' => 'Promo Code',
     'secure_checkout' => 'Secure Checkout',
