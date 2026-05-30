@@ -116,11 +116,7 @@
                     {{ __('messages.admin.sidebar.users') }}
                 </a>
 
-                <a href="{{ route('admin.password-requests') }}" 
-                   class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors {{ request()->routeIs('admin.password-requests') ? 'bg-brand-base text-white' : 'text-dark-200 hover:bg-dark-800 hover:text-white' }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    {{ __('messages.admin.sidebar.password_requests') }}
-                </a>
+
 
                 <div class="pt-4 pb-2 px-3 text-xs font-semibold text-dark-500 uppercase tracking-wider">{{ __('messages.admin.sidebar.personal') }}</div>
 

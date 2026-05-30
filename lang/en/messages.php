@@ -256,6 +256,15 @@ return [
       'active_shipments' => 'Active Shipments',
       'completed_shipments' => 'Completed Shipments',
       'cancelled_shipments' => 'Cancelled Shipments',
+      'need_restocking' => 'need restocking',
+      'all_stocked_desc' => 'All products are currently in stock',
+      'active_transit' => 'active orders in transit',
+      'no_active_deliveries' => 'No Active Deliveries',
+      'all_delivered_cancelled' => 'All orders have been delivered or cancelled',
+      'revenue_over_time' => 'Revenue Over Time',
+      'payment_split' => 'Payment Split',
+      'cod' => 'Cash on Delivery',
+      'wayl' => 'Wayl (Online)',
     ],
   ],
   'auth' => 
@@ -372,6 +381,10 @@ return [
     'processing' => 'Processing...',
     'qty' => 'Qty',
     'review_pay' => 'Review & Pay',
+    'confirm_title' => 'Confirm Your Order',
+    'confirm_message' => 'Are you certain you want to place this order? Please make sure your delivery details and items are correct.',
+    'confirm_yes' => 'Yes, Place Order',
+    'confirm_no' => 'Cancel',
   ],
   'compare' => 
   [
@@ -654,6 +667,7 @@ return [
     'related' => 'You Might Also Like',
     'reviews' => 'reviews',
     'specifications' => 'Specifications',
+    'out_of_stock' => 'Out of Stock',
   ],
   'profile' => 
   [

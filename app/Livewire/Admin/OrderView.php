@@ -17,9 +17,16 @@ class OrderView extends Component
     public function updateStatus($status)
     {
         $validStatuses = ['pending', 'processing', 'completed', 'cancelled'];
-        
+
         if (in_array($status, $validStatuses)) {
-            $this->order->update(['status' => $status]);
+            $updateData = ['status' => $status];
+
+            // Only sync payment_status for COD orders — never touch Wayl
+            if ($status === 'completed' && $this->order->payment_method === 'cod') {
+                $updateData['payment_status'] = 'paid';
+            }
+
+            $this->order->update($updateData);
             $this->order->refresh();
         }
     }

@@ -256,6 +256,15 @@ return [
       'active_shipments' => 'الشحنات النشطة',
       'completed_shipments' => 'الشحنات المكتملة',
       'cancelled_shipments' => 'الشحنات الملغاة',
+      'need_restocking' => 'بحاجة إلى إعادة تخزين',
+      'all_stocked_desc' => 'جميع المنتجات متوفرة حالياً في المخزون',
+      'active_transit' => 'طلبات نشطة قيد التوصيل',
+      'no_active_deliveries' => 'لا توجد توصيلات نشطة',
+      'all_delivered_cancelled' => 'تم تسليم جميع الطلبات أو إلغاؤها',
+      'revenue_over_time' => 'الإيرادات بمرور الوقت',
+      'payment_split' => 'تقسيم الدفع',
+      'cod' => 'الدفع عند الاستلام',
+      'wayl' => 'وايل (أونلاين)',
     ],
   ],
   'auth' => 
@@ -372,6 +381,10 @@ return [
     'processing' => 'جاري المعالجة...',
     'qty' => 'الكمية',
     'review_pay' => 'المراجعة والدفع',
+    'confirm_title' => 'تأكيد طلبك',
+    'confirm_message' => 'هل أنت متأكد من رغبتك في تأكيد هذا الطلب؟ يرجى التحقق من صحة تفاصيل التوصيل والمنتجات قبل المتابعة.',
+    'confirm_yes' => 'نعم، أكد الطلب',
+    'confirm_no' => 'إلغاء',
   ],
   'compare' => 
   [
@@ -654,6 +667,7 @@ return [
     'related' => 'قد يعجبك أيضاً',
     'reviews' => 'تقييمات',
     'specifications' => 'المواصفات',
+    'out_of_stock' => 'نفد من المخزون',
   ],
   'profile' => 
   [

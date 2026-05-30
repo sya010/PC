@@ -73,12 +73,13 @@
     </div>
 
     <!-- Orders Table -->
-    <div class="bg-white dark:bg-dark-900 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800 overflow-hidden">
-        <div class="overflow-x-auto">
+    <div class="bg-white dark:bg-dark-900 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-800">
+        <div class="overflow-x-auto md:overflow-x-visible min-h-[400px]">
             <table class="w-full text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'right' : 'left' }} text-sm text-gray-600 dark:text-dark-300">
                 <thead class="bg-gray-50/50 dark:bg-dark-800/50 text-xs uppercase font-bold text-gray-500 dark:text-dark-400 tracking-wider">
                     <tr>
                         <th class="px-6 py-4">{{ __('messages.admin.orders.order_id') }}</th>
+                        <th class="px-6 py-4">{{ __('messages.admin.orders.product') }}</th>
                         <th class="px-6 py-4">{{ __('messages.admin.orders.customer') }}</th>
                         <th class="px-6 py-4">{{ __('messages.admin.orders.date') }}</th>
                         <th class="px-6 py-4">{{ __('messages.admin.orders.total') }}</th>
@@ -106,6 +107,30 @@
                         @endphp
                         <tr class="hover:bg-gray-50/50 dark:hover:bg-dark-800/30 transition-colors">
                             <td class="px-6 py-4 font-bold text-brand-base">#{{ $order->id }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2 flex-wrap max-w-[200px]">
+                                    @foreach($order->items as $item)
+                                        <div class="relative group cursor-pointer" title="{{ $item->product_name }} (x{{ $item->quantity }})">
+                                            <div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-50 dark:bg-dark-950 border border-gray-100 dark:border-dark-800 flex-shrink-0 flex items-center justify-center transition-transform hover:scale-105 shadow-sm">
+                                                @if($item->product && $item->product->image_url)
+                                                    <img src="{{ $item->product->image_url }}" class="w-full h-full object-contain p-0.5 dark:bg-white" alt="{{ $item->product_name }}">
+                                                @else
+                                                    <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 dark:bg-dark-800 dark:text-dark-500">
+                                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </svg>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            @if($item->quantity > 1)
+                                                <span class="absolute -top-1.5 -end-1.5 bg-brand-base text-white text-[9px] font-bold px-1.5 rounded-full border border-white dark:border-dark-900 leading-none py-0.5 shadow-sm">
+                                                    {{ $item->quantity }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </td>
                             <td class="px-6 py-4">
                                 <div class="font-bold text-gray-900 dark:text-dark-100">{{ $order->full_name }}</div>
                                 <div class="text-xs text-gray-500 dark:text-dark-400 font-medium">{{ $order->email }}</div>
@@ -142,8 +167,15 @@
                                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                                             {{ __('messages.admin.orders.update_status') }}
                                         </button>
-                                        <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75"
-                                            class="absolute z-50 {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'left-0' : 'right-0' }} mt-2 w-44 bg-white dark:bg-dark-900 rounded-xl shadow-xl border border-gray-100 dark:border-dark-800 overflow-hidden" style="display: none;">
+                                        <div x-show="open" 
+                                            x-transition:enter="transition ease-out duration-200" 
+                                            x-transition:enter-start="opacity-0 translate-y-1 scale-95" 
+                                            x-transition:enter-end="opacity-100 translate-y-0 scale-100" 
+                                            x-transition:leave="transition ease-in duration-150" 
+                                            x-transition:leave-start="opacity-100 translate-y-0 scale-100" 
+                                            x-transition:leave-end="opacity-0 translate-y-1 scale-95"
+                                            class="absolute z-50 {{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'left-0' : 'right-0' }} mt-2 w-48 bg-white/95 dark:bg-dark-900/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-150 dark:border-dark-750 py-1.5 overflow-hidden" 
+                                            style="display: none;">
                                             @foreach(['pending' => ['label' => __('messages.admin.orders.pending'), 'dot' => 'bg-amber-400', 'hover' => 'hover:bg-amber-50 hover:text-amber-700 dark:hover:bg-amber-950/30 dark:hover:text-amber-300'], 'processing' => ['label' => __('messages.admin.orders.processing'), 'dot' => 'bg-blue-400', 'hover' => 'hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-blue-950/30 dark:hover:text-blue-300'], 'completed' => ['label' => __('messages.admin.orders.completed'), 'dot' => 'bg-emerald-400', 'hover' => 'hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/30 dark:hover:text-emerald-300'], 'cancelled' => ['label' => __('messages.admin.orders.cancelled'), 'dot' => 'bg-rose-400', 'hover' => 'hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-950/30 dark:hover:text-rose-300']] as $sVal => $sOpt)
                                                 <button wire:click="updateStatus({{ $order->id }}, '{{ $sVal }}')" @click="open = false" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors {{ $sOpt['hover'] }} {{ $order->status === $sVal ? 'bg-gray-50 dark:bg-dark-800 font-bold text-gray-900 dark:text-dark-100' : 'text-gray-700 dark:text-dark-300' }}">
                                                     <span class="w-2 h-2 rounded-full {{ $sOpt['dot'] }}"></span>
@@ -160,7 +192,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-gray-400 dark:text-dark-500 font-medium">
+                            <td colspan="8" class="px-6 py-12 text-center text-gray-400 dark:text-dark-500 font-medium">
                                 {{ __('messages.admin.orders.no_orders') }}
                             </td>
                         </tr>

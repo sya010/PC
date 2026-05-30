@@ -63,17 +63,9 @@
                         @error('password') <p class="mt-1.5 text-xs font-medium text-brand-accent animate-in slide-in-from-top-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input id="remember-me" name="remember-me" type="checkbox" wire:model="remember" class="w-4 h-4 text-brand-base border-border-subtle dark:border-dark-700 rounded focus:ring-brand-accent cursor-pointer">
-                            <label for="remember-me" class="ms-2 block text-sm text-content-secondary dark:text-dark-400 cursor-pointer font-medium">{{ __('messages.auth.remember_me') }}</label>
-                        </div>
-
-                        <div class="text-sm">
-                            <a href="{{ route('password.request') }}" wire:navigate class="font-semibold text-brand-base hover:text-brand-accent transition-colors">
-                                {{ __('messages.auth.forgot_password') }}
-                            </a>
-                        </div>
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" wire:model="remember" class="w-4 h-4 text-brand-base border-border-subtle dark:border-dark-700 rounded focus:ring-brand-accent cursor-pointer">
+                        <label for="remember-me" class="ms-2 block text-sm text-content-secondary dark:text-dark-400 cursor-pointer font-medium">{{ __('messages.auth.remember_me') }}</label>
                     </div>
 
                     <button type="submit" class="relative w-full h-12 flex justify-center items-center bg-brand-base hover:bg-brand-accent text-white font-bold rounded-xl shadow-lg shadow-brand-accent/30 transition-all duration-200 transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed">
