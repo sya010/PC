@@ -11,14 +11,14 @@ class WaylWebhookController extends Controller
     public function handle(Request $request)
     {
         $payload = $request->all();
-        $signature = $request->header('WEBHOOK-SIGNATURE');
+        $signature = $request->header('X-Wayl-Signature');
         $secret = env('WAYL_WEBHOOK_SECRET', 'default_secret_string_min_10_chars');
 
         // Verify the signature
         // We use hash_hmac with sha256 to sign the JSON payload
         $expectedSignature = hash_hmac('sha256', $request->getContent(), $secret);
 
-        if (!hash_equals($expectedSignature, $signature)) {
+        if (!$signature || !hash_equals($expectedSignature, $signature)) {
             Log::warning('Invalid Wayl Webhook Signature', ['payload' => $payload]);
             return response()->json(['error' => 'Invalid signature'], 400);
         }
