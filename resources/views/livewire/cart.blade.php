@@ -62,16 +62,8 @@
                                 <span>-{{ number_format($discount, 0) }} {{ __('messages.currency') }}</span>
                             </div>
                         @endif
-                        <div class="flex flex-col gap-2 pt-2 pb-2">
-                             <div class="flex gap-2">
-                                <input type="text" wire:model="couponCode" placeholder="{{ __('messages.cart_page.promo_code') }}" class="flex-1 px-3 py-2 border border-border-subtle dark:border-dark-700 rounded-lg text-sm bg-surface-secondary dark:bg-dark-950 text-content-primary dark:text-dark-100 focus:outline-none focus:border-brand-accent">
-                                <button wire:click="applyCoupon" class="px-3 py-2 bg-dark-950 dark:bg-dark-800 text-white text-sm font-medium rounded-lg hover:bg-dark-900 dark:hover:bg-dark-700 transition-colors">{{ __('messages.cart_page.apply') }}</button>
-                             </div>
-                        </div>
-                        <div class="flex justify-between text-content-secondary dark:text-dark-300">
-                            <span>{{ __('messages.cart_page.shipping') }}</span>
-                            <span class="text-emerald-600 dark:text-emerald-400">{{ __('messages.cart_page.free') }}</span>
-                        </div>
+
+
                         <div class="border-t border-border-subtle dark:border-dark-800 pt-4 flex justify-between font-bold text-lg text-content-primary dark:text-dark-100">
                             <span>{{ __('messages.cart_page.total') }}</span>
                             <span class="text-brand-base">{{ number_format($total, 0) }} {{ __('messages.currency') }}</span>

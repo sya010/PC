@@ -23,7 +23,7 @@ Route::get('/build-pc/select/{type}', App\Livewire\ComponentSelector::class)->na
 // Auth Routes
 Route::get('/login', App\Livewire\Auth\Login::class)->name('login');
 Route::get('/register', App\Livewire\Auth\Register::class)->name('register');
-Route::get('/forgot-password', App\Livewire\Auth\ForgotPassword::class)->name('password.request');
+
 Route::post('/logout', function () {
     auth()->logout();
     request()->session()->invalidate();
@@ -50,8 +50,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/users/create', App\Livewire\Admin\UserForm::class)->name('users.create');
     Route::get('/users/{id}', App\Livewire\Admin\UserView::class)->name('users.view');
     Route::get('/users/{id}/edit', App\Livewire\Admin\UserForm::class)->name('users.edit');
-    Route::get('/password-requests', App\Livewire\Admin\PasswordRequests::class)->name('password-requests');
-    Route::get('/password-requests/{id}', App\Livewire\Admin\PasswordRequestReview::class)->name('password-requests.review');
+
 });
 
 // Compare route

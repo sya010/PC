@@ -35,7 +35,25 @@
                         @foreach($order->items as $item)
                             <tr class="hover:bg-gray-50/50 dark:hover:bg-dark-800/30 transition-colors">
                                 <td class="px-6 py-4">
-                                    <div class="font-bold text-gray-900 dark:text-dark-100">{{ $item->product_name }}</div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-xl overflow-hidden bg-gray-50 dark:bg-dark-950 border border-gray-100 dark:border-dark-800 flex-shrink-0 flex items-center justify-center shadow-sm">
+                                            @if($item->product && $item->product->image_url)
+                                                <img src="{{ $item->product->image_url }}" class="w-full h-full object-contain p-1 dark:bg-white" alt="{{ $item->product_name }}">
+                                            @else
+                                                <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 dark:bg-dark-800 dark:text-dark-500">
+                                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-gray-900 dark:text-dark-100">{{ $item->product_name }}</div>
+                                            @if($item->product)
+                                                <div class="text-xs text-brand-muted dark:text-dark-400 font-medium">{{ $item->product->category }}</div>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 text-center font-medium text-gray-600 dark:text-dark-300">{{ $item->quantity }}</td>
                                 <td class="px-6 py-4 text-{{ in_array(app()->getLocale(), ['ar', 'ku']) ? 'left' : 'right' }} text-gray-600 dark:text-dark-300">{{ number_format($item->price) }} {{ __('messages.currency') }}</td>

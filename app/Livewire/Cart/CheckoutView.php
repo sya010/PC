@@ -33,6 +33,22 @@ class CheckoutView extends Component
     {
         // DB Transaction to ensure data integrity
         $order = DB::transaction(function () {
+            // Validate stock for all cart items before proceeding
+            foreach ($this->cartItems as $key => $item) {
+                $productId = $item['id'] ?? $key;
+                $product = \App\Models\Product::lockForUpdate()->find($productId);
+
+                if (!$product) {
+                    throw new \Exception(__('messages.shop.product_not_found') ?? 'Product not found: ' . ($item['name'] ?? 'Unknown'));
+                }
+
+                if ($product->stock < $item['quantity']) {
+                    throw new \Exception(
+                        ($item['name'] ?? 'Product') . ' - ' . (__('messages.shop.insufficient_stock') ?? 'Insufficient stock. Available: ' . $product->stock)
+                    );
+                }
+            }
+
             // Create Order
             $order = Order::create([
                 'user_id' => auth()->id(),
@@ -49,15 +65,21 @@ class CheckoutView extends Component
                 'payment_status' => 'pending',
             ]);
 
-            // Create Order Items
-            foreach ($this->cartItems as $item) {
+            // Create Order Items & Decrement Stock
+            foreach ($this->cartItems as $key => $item) {
+                $productId = $item['id'] ?? $key;
+
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_id' => $item['id'] ?? null,
+                    'product_id' => $productId,
                     'product_name' => $item['name'],
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],
                 ]);
+
+                // Decrement product stock
+                \App\Models\Product::where('id', $productId)
+                    ->decrement('stock', $item['quantity']);
             }
             
             return $order;

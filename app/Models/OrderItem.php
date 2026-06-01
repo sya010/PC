@@ -13,12 +13,34 @@ class OrderItem extends Model
         'product_name',
         'quantity',
         'price',
+        'unit_price',
+        'subtotal',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'unit_price' => 'decimal:2',
+        'subtotal' => 'decimal:2',
         'quantity' => 'integer',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (OrderItem $item) {
+            // Sync unit_price and price
+            if ($item->isDirty('price') && !$item->isDirty('unit_price')) {
+                $item->unit_price = $item->price;
+            } elseif ($item->isDirty('unit_price') && !$item->isDirty('price')) {
+                $item->price = $item->unit_price;
+            }
+
+            // Auto-calculate subtotal
+            $item->subtotal = $item->price * $item->quantity;
+        });
+    }
 
     public function order(): BelongsTo
     {

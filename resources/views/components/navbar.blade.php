@@ -95,6 +95,10 @@
                                         {{ __('messages.admin.panel_title') }}
                                     </a>
                                 @endif
+                                <a href="{{ route('profile') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-content-secondary dark:text-dark-400 hover:bg-surface-secondary dark:hover:bg-dark-600 hover:text-brand-base transition-colors">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                    {{ __('messages.user_orders.my_profile') }}
+                                </a>
                                 <a href="{{ route('my-orders') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-content-secondary dark:text-dark-400 hover:bg-surface-secondary dark:hover:bg-dark-600 hover:text-brand-base transition-colors">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
                                     {{ __('messages.user_orders.title') }}

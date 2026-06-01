@@ -18,10 +18,14 @@ return new class extends Migration
             $table->string('city');
             $table->string('state');
             $table->string('zip_code');
-            $table->decimal('total_amount', 10, 2);
+            $table->decimal('total_amount', 15, 2);
             $table->string('status')->default('pending'); // pending, processing, completed, cancelled
             $table->string('payment_method')->default('cod');
-            $table->string('payment_status')->default('pending');
+            $table->enum('payment_status', ['pending', 'paid', 'failed', 'cancelled'])->default('pending');
+            $table->string('transaction_id')->nullable();
+            $table->string('shipping_name')->nullable();
+            $table->string('shipping_phone')->nullable();
+            $table->text('shipping_address')->nullable();
             $table->timestamps();
         });
     }

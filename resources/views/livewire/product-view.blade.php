@@ -67,23 +67,21 @@
                             <p>{{ $product->description }}</p>
                         </div>
 
+                        @if($product->has_specs && is_array($product->specs) && count($product->specs) > 0)
                         <div>
                             <h3 class="text-xl font-bold text-content-primary dark:text-dark-100 mb-4">{{ __('messages.product.specifications') }}</h3>
-                            @if(is_array($product->specs))
-                                <div class="space-y-4">
-                                    @foreach($product->specs as $key => $value)
-                                        @if(is_scalar($value))
-                                            <div class="flex items-center justify-between py-2 border-b border-border-subtle dark:border-dark-800 hover:bg-surface-secondary dark:hover:bg-dark-950/30 px-2 rounded-lg transition-colors">
-                                                <span class="font-bold text-content-muted dark:text-dark-400 uppercase text-xs tracking-wider">{{ str_replace('_', ' ', $key) }}</span>
-                                                <span class="font-bold text-content-primary dark:text-dark-100">{{ $value }}</span>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            @else
-                                <p>{{ __('messages.product.no_specs') }}</p>
-                            @endif
+                            <div class="space-y-4">
+                                @foreach($product->specs as $key => $value)
+                                    @if(is_scalar($value))
+                                        <div class="flex items-center justify-between py-2 border-b border-border-subtle dark:border-dark-800 hover:bg-surface-secondary dark:hover:bg-dark-950/30 px-2 rounded-lg transition-colors">
+                                            <span class="font-bold text-content-muted dark:text-dark-400 uppercase text-xs tracking-wider">{{ str_replace('_', ' ', $key) }}</span>
+                                            <span class="font-bold text-content-primary dark:text-dark-100">{{ $value }}</span>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
                         </div>
+                        @endif
                     </div>
 
                     <div class="flex items-center gap-4 pt-6 border-t border-border-subtle dark:border-dark-800">
@@ -91,8 +89,8 @@
                         
                         <button 
                             wire:click="addToCart" 
-                            @if($product->stock <= 0) disabled @endif
-                            class="flex-1 {{ $product->stock <= 0 ? 'bg-slate-300 dark:bg-dark-800 text-slate-500 dark:text-dark-500 cursor-not-allowed' : 'bg-dark-950 dark:bg-dark-800 hover:bg-brand-base dark:hover:bg-brand-accent text-white hover:shadow-brand-base/30 dark:hover:shadow-brand-accent/30 active:scale-95' }} font-bold py-5 px-8 rounded-2xl shadow-xl dark:shadow-dark-950/20 transition-all flex items-center justify-center gap-3 group"
+                            @disabled($product->stock < 1)
+                            class="flex-1 {{ $product->stock < 1 ? 'bg-slate-300 dark:bg-dark-800 text-slate-500 dark:text-dark-500 cursor-not-allowed' : 'bg-dark-950 dark:bg-dark-800 hover:bg-brand-base dark:hover:bg-brand-accent text-white hover:shadow-brand-base/30 dark:hover:shadow-brand-accent/30 active:scale-95' }} font-bold py-5 px-8 rounded-2xl shadow-xl dark:shadow-dark-950/20 transition-all flex items-center justify-center gap-3 group"
                         >
                             @if($product->stock > 0)
                                 <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">

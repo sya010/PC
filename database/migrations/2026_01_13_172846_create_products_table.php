@@ -13,11 +13,16 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 15, 2);
             $table->string('image')->nullable();
+            $table->string('image_path')->nullable();
             $table->json('images')->nullable();
+            $table->json('specs')->nullable();
+            $table->json('specifications')->nullable();
+            $table->boolean('has_specs')->default(true);
             $table->string('category')->nullable();
             $table->integer('stock')->default(0);
+            $table->integer('stock_quantity')->unsigned()->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

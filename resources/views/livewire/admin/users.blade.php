@@ -108,15 +108,7 @@
                                             <button wire:click="startConfirmation({{ $user->id }}, 'demote')" class="px-3 py-1.5 text-xs font-bold text-brand-light bg-brand-light/20 dark:text-brand-light dark:bg-brand-light/30 rounded-lg hover:bg-brand-light/30 dark:hover:bg-brand-light/40 transition-colors">
                                                 {{ __('messages.admin.users.demote') }}
                                             </button>
-                                            <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate class="px-3 py-1.5 text-xs font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 dark:text-amber-400 dark:bg-amber-950/30 rounded-lg transition-colors flex items-center gap-1 border border-amber-100 dark:border-amber-900/30">
-                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                                                {{ __('messages.admin.products.edit') }}
-                                            </a>
                                         @else
-                                            <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate class="px-3 py-1.5 text-xs font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 dark:text-amber-400 dark:bg-amber-950/30 rounded-lg transition-colors flex items-center gap-1 border border-amber-100 dark:border-amber-900/30">
-                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                                                {{ __('messages.admin.products.edit') }}
-                                            </a>
                                             <button wire:click="startConfirmation({{ $user->id }}, 'promote')" class="px-3 py-1.5 text-xs font-bold text-brand-accent bg-brand-base/10 rounded-lg hover:bg-brand-base/20 transition-colors">
                                                 {{ __('messages.admin.users.make_admin') }}
                                             </button>

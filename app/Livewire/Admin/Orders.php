@@ -15,7 +15,7 @@ class Orders extends Component
 
     public function render()
     {
-        $orders = Order::with('items')
+        $orders = Order::with('items.product')
             ->when($this->search, function ($query) {
                 $query->where('id', 'like', '%'.$this->search.'%')
                       ->orWhere('full_name', 'like', '%'.$this->search.'%')
@@ -35,9 +35,19 @@ class Orders extends Component
     public function updateStatus($orderId, $status)
     {
         $validStatuses = ['pending', 'processing', 'completed', 'cancelled'];
-        
+
         if (in_array($status, $validStatuses)) {
-            Order::find($orderId)->update(['status' => $status]);
+            $order = Order::find($orderId);
+            if (!$order) return;
+
+            $updateData = ['status' => $status];
+
+            // Only sync payment_status for COD orders — never touch Wayl
+            if ($status === 'completed' && $order->payment_method === 'cod') {
+                $updateData['payment_status'] = 'paid';
+            }
+
+            $order->update($updateData);
             session()->flash('success', "Order #{$orderId} status updated to {$status}.");
         }
     }
