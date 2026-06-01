@@ -14,7 +14,9 @@ return new class extends Migration
             $table->foreignId('product_id')->nullable()->constrained()->nullOnDelete();
             $table->string('product_name'); // Snapshot
             $table->integer('quantity');
-            $table->decimal('price', 10, 2); // Snapshot
+            $table->decimal('price', 15, 2); // Snapshot
+            $table->decimal('unit_price', 15, 2)->nullable();
+            $table->decimal('subtotal', 15, 2)->nullable();
             $table->timestamps();
         });
     }

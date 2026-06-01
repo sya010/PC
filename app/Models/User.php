@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'is_blocked',
+        'role',
     ];
 
     /**
@@ -48,7 +49,23 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_admin' => 'boolean',
             'is_blocked' => 'boolean',
+            'role' => 'string',
         ];
+    }
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (User $user) {
+            // Keep role and is_admin in sync
+            if ($user->isDirty('is_admin') && !$user->isDirty('role')) {
+                $user->role = $user->is_admin ? 'admin' : 'user';
+            } elseif ($user->isDirty('role') && !$user->isDirty('is_admin')) {
+                $user->is_admin = ($user->role === 'admin');
+            }
+        });
     }
 
     /**

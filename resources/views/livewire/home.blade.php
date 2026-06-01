@@ -16,10 +16,7 @@
         <!-- Content -->
         <div class="container mx-auto px-4 relative z-10">
             <div class="max-w-3xl">
-                <span class="inline-flex items-center gap-2 py-2 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white font-medium text-sm mb-8 animate-fade-in ring-1 ring-white/10 shadow-lg shadow-indigo-900/20">
-                    <span class="w-1.5 h-1.5 rounded-full bg-brand-light animate-pulse"></span>
-                    {{ __('messages.home.new_arrivals') }}
-                </span>
+
                 <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 leading-[0.9] tracking-tight animate-slide-up">
                     {{ __('messages.home.hero_title') }}
                 </h1>

@@ -21,6 +21,10 @@ class Order extends Model
         'status',
         'payment_method',
         'payment_status',
+        'transaction_id',
+        'shipping_name',
+        'shipping_phone',
+        'shipping_address',
     ];
 
     protected $casts = [
@@ -32,6 +36,29 @@ class Order extends Model
      */
     protected static function booted(): void
     {
+        static::saving(function (Order $order) {
+            // Sync shipping_name and full_name
+            if ($order->isDirty('full_name') && !$order->isDirty('shipping_name')) {
+                $order->shipping_name = $order->full_name;
+            } elseif ($order->isDirty('shipping_name') && !$order->isDirty('full_name')) {
+                $order->full_name = $order->shipping_name;
+            }
+
+            // Sync shipping_phone and phone
+            if ($order->isDirty('phone') && !$order->isDirty('shipping_phone')) {
+                $order->shipping_phone = $order->phone;
+            } elseif ($order->isDirty('shipping_phone') && !$order->isDirty('phone')) {
+                $order->phone = $order->shipping_phone;
+            }
+
+            // Sync shipping_address and address/city/state/zip_code
+            if ($order->isDirty('address') && !$order->isDirty('shipping_address')) {
+                $order->shipping_address = trim($order->address . ', ' . $order->city . ', ' . $order->state . ' ' . $order->zip_code, ', ');
+            } elseif ($order->isDirty('shipping_address') && !$order->isDirty('address')) {
+                $order->address = $order->shipping_address;
+            }
+        });
+
         static::updated(function (Order $order) {
             // Restore stock if the order status transitions to 'cancelled'
             if ($order->isDirty('status') && $order->status === 'cancelled' && $order->getOriginal('status') !== 'cancelled') {
