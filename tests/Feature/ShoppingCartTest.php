@@ -220,8 +220,8 @@ class ShoppingCartTest extends TestCase
             ],
         ]]);
 
-        // CartCounter counts the number of distinct items (keys), not total quantity
+        // CartCounter sums up the quantities of all items (1 + 3 = 4)
         Livewire::test(CartCounter::class)
-            ->assertSet('count', 2);
+            ->assertSet('count', 4);
     }
 }
