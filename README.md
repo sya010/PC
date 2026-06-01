@@ -62,7 +62,7 @@ Follow these steps to spin up the application:
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/sya010/PC
    cd PC
    ```
 
