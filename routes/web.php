@@ -21,8 +21,7 @@ Route::get('/build-pc', App\Livewire\PcBuilder::class)->name('build-pc');
 Route::get('/build-pc/select/{type}', App\Livewire\ComponentSelector::class)->name('pc.select');
 
 // Auth Routes
-Route::get('/login', App\Livewire\Auth\Login::class)->name('login');
-Route::get('/register', App\Livewire\Auth\Register::class)->name('register');
+require __DIR__.'/auth.php';
 
 Route::post('/logout', function () {
     auth()->logout();

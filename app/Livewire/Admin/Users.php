@@ -12,7 +12,7 @@ class Users extends Component
 
     public $search = '';
     public $confirmingUserId = null;
-    public $confirmingAction = null; // 'promote', 'demote', 'block', 'unblock', 'delete'
+    public $confirmingAction = null; // 'promote', 'demote', 'delete'
     public $confirmingUserName = '';
 
     public function render()
@@ -31,7 +31,7 @@ class Users extends Component
 
     public function startConfirmation($id, $action)
     {
-        if ($id == auth()->id() && in_array($action, ['demote', 'block', 'delete'])) {
+        if ($id == auth()->id() && in_array($action, ['demote', 'delete'])) {
             session()->flash('error', "You cannot perform this action on yourself!");
             return;
         }
@@ -60,7 +60,7 @@ class Users extends Component
         $id = $this->confirmingUserId;
         $action = $this->confirmingAction;
 
-        if ($id == auth()->id() && in_array($action, ['demote', 'block', 'delete'])) {
+        if ($id == auth()->id() && in_array($action, ['demote', 'delete'])) {
             session()->flash('error', "You cannot perform this action on yourself!");
             $this->cancelConfirmation();
             return;
@@ -85,17 +85,7 @@ class Users extends Component
                 session()->flash('success', "User {$user->name} demoted to User.");
                 break;
 
-            case 'block':
-                $user->is_blocked = true;
-                $user->save();
-                session()->flash('success', "User {$user->name} has been blocked.");
-                break;
 
-            case 'unblock':
-                $user->is_blocked = false;
-                $user->save();
-                session()->flash('success', "User {$user->name} has been unblocked.");
-                break;
 
             case 'delete':
                 $name = $user ? $user->name : 'User';
