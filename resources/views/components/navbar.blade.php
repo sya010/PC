@@ -103,7 +103,13 @@
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
                                     {{ __('messages.user_orders.title') }}
                                 </a>
-                                <livewire:auth.logout />
+                                <form method="POST" action="{{ route('logout') }}" class="w-full">
+                                    @csrf
+                                    <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-content-secondary dark:text-dark-400 hover:bg-surface-secondary dark:hover:bg-dark-600 hover:text-brand-base transition-colors">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                                        {{ __('messages.logout') }}
+                                    </button>
+                                </form>
                             </div>
                         @else
                             <div class="p-2 space-y-1">
@@ -179,7 +185,15 @@
                             {{ __('messages.admin.panel_title') }}
                         </a>
                     @endif
-                    <div class="px-4"><livewire:auth.logout /></div>
+                    <div class="px-4">
+                        <form method="POST" action="{{ route('logout') }}" class="w-full">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-content-secondary dark:text-dark-400 hover:bg-surface-secondary dark:hover:bg-dark-800 hover:text-brand-base transition-colors">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013 3h4a3 3 0 013 3v1" /></svg>
+                                {{ __('messages.logout') }}
+                            </button>
+                        </form>
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-content-secondary dark:text-dark-400 hover:bg-surface-secondary dark:hover:bg-dark-800 hover:text-brand-base transition-colors">{{ __('messages.login') }}</a>
                     <a href="{{ route('register') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-bold text-brand-base bg-brand-base/10 hover:bg-brand-base/20 transition-colors">{{ __('messages.register') }}</a>

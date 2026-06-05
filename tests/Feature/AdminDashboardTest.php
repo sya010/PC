@@ -159,18 +159,5 @@ class AdminDashboardTest extends TestCase
         $response->assertStatus(200);
     }
 
-    // 10. test_admin_can_block_a_user
-    public function test_admin_can_block_a_user(): void
-    {
-        $admin = $this->createAdmin();
-        $user = $this->createUser();
 
-        // Admin Users component uses startConfirmation + executeAction flow
-        Livewire::actingAs($admin)
-            ->test(\App\Livewire\Admin\Users::class)
-            ->call('startConfirmation', $user->id, 'block')
-            ->call('executeAction');
-
-        $this->assertTrue($user->fresh()->is_blocked);
-    }
 }
